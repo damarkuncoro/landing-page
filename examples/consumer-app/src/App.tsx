@@ -22,28 +22,28 @@ const landingPageConfig: LandingPageConfig = defineLandingPage({
   },
   sections: [
     createHeaderSection({
-      logo: 'https://picsum.photos/150',
-      title: 'My Company',
+      logo: "https://picsum.photos/150",
+      title: "My Company",
       links: [
         {
-          id: 'link1',
-          text: 'Home',
-          url: '#',
+          id: "link1",
+          text: "Home",
+          url: "/",
         },
         {
-          id: 'link2',
-          text: 'Features',
-          url: '#',
+          id: "link2",
+          text: "Features",
+          url: "#features",
         },
         {
-          id: 'link3',
-          text: 'Pricing',
-          url: '#',
+          id: "link3",
+          text: "Pricing",
+          url: "#pricing",
         },
         {
-          id: 'link4',
-          text: 'Contact',
-          url: '#',
+          id: "link4",
+          text: "Contact",
+          url: "#contact",
         },
       ],
     }),

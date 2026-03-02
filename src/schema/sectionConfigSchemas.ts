@@ -6,8 +6,8 @@ export const sectionConfigSchemas = {
     properties: {
       title: { type: "string" },
       subtitle: { type: "string" },
-      image: { type: "string", format: "uri" },
-      video: { type: "string", format: "uri" },
+      image: { type: "string", format: "uri-reference" },
+      video: { type: "string", format: "uri-reference" },
       buttons: {
         type: "array",
         items: { $ref: "urn:landing-page:schema#/definitions/ButtonConfig" },
@@ -29,7 +29,7 @@ export const sectionConfigSchemas = {
             title: { type: "string" },
             description: { type: "string" },
             icon: { type: "string" },
-            image: { type: "string", format: "uri" },
+            image: { type: "string", format: "uri-reference" },
           },
           required: ["title", "description"],
         },
@@ -48,7 +48,7 @@ export const sectionConfigSchemas = {
             quote: { type: "string" },
             author: { type: "string" },
             role: { type: "string" },
-            avatar: { type: "string", format: "uri" },
+            avatar: { type: "string", format: "uri-reference" },
           },
           required: ["quote", "author"],
         },
@@ -90,14 +90,14 @@ export const sectionConfigSchemas = {
       title: { type: "string" },
       description: { type: "string" },
       button: { $ref: "urn:landing-page:schema#/definitions/ButtonConfig" },
-      image: { type: "string", format: "uri" },
+      image: { type: "string", format: "uri-reference" },
     },
     required: ["title", "description", "button"],
   },
   footer: {
     type: "object",
     properties: {
-      logo: { type: "string", format: "uri" },
+      logo: { type: "string", format: "uri-reference" },
       title: { type: "string" },
       description: { type: "string" },
       links: {
@@ -112,7 +112,7 @@ export const sectionConfigSchemas = {
                 type: "object",
                 properties: {
                   text: { type: "string" },
-                  url: { type: "string", format: "uri" },
+                  url: { type: "string", format: "uri-reference" },
                   target: { type: "string", enum: ["_blank", "_self"] },
                 },
                 required: ["text", "url"],
@@ -128,7 +128,7 @@ export const sectionConfigSchemas = {
           type: "object",
           properties: {
             platform: { type: "string" },
-            url: { type: "string", format: "uri" },
+            url: { type: "string", format: "uri-reference" },
             icon: { type: "string" },
           },
           required: ["platform", "url"],
@@ -179,7 +179,7 @@ export const sectionConfigSchemas = {
   header: {
     type: "object",
     properties: {
-      logo: { type: "string", format: "uri" },
+      logo: { type: "string", format: "uri-reference" },
       title: { type: "string" },
       links: {
         type: "array",
@@ -188,7 +188,7 @@ export const sectionConfigSchemas = {
           properties: {
             id: { type: "string" },
             text: { type: "string" },
-            url: { type: "string", format: "uri" },
+            url: { type: "string", format: "uri-reference" },
             target: { type: "string", enum: ["_blank", "_self"] },
           },
           required: ["text", "url"],

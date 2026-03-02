@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2] - 2026-03-02
+
+### Fixed
+- Changed URL validation format from `uri` to `uri-reference` in all schemas.
+- This allows using relative paths (`/about`) and fragments (`#features`) in section configurations.
+- Fixed `ButtonBase` to prevent custom attributes from leaking into the DOM.
+
 ## [0.1.1] - 2026-03-02
 
 ### Fixed

@@ -158,7 +158,17 @@ var landingPageSchema = {
         type: {
           type: "string",
           description: "Section type",
-          enum: ["hero", "features", "testimonials", "pricing", "cta", "footer", "stats", "faq", "header"]
+          enum: [
+            "hero",
+            "features",
+            "testimonials",
+            "pricing",
+            "cta",
+            "footer",
+            "stats",
+            "faq",
+            "header"
+          ]
         },
         config: {
           type: "object",
@@ -218,7 +228,14 @@ var landingPageSchema = {
           pattern: "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
         }
       },
-      required: ["primary", "secondary", "accent", "background", "text", "muted"]
+      required: [
+        "primary",
+        "secondary",
+        "accent",
+        "background",
+        "text",
+        "muted"
+      ]
     },
     Spacing: {
       type: "object",
@@ -291,7 +308,10 @@ var landingPageSchema = {
       properties: {
         text: { type: "string" },
         url: { type: "string", format: "uri" },
-        variant: { type: "string", enum: ["primary", "secondary", "outline", "ghost"] },
+        variant: {
+          type: "string",
+          enum: ["primary", "secondary", "outline", "ghost"]
+        },
         size: { type: "string", enum: ["sm", "md", "lg"] },
         target: { type: "string", enum: ["_blank", "_self"] }
       },
@@ -309,8 +329,8 @@ var sectionConfigSchemas = {
     properties: {
       title: { type: "string" },
       subtitle: { type: "string" },
-      image: { type: "string", format: "uri" },
-      video: { type: "string", format: "uri" },
+      image: { type: "string", format: "uri-reference" },
+      video: { type: "string", format: "uri-reference" },
       buttons: {
         type: "array",
         items: { $ref: "urn:landing-page:schema#/definitions/ButtonConfig" }
@@ -332,7 +352,7 @@ var sectionConfigSchemas = {
             title: { type: "string" },
             description: { type: "string" },
             icon: { type: "string" },
-            image: { type: "string", format: "uri" }
+            image: { type: "string", format: "uri-reference" }
           },
           required: ["title", "description"]
         }
@@ -351,7 +371,7 @@ var sectionConfigSchemas = {
             quote: { type: "string" },
             author: { type: "string" },
             role: { type: "string" },
-            avatar: { type: "string", format: "uri" }
+            avatar: { type: "string", format: "uri-reference" }
           },
           required: ["quote", "author"]
         }
@@ -376,7 +396,9 @@ var sectionConfigSchemas = {
               type: "array",
               items: { type: "string" }
             },
-            button: { $ref: "urn:landing-page:schema#/definitions/ButtonConfig" },
+            button: {
+              $ref: "urn:landing-page:schema#/definitions/ButtonConfig"
+            },
             featured: { type: "boolean" }
           },
           required: ["title", "description", "price", "features", "button"]
@@ -391,14 +413,14 @@ var sectionConfigSchemas = {
       title: { type: "string" },
       description: { type: "string" },
       button: { $ref: "urn:landing-page:schema#/definitions/ButtonConfig" },
-      image: { type: "string", format: "uri" }
+      image: { type: "string", format: "uri-reference" }
     },
     required: ["title", "description", "button"]
   },
   footer: {
     type: "object",
     properties: {
-      logo: { type: "string", format: "uri" },
+      logo: { type: "string", format: "uri-reference" },
       title: { type: "string" },
       description: { type: "string" },
       links: {
@@ -413,7 +435,7 @@ var sectionConfigSchemas = {
                 type: "object",
                 properties: {
                   text: { type: "string" },
-                  url: { type: "string", format: "uri" },
+                  url: { type: "string", format: "uri-reference" },
                   target: { type: "string", enum: ["_blank", "_self"] }
                 },
                 required: ["text", "url"]
@@ -429,7 +451,7 @@ var sectionConfigSchemas = {
           type: "object",
           properties: {
             platform: { type: "string" },
-            url: { type: "string", format: "uri" },
+            url: { type: "string", format: "uri-reference" },
             icon: { type: "string" }
           },
           required: ["platform", "url"]
@@ -480,7 +502,7 @@ var sectionConfigSchemas = {
   header: {
     type: "object",
     properties: {
-      logo: { type: "string", format: "uri" },
+      logo: { type: "string", format: "uri-reference" },
       title: { type: "string" },
       links: {
         type: "array",
@@ -489,7 +511,7 @@ var sectionConfigSchemas = {
           properties: {
             id: { type: "string" },
             text: { type: "string" },
-            url: { type: "string", format: "uri" },
+            url: { type: "string", format: "uri-reference" },
             target: { type: "string", enum: ["_blank", "_self"] }
           },
           required: ["text", "url"]
@@ -544,7 +566,9 @@ function validateConfig(config) {
     if (!section.type)
       errors.push(`Section ${section.id || index} is missing a type`);
     const sectionErrors = validateSection2(section);
-    sectionErrors.forEach((error) => errors.push(`Section ${section.id || index}: ${error}`));
+    sectionErrors.forEach(
+      (error) => errors.push(`Section ${section.id || index}: ${error}`)
+    );
   });
   return errors;
 }
@@ -559,9 +583,14 @@ function validateSection2(section) {
     return errors;
   }
   try {
-    const validationResult = validateSectionConfig(section.type, section.config);
+    const validationResult = validateSectionConfig(
+      section.type,
+      section.config
+    );
     if (validationResult) {
-      errors.push(...validationResult.map((err) => `${err.field}: ${err.message}`));
+      errors.push(
+        ...validationResult.map((err) => `${err.field}: ${err.message}`)
+      );
     }
   } catch (error) {
     errors.push(`Invalid section configuration: ${error.message}`);
@@ -600,7 +629,9 @@ function defineLandingPage(config) {
         const updatedSection = { ...this.sections[index], ...updates };
         const sectionErrors = validateSection2(updatedSection);
         if (sectionErrors.length > 0) {
-          throw new Error(`Invalid section updates: ${sectionErrors.join(", ")}`);
+          throw new Error(
+            `Invalid section updates: ${sectionErrors.join(", ")}`
+          );
         }
         this.sections[index] = updatedSection;
       }
@@ -785,39 +816,58 @@ Container.displayName = "Container";
 
 // src/renderers/react/base/NavbarBase.tsx
 var import_jsx_runtime2 = require("react/jsx-runtime");
-var NavbarBase = import_react2.default.forwardRef((props, ref) => {
-  const {
-    links,
-    isMobile,
-    isOpen,
-    className,
-    style,
-    linkStyle,
-    onLinkMouseEnter,
-    onLinkMouseLeave
-  } = props;
-  if (isMobile && !isOpen)
-    return null;
-  return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Box, { as: "nav", ref, className, style, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Flex, { as: "ul", direction: isMobile ? "column" : "row", gap: "1.5rem", style: { listStyle: "none", padding: 0 }, children: links.map((link, index) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Box, { as: "li", style: { marginBottom: isMobile ? "0.5rem" : 0 }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
-    "a",
-    {
-      href: link.url,
-      target: link.target || "_self",
-      rel: link.target === "_blank" ? "noopener noreferrer" : void 0,
-      style: linkStyle,
-      onMouseEnter: (e) => onLinkMouseEnter?.(e, link),
-      onMouseLeave: (e) => onLinkMouseLeave?.(e, link),
-      onFocus: (e) => {
-        e.currentTarget.style.outline = "2px solid currentColor";
-        e.currentTarget.style.outlineOffset = "2px";
-      },
-      onBlur: (e) => {
-        e.currentTarget.style.outline = "none";
-      },
-      children: link.text
-    }
-  ) }, index)) }) });
-});
+var NavbarBase = import_react2.default.forwardRef(
+  (props, ref) => {
+    const {
+      links,
+      isMobile,
+      isOpen,
+      className,
+      style,
+      linkStyle,
+      onLinkMouseEnter,
+      onLinkMouseLeave
+    } = props;
+    if (isMobile && !isOpen)
+      return null;
+    return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(Box, { as: "nav", ref, className, style, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+      Flex,
+      {
+        as: "ul",
+        direction: isMobile ? "column" : "row",
+        gap: "1.5rem",
+        style: { listStyle: "none", padding: 0 },
+        children: links.map((link, index) => /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+          Box,
+          {
+            as: "li",
+            style: { marginBottom: isMobile ? "0.5rem" : 0 },
+            children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+              "a",
+              {
+                href: link.url,
+                target: link.target || "_self",
+                rel: link.target === "_blank" ? "noopener noreferrer" : void 0,
+                style: linkStyle,
+                onMouseEnter: (e) => onLinkMouseEnter?.(e, link),
+                onMouseLeave: (e) => onLinkMouseLeave?.(e, link),
+                onFocus: (e) => {
+                  e.currentTarget.style.outline = "2px solid currentColor";
+                  e.currentTarget.style.outlineOffset = "2px";
+                },
+                onBlur: (e) => {
+                  e.currentTarget.style.outline = "none";
+                },
+                children: link.text
+              }
+            )
+          },
+          index
+        ))
+      }
+    ) });
+  }
+);
 NavbarBase.displayName = "NavbarBase";
 
 // src/renderers/react/skins/NavbarSkin.tsx
@@ -930,13 +980,7 @@ var MenuToggleSkin = (props) => {
     transition: "color 0.2s ease",
     ...config.style
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
-    MenuToggleBase,
-    {
-      ...config,
-      style: toggleStyle
-    }
-  );
+  return /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(MenuToggleBase, { ...config, style: toggleStyle });
 };
 
 // src/renderers/react/MenuToggle.tsx
@@ -1045,13 +1089,7 @@ var HeaderSkin = (props) => {
 // src/renderers/react/Header.tsx
 var import_jsx_runtime10 = require("react/jsx-runtime");
 var Header = ({ config, theme }) => {
-  return /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
-    HeaderSkin,
-    {
-      ...config,
-      theme
-    }
-  );
+  return /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(HeaderSkin, { ...config, theme });
 };
 var Header_default = Header;
 
@@ -1066,8 +1104,10 @@ var ButtonBase = import_react6.default.forwardRef((props, ref) => {
     text,
     url,
     target = "_self",
-    variant,
-    size,
+    variant: _variant,
+    // Destructure to avoid spreading to DOM
+    size: _size,
+    // Destructure to avoid spreading to DOM
     className,
     style,
     onMouseEnter,
@@ -1103,7 +1143,10 @@ ButtonBase.displayName = "ButtonBase";
 // src/core/utils/contrast.ts
 function hexToRgb(hex) {
   const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-  const fullHex = hex.replace(shorthandRegex, (_, r, g, b) => r + r + g + g + b + b);
+  const fullHex = hex.replace(
+    shorthandRegex,
+    (_, r, g, b) => r + r + g + g + b + b
+  );
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(fullHex);
   return result ? {
     r: parseInt(result[1], 16),
@@ -1227,13 +1270,7 @@ var ButtonSkin = (props) => {
 // src/renderers/react/Button.tsx
 var import_jsx_runtime13 = require("react/jsx-runtime");
 var Button = ({ config, theme }) => {
-  return /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
-    ButtonSkin,
-    {
-      ...config,
-      theme
-    }
-  );
+  return /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ButtonSkin, { ...config, theme });
 };
 var Button_default = Button;
 
@@ -1262,21 +1299,33 @@ var HeroBase = import_react7.default.forwardRef((props, ref) => {
       style: { textAlign: alignment, ...contentStyle },
       children: [
         /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(Box, { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("h1", { style: {
-            fontSize: "3rem",
-            fontWeight: "bold",
-            color: theme.colors.text,
-            marginBottom: theme.spacing.md,
-            lineHeight: "1.2"
-          }, children: title }),
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsx)("p", { style: {
-            fontSize: "1.25rem",
-            color: theme.colors.muted,
-            marginBottom: theme.spacing.lg,
-            maxWidth: "600px",
-            marginLeft: alignment === "center" ? "auto" : "0",
-            marginRight: alignment === "center" ? "auto" : "0"
-          }, children: subtitle })
+          /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+            "h1",
+            {
+              style: {
+                fontSize: "3rem",
+                fontWeight: "bold",
+                color: theme.colors.text,
+                marginBottom: theme.spacing.md,
+                lineHeight: "1.2"
+              },
+              children: title
+            }
+          ),
+          /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+            "p",
+            {
+              style: {
+                fontSize: "1.25rem",
+                color: theme.colors.muted,
+                marginBottom: theme.spacing.lg,
+                maxWidth: "600px",
+                marginLeft: alignment === "center" ? "auto" : "0",
+                marginRight: alignment === "center" ? "auto" : "0"
+              },
+              children: subtitle
+            }
+          )
         ] }),
         image && /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
           "img",
@@ -1303,7 +1352,15 @@ var HeroBase = import_react7.default.forwardRef((props, ref) => {
             }
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(Flex, { gap: theme.spacing.md, wrap: "wrap", justify: alignment === "center" ? "center" : "flex-start", children: buttons.map((button) => /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(Button_default, { config: button, theme }, button.id)) })
+        /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
+          Flex,
+          {
+            gap: theme.spacing.md,
+            wrap: "wrap",
+            justify: alignment === "center" ? "center" : "flex-start",
+            children: buttons.map((button) => /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(Button_default, { config: button, theme }, button.id))
+          }
+        )
       ]
     }
   ) }) });
@@ -1347,13 +1404,7 @@ var HeroSkin = (props) => {
 // src/renderers/react/Hero.tsx
 var import_jsx_runtime16 = require("react/jsx-runtime");
 var Hero = ({ config, theme }) => {
-  return /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
-    HeroSkin,
-    {
-      ...config,
-      theme
-    }
-  );
+  return /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(HeroSkin, { ...config, theme });
 };
 var Hero_default = Hero;
 
@@ -1372,8 +1423,7 @@ var FeaturesBase = import_react8.default.forwardRef((props, ref) => {
     titleStyle,
     descriptionStyle,
     onFeatureMouseEnter,
-    onFeatureMouseLeave,
-    theme
+    onFeatureMouseLeave
   } = props;
   return /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(Box, { as: "section", ref, className, style, children: /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(Container, { style: containerStyle, children: /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(Box, { style: gridStyle, children: features.map((feature) => /* @__PURE__ */ (0, import_jsx_runtime17.jsxs)(
     Box,
@@ -1469,13 +1519,7 @@ var FeaturesSkin = (props) => {
 // src/renderers/react/Features.tsx
 var import_jsx_runtime19 = require("react/jsx-runtime");
 var Features = ({ config, theme }) => {
-  return /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(
-    FeaturesSkin,
-    {
-      ...config,
-      theme
-    }
-  );
+  return /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(FeaturesSkin, { ...config, theme });
 };
 var Features_default = Features;
 
@@ -1522,21 +1566,29 @@ var TestimonialsBase = import_react9.default.forwardRef((props, ref) => {
           }
         ) }),
         /* @__PURE__ */ (0, import_jsx_runtime20.jsx)(Box, { as: "blockquote", style: quoteStyle, children: testimonial.quote }),
-        /* @__PURE__ */ (0, import_jsx_runtime20.jsxs)(Flex, { align: "center", gap: theme.spacing.md, style: authorContainerStyle, children: [
-          testimonial.avatar && /* @__PURE__ */ (0, import_jsx_runtime20.jsx)(
-            "img",
-            {
-              src: testimonial.avatar,
-              alt: testimonial.author,
-              style: avatarStyle,
-              loading: "lazy"
-            }
-          ),
-          /* @__PURE__ */ (0, import_jsx_runtime20.jsxs)(Box, { style: authorInfoStyle, children: [
-            /* @__PURE__ */ (0, import_jsx_runtime20.jsx)(Box, { as: "p", style: authorNameStyle, children: testimonial.author }),
-            testimonial.role && /* @__PURE__ */ (0, import_jsx_runtime20.jsx)(Box, { as: "p", style: authorRoleStyle, children: testimonial.role })
-          ] })
-        ] })
+        /* @__PURE__ */ (0, import_jsx_runtime20.jsxs)(
+          Flex,
+          {
+            align: "center",
+            gap: theme.spacing.md,
+            style: authorContainerStyle,
+            children: [
+              testimonial.avatar && /* @__PURE__ */ (0, import_jsx_runtime20.jsx)(
+                "img",
+                {
+                  src: testimonial.avatar,
+                  alt: testimonial.author,
+                  style: avatarStyle,
+                  loading: "lazy"
+                }
+              ),
+              /* @__PURE__ */ (0, import_jsx_runtime20.jsxs)(Box, { style: authorInfoStyle, children: [
+                /* @__PURE__ */ (0, import_jsx_runtime20.jsx)(Box, { as: "p", style: authorNameStyle, children: testimonial.author }),
+                testimonial.role && /* @__PURE__ */ (0, import_jsx_runtime20.jsx)(Box, { as: "p", style: authorRoleStyle, children: testimonial.role })
+              ] })
+            ]
+          }
+        )
       ]
     },
     testimonial.id
@@ -1643,13 +1695,7 @@ var TestimonialsSkin = (props) => {
 // src/renderers/react/Testimonials.tsx
 var import_jsx_runtime22 = require("react/jsx-runtime");
 var Testimonials = ({ config, theme }) => {
-  return /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(
-    TestimonialsSkin,
-    {
-      ...config,
-      theme
-    }
-  );
+  return /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(TestimonialsSkin, { ...config, theme });
 };
 var Testimonials_default = Testimonials;
 
@@ -1827,13 +1873,7 @@ var PricingSkin = (props) => {
 // src/renderers/react/Pricing.tsx
 var import_jsx_runtime25 = require("react/jsx-runtime");
 var Pricing = ({ config, theme }) => {
-  return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
-    PricingSkin,
-    {
-      ...config,
-      theme
-    }
-  );
+  return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(PricingSkin, { ...config, theme });
 };
 var Pricing_default = Pricing;
 
@@ -1845,7 +1885,6 @@ var CtaBase = import_react11.default.forwardRef((props, ref) => {
     title,
     description,
     button,
-    image,
     className,
     style,
     containerStyle,
@@ -1854,13 +1893,19 @@ var CtaBase = import_react11.default.forwardRef((props, ref) => {
   } = props;
   return /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(Box, { as: "section", ref, className, style, children: /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(Container, { style: containerStyle, children: /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)(Box, { style: contentStyle, children: [
     /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("h2", { style: { fontSize: "2rem", marginBottom: theme.spacing.md }, children: title }),
-    /* @__PURE__ */ (0, import_jsx_runtime26.jsx)("p", { style: {
-      fontSize: "1.125rem",
-      marginBottom: theme.spacing.lg,
-      maxWidth: "600px",
-      marginLeft: "auto",
-      marginRight: "auto"
-    }, children: description }),
+    /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(
+      "p",
+      {
+        style: {
+          fontSize: "1.125rem",
+          marginBottom: theme.spacing.lg,
+          maxWidth: "600px",
+          marginLeft: "auto",
+          marginRight: "auto"
+        },
+        children: description
+      }
+    ),
     /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(Button_default, { config: button, theme })
   ] }) }) });
 });
@@ -1920,13 +1965,7 @@ var CtaSkin = (props) => {
 // src/renderers/react/Cta.tsx
 var import_jsx_runtime28 = require("react/jsx-runtime");
 var Cta = ({ config, theme }) => {
-  return /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(
-    CtaSkin,
-    {
-      ...config,
-      theme
-    }
-  );
+  return /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(CtaSkin, { ...config, theme });
 };
 var Cta_default = Cta;
 
@@ -1939,7 +1978,6 @@ var FooterBase = import_react12.default.forwardRef((props, ref) => {
     title,
     description,
     links,
-    socialLinks,
     copyright,
     className,
     style,
@@ -1954,27 +1992,82 @@ var FooterBase = import_react12.default.forwardRef((props, ref) => {
   return /* @__PURE__ */ (0, import_jsx_runtime29.jsx)(Box, { as: "footer", ref, className, style, children: /* @__PURE__ */ (0, import_jsx_runtime29.jsxs)(Container, { style: containerStyle, children: [
     /* @__PURE__ */ (0, import_jsx_runtime29.jsxs)(Box, { style: gridStyle, children: [
       /* @__PURE__ */ (0, import_jsx_runtime29.jsxs)(Box, { style: columnStyle, children: [
-        logo && /* @__PURE__ */ (0, import_jsx_runtime29.jsx)("img", { src: logo, alt: title || "Logo", style: { marginBottom: theme.spacing.md }, loading: "lazy" }),
-        title && /* @__PURE__ */ (0, import_jsx_runtime29.jsx)(Box, { as: "h3", style: { fontSize: "1.25rem", marginBottom: theme.spacing.md, color: theme.colors.text }, children: title }),
-        description && /* @__PURE__ */ (0, import_jsx_runtime29.jsx)(Box, { as: "p", style: { color: theme.colors.muted, lineHeight: "1.6" }, children: description })
+        logo && /* @__PURE__ */ (0, import_jsx_runtime29.jsx)(
+          "img",
+          {
+            src: logo,
+            alt: title || "Logo",
+            style: { marginBottom: theme.spacing.md },
+            loading: "lazy"
+          }
+        ),
+        title && /* @__PURE__ */ (0, import_jsx_runtime29.jsx)(
+          Box,
+          {
+            as: "h3",
+            style: {
+              fontSize: "1.25rem",
+              marginBottom: theme.spacing.md,
+              color: theme.colors.text
+            },
+            children: title
+          }
+        ),
+        description && /* @__PURE__ */ (0, import_jsx_runtime29.jsx)(
+          Box,
+          {
+            as: "p",
+            style: { color: theme.colors.muted, lineHeight: "1.6" },
+            children: description
+          }
+        )
       ] }),
       links.map((linkGroup) => /* @__PURE__ */ (0, import_jsx_runtime29.jsxs)(Box, { style: columnStyle, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime29.jsx)(Box, { as: "h4", style: { marginBottom: theme.spacing.md, color: theme.colors.text }, children: linkGroup.title }),
-        /* @__PURE__ */ (0, import_jsx_runtime29.jsx)(Box, { as: "ul", style: { listStyle: "none", padding: 0 }, children: linkGroup.items.map((link, index) => /* @__PURE__ */ (0, import_jsx_runtime29.jsx)(Box, { as: "li", style: { marginBottom: theme.spacing.sm }, children: /* @__PURE__ */ (0, import_jsx_runtime29.jsx)(
-          "a",
+        /* @__PURE__ */ (0, import_jsx_runtime29.jsx)(
+          Box,
           {
-            href: link.url,
-            target: link.target || "_self",
-            rel: link.target === "_blank" ? "noopener noreferrer" : void 0,
-            style: linkStyle,
-            onMouseEnter: onLinkMouseEnter,
-            onMouseLeave: onLinkMouseLeave,
-            children: link.text
+            as: "h4",
+            style: {
+              marginBottom: theme.spacing.md,
+              color: theme.colors.text
+            },
+            children: linkGroup.title
           }
-        ) }, index)) })
+        ),
+        /* @__PURE__ */ (0, import_jsx_runtime29.jsx)(Box, { as: "ul", style: { listStyle: "none", padding: 0 }, children: linkGroup.items.map((link, index) => /* @__PURE__ */ (0, import_jsx_runtime29.jsx)(
+          Box,
+          {
+            as: "li",
+            style: { marginBottom: theme.spacing.sm },
+            children: /* @__PURE__ */ (0, import_jsx_runtime29.jsx)(
+              "a",
+              {
+                href: link.url,
+                target: link.target || "_self",
+                rel: link.target === "_blank" ? "noopener noreferrer" : void 0,
+                style: linkStyle,
+                onMouseEnter: onLinkMouseEnter,
+                onMouseLeave: onLinkMouseLeave,
+                children: link.text
+              }
+            )
+          },
+          index
+        )) })
       ] }, linkGroup.title))
     ] }),
-    copyright && /* @__PURE__ */ (0, import_jsx_runtime29.jsx)(Box, { style: { marginTop: "4rem", paddingTop: "2rem", borderTop: `1px solid ${theme.colors.muted}20`, textAlign: "center" }, children: /* @__PURE__ */ (0, import_jsx_runtime29.jsx)(Box, { as: "p", style: { color: theme.colors.muted }, children: copyright }) })
+    copyright && /* @__PURE__ */ (0, import_jsx_runtime29.jsx)(
+      Box,
+      {
+        style: {
+          marginTop: "4rem",
+          paddingTop: "2rem",
+          borderTop: `1px solid ${theme.colors.muted}20`,
+          textAlign: "center"
+        },
+        children: /* @__PURE__ */ (0, import_jsx_runtime29.jsx)(Box, { as: "p", style: { color: theme.colors.muted }, children: copyright })
+      }
+    )
   ] }) });
 });
 FooterBase.displayName = "FooterBase";
@@ -2038,13 +2131,7 @@ var FooterSkin = (props) => {
 // src/renderers/react/Footer.tsx
 var import_jsx_runtime31 = require("react/jsx-runtime");
 var Footer = ({ config, theme }) => {
-  return /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(
-    FooterSkin,
-    {
-      ...config,
-      theme
-    }
-  );
+  return /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(FooterSkin, { ...config, theme });
 };
 var Footer_default = Footer;
 
@@ -2062,8 +2149,7 @@ var StatsBase = import_react13.default.forwardRef((props, ref) => {
     iconStyle,
     numberContainerStyle,
     numberStyle,
-    labelStyle,
-    theme
+    labelStyle
   } = props;
   return /* @__PURE__ */ (0, import_jsx_runtime32.jsx)(Box, { as: "section", ref, className, style, children: /* @__PURE__ */ (0, import_jsx_runtime32.jsx)(Container, { style: containerStyle, children: /* @__PURE__ */ (0, import_jsx_runtime32.jsx)(Box, { style: gridStyle, children: stats.map((stat) => /* @__PURE__ */ (0, import_jsx_runtime32.jsxs)(Box, { className: stat.className, style: statStyle, children: [
     stat.icon && /* @__PURE__ */ (0, import_jsx_runtime32.jsx)(Box, { style: iconStyle, children: stat.icon }),
@@ -2143,14 +2229,11 @@ var StatsSkin = (props) => {
 
 // src/renderers/react/Stats.tsx
 var import_jsx_runtime34 = require("react/jsx-runtime");
-var Stats = ({ config, theme }) => {
-  return /* @__PURE__ */ (0, import_jsx_runtime34.jsx)(
-    StatsSkin,
-    {
-      ...config,
-      theme
-    }
-  );
+var Stats = ({
+  config,
+  theme
+}) => {
+  return /* @__PURE__ */ (0, import_jsx_runtime34.jsx)(StatsSkin, { ...config, theme });
 };
 var Stats_default = Stats;
 
@@ -2227,39 +2310,99 @@ var FaqSkin = (props) => {
 // src/renderers/react/Faq.tsx
 var import_jsx_runtime37 = require("react/jsx-runtime");
 var Faq = ({ config, theme }) => {
-  return /* @__PURE__ */ (0, import_jsx_runtime37.jsx)(
-    FaqSkin,
-    {
-      ...config,
-      theme
-    }
-  );
+  return /* @__PURE__ */ (0, import_jsx_runtime37.jsx)(FaqSkin, { ...config, theme });
 };
 var Faq_default = Faq;
 
 // src/renderers/react/index.tsx
 var import_jsx_runtime38 = require("react/jsx-runtime");
 var createReactRenderer = () => {
-  const SectionRenderer = ({ section, theme }) => {
+  const SectionRenderer = ({
+    section,
+    theme
+  }) => {
     switch (section.type) {
       case "header":
-        return /* @__PURE__ */ (0, import_jsx_runtime38.jsx)(Header_default, { config: section.config, theme }, section.id);
+        return /* @__PURE__ */ (0, import_jsx_runtime38.jsx)(
+          Header_default,
+          {
+            config: section.config,
+            theme
+          },
+          section.id
+        );
       case "hero":
-        return /* @__PURE__ */ (0, import_jsx_runtime38.jsx)(Hero_default, { config: section.config, theme }, section.id);
+        return /* @__PURE__ */ (0, import_jsx_runtime38.jsx)(
+          Hero_default,
+          {
+            config: section.config,
+            theme
+          },
+          section.id
+        );
       case "features":
-        return /* @__PURE__ */ (0, import_jsx_runtime38.jsx)(Features_default, { config: section.config, theme }, section.id);
+        return /* @__PURE__ */ (0, import_jsx_runtime38.jsx)(
+          Features_default,
+          {
+            config: section.config,
+            theme
+          },
+          section.id
+        );
       case "testimonials":
-        return /* @__PURE__ */ (0, import_jsx_runtime38.jsx)(Testimonials_default, { config: section.config, theme }, section.id);
+        return /* @__PURE__ */ (0, import_jsx_runtime38.jsx)(
+          Testimonials_default,
+          {
+            config: section.config,
+            theme
+          },
+          section.id
+        );
       case "pricing":
-        return /* @__PURE__ */ (0, import_jsx_runtime38.jsx)(Pricing_default, { config: section.config, theme }, section.id);
+        return /* @__PURE__ */ (0, import_jsx_runtime38.jsx)(
+          Pricing_default,
+          {
+            config: section.config,
+            theme
+          },
+          section.id
+        );
       case "cta":
-        return /* @__PURE__ */ (0, import_jsx_runtime38.jsx)(Cta_default, { config: section.config, theme }, section.id);
+        return /* @__PURE__ */ (0, import_jsx_runtime38.jsx)(
+          Cta_default,
+          {
+            config: section.config,
+            theme
+          },
+          section.id
+        );
       case "footer":
-        return /* @__PURE__ */ (0, import_jsx_runtime38.jsx)(Footer_default, { config: section.config, theme }, section.id);
+        return /* @__PURE__ */ (0, import_jsx_runtime38.jsx)(
+          Footer_default,
+          {
+            config: section.config,
+            theme
+          },
+          section.id
+        );
       case "stats":
-        return /* @__PURE__ */ (0, import_jsx_runtime38.jsx)(Stats_default, { config: section.config, theme }, section.id);
+        return /* @__PURE__ */ (0, import_jsx_runtime38.jsx)(
+          Stats_default,
+          {
+            config: section.config,
+            theme
+          },
+          section.id
+        );
       case "faq":
-        return /* @__PURE__ */ (0, import_jsx_runtime38.jsx)(Faq_default, { config: section.config, theme }, section.id);
+        return /* @__PURE__ */ (0, import_jsx_runtime38.jsx)(
+          Faq_default,
+          {
+            config: section.config,
+            theme
+          },
+          section.id
+        );
       default:
         console.warn(`Unknown section type: ${section.type}`);
         return null;
@@ -2286,7 +2429,14 @@ var createReactRenderer = () => {
         document.head.removeChild(style);
       };
     }, [config]);
-    return /* @__PURE__ */ (0, import_jsx_runtime38.jsx)(Box, { children: config.sections.map((section) => /* @__PURE__ */ (0, import_jsx_runtime38.jsx)(SectionRenderer, { section, theme: config.theme }, section.id)) });
+    return /* @__PURE__ */ (0, import_jsx_runtime38.jsx)(Box, { children: config.sections.map((section) => /* @__PURE__ */ (0, import_jsx_runtime38.jsx)(
+      SectionRenderer,
+      {
+        section,
+        theme: config.theme
+      },
+      section.id
+    )) });
   };
   return LandingPage;
 };

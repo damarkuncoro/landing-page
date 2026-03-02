@@ -1,7 +1,7 @@
 import * as react_jsx_runtime from 'react/jsx-runtime';
 
-type SectionType = 'hero' | 'features' | 'testimonials' | 'pricing' | 'cta' | 'footer' | 'stats' | 'faq' | 'header';
-type ComponentType = 'button' | 'card' | 'image' | 'text' | 'video';
+type SectionType = "hero" | "features" | "testimonials" | "pricing" | "cta" | "footer" | "stats" | "faq" | "header";
+type ComponentType = "button" | "card" | "image" | "text" | "video";
 interface BaseConfig {
     id?: string;
     className?: string;
@@ -72,9 +72,9 @@ declare function defineLandingPage(config: LandingPageConfig): {
 interface ButtonConfig extends BaseConfig {
     text: string;
     url: string;
-    variant: 'primary' | 'secondary' | 'outline' | 'ghost';
-    size: 'sm' | 'md' | 'lg';
-    target?: '_blank' | '_self';
+    variant: "primary" | "secondary" | "outline" | "ghost";
+    size: "sm" | "md" | "lg";
+    target?: "_blank" | "_self";
 }
 interface HeaderConfig extends BaseConfig {
     logo?: string;
@@ -83,7 +83,7 @@ interface HeaderConfig extends BaseConfig {
         id?: string;
         text: string;
         url: string;
-        target?: '_blank' | '_self';
+        target?: "_blank" | "_self";
     }[];
 }
 interface HeroConfig extends BaseConfig {
@@ -92,7 +92,7 @@ interface HeroConfig extends BaseConfig {
     image?: string;
     video?: string;
     buttons: ButtonConfig[];
-    alignment?: 'left' | 'center' | 'right';
+    alignment?: "left" | "center" | "right";
 }
 interface FeatureConfig extends BaseConfig {
     title: string;
@@ -127,7 +127,7 @@ interface FooterConfig extends BaseConfig {
         items: {
             text: string;
             url: string;
-            target?: '_blank' | '_self';
+            target?: "_blank" | "_self";
         }[];
     }[];
     socialLinks: {
@@ -159,19 +159,19 @@ interface FaqConfig extends BaseConfig {
 }
 
 interface HeaderSection extends SectionConfig {
-    type: 'header';
+    type: "header";
     config: HeaderConfig;
 }
 declare function createHeaderSection(config: HeaderConfig, id?: string, className?: string): HeaderSection;
 
 interface HeroSection extends SectionConfig {
-    type: 'hero';
+    type: "hero";
     config: HeroConfig;
 }
 declare function createHeroSection(config: HeroConfig, id?: string, className?: string): HeroSection;
 
 interface FeaturesSection extends SectionConfig {
-    type: 'features';
+    type: "features";
     config: {
         features: FeatureConfig[];
     };
@@ -181,7 +181,7 @@ declare function createFeaturesSection(config: {
 }, id?: string, className?: string): FeaturesSection;
 
 interface TestimonialsSection extends SectionConfig {
-    type: 'testimonials';
+    type: "testimonials";
     config: {
         testimonials: TestimonialConfig[];
     };
@@ -191,25 +191,25 @@ declare function createTestimonialsSection(config: {
 }, id?: string, className?: string): TestimonialsSection;
 
 interface PricingSection extends SectionConfig {
-    type: 'pricing';
+    type: "pricing";
     config: PricingConfig;
 }
 declare function createPricingSection(config: PricingConfig, id?: string, className?: string): PricingSection;
 
 interface CtaSection extends SectionConfig {
-    type: 'cta';
+    type: "cta";
     config: CtaConfig;
 }
 declare function createCtaSection(config: CtaConfig, id?: string, className?: string): CtaSection;
 
 interface FooterSection extends SectionConfig {
-    type: 'footer';
+    type: "footer";
     config: FooterConfig;
 }
 declare function createFooterSection(config: FooterConfig, id?: string, className?: string): FooterSection;
 
 interface StatsSection extends SectionConfig {
-    type: 'stats';
+    type: "stats";
     config: {
         stats: StatConfig[];
     };
@@ -219,7 +219,7 @@ declare function createStatsSection(config: {
 }, id?: string, className?: string): StatsSection;
 
 interface FaqSection extends SectionConfig {
-    type: 'faq';
+    type: "faq";
     config: FaqConfig;
 }
 declare function createFaqSection(config: FaqConfig, id?: string, className?: string): FaqSection;
