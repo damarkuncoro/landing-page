@@ -93,7 +93,7 @@ interface HeroConfig extends BaseConfig {
     video?: string;
     buttons: ButtonConfig[];
     alignment?: "left" | "center" | "right";
-    skin?: "default" | "skin2" | "skin3" | "skin4";
+    skin?: "default" | "skin2" | "skin3" | "skin4" | "skin5" | "skin6" | "skin7" | "skin8" | "skin9";
 }
 interface FeatureConfig extends BaseConfig {
     title: string;
@@ -467,6 +467,10 @@ declare const sectionConfigSchemas: {
                 type: string;
                 enum: string[];
             };
+            skin: {
+                type: string;
+                enum: string[];
+            };
         };
         required: string[];
     };
@@ -758,4 +762,4 @@ declare const sectionConfigSchemas: {
 declare function validateConfig(config: Partial<LandingPageConfig>): string[];
 declare function validateSection(section: Partial<SectionConfig>): string[];
 
-export { ButtonConfig, ComponentType, CtaConfig, FaqConfig, FeatureConfig, FooterConfig, HeaderConfig, HeroConfig, LandingPageConfig, PricingConfig, SectionType, StatConfig, TestimonialConfig, createCtaSection, createFaqSection, createFeaturesSection, createFooterSection, createHeaderSection, createHeroSection, createPricingSection, createReactRenderer, createStatsSection, createTestimonialsSection, defaultTheme, defineLandingPage, landingPageSchema, sectionConfigSchemas, validateConfig, validateSection };
+export { ButtonConfig, ComponentType, CtaConfig, FaqConfig, FeatureConfig, FooterConfig, HeaderConfig, HeroConfig, LandingPageConfig, PricingConfig, SectionType, StatConfig, TestimonialConfig, ThemeConfig, createCtaSection, createFaqSection, createFeaturesSection, createFooterSection, createHeaderSection, createHeroSection, createPricingSection, createReactRenderer, createStatsSection, createTestimonialsSection, defaultTheme, defineLandingPage, landingPageSchema, sectionConfigSchemas, validateConfig, validateSection };

@@ -2,6 +2,7 @@ export type {
   LandingPageConfig,
   SectionType,
   ComponentType,
+  ThemeConfig,
 } from "../core/types";
 export type {
   ButtonConfig,

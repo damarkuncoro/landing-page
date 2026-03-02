@@ -26,7 +26,7 @@ export interface HeroConfig extends BaseConfig {
   video?: string;
   buttons: ButtonConfig[];
   alignment?: "left" | "center" | "right";
-  skin?: "default" | "skin2" | "skin3" | "skin4";
+  skin?: "default" | "skin2" | "skin3" | "skin4" | "skin5" | "skin6" | "skin7" | "skin8" | "skin9";
 }
 
 export interface FeatureConfig extends BaseConfig {

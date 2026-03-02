@@ -177,7 +177,7 @@ interface HeroConfig {
   video?: string
   buttons: ButtonConfig[]
   alignment?: 'left' | 'center' | 'right'
-  skin?: 'default' | 'skin2' | 'skin3' | 'skin4'
+  skin?: 'default' | 'skin2' | 'skin3' | 'skin4' | 'skin5' | 'skin6' | 'skin7' | 'skin8'
 }
 
 ### Hero Skins
@@ -193,6 +193,21 @@ Gradient background with white text.
 
 #### Skin 4
 Video background with dark overlay.
+
+#### Skin 5
+Gambar di atas dengan teks di bawah, latar belakang berwarna terang.
+
+#### Skin 6
+Gambar di sebelah kanan dengan teks di kiri, latar belakang hitam dengan gradien.
+
+#### Skin 7
+Desain minimalis dengan latar belakang putih dan elemen yang bersih. Gambar di atas teks.
+
+#### Skin 8
+Desain dengan latar belakang gradien biru muda dan teks berwarna putih. Gambar di sebelah kanan dengan teks di kiri.
+
+#### Skin 9
+Title, subtitle, dan buttons di atas gambar.
 ```
 
 #### Features Section

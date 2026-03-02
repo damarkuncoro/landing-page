@@ -68,6 +68,7 @@ const landing = defineLandingPage({
       ],
       image: 'https://picsum.photos/1280/640',
       alignment: 'left',
+      skin: 'skin9',
     }),
     createFeaturesSection({
       features: [
