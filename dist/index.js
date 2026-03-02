@@ -307,7 +307,7 @@ var landingPageSchema = {
       type: "object",
       properties: {
         text: { type: "string" },
-        url: { type: "string", format: "uri" },
+        url: { type: "string", format: "uri-reference" },
         variant: {
           type: "string",
           enum: ["primary", "secondary", "outline", "ghost"]
