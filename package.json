@@ -30,6 +30,14 @@
   ],
   "author": "Damar Kuncoro",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/damarkuncoro/landing-page.git"
+  },
+  "homepage": "https://damarkuncoro.com/landing-page",
+  "bugs": {
+    "url": "https://github.com/damarkuncoro/landing-page/issues"
+  },
   "devDependencies": {
     "@types/ajv": "^0.0.5",
     "@types/react": "^19.2.14",
@@ -47,14 +55,6 @@
   "peerDependencies": {
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
-  },
-  "peerDependenciesMeta": {
-    "react": {
-      "optional": true
-    },
-    "react-dom": {
-      "optional": true
-    }
   },
   "dependencies": {
     "ajv": "^8.18.0",

@@ -234,6 +234,17 @@ var landingPageSchema = {
         }
       },
       required: ["sm", "md", "lg", "xl"]
+    },
+    ButtonConfig: {
+      type: "object",
+      properties: {
+        text: { type: "string" },
+        url: { type: "string", format: "uri" },
+        variant: { type: "string", enum: ["primary", "secondary", "outline", "ghost"] },
+        size: { type: "string", enum: ["sm", "md", "lg"] },
+        target: { type: "string", enum: ["_blank", "_self"] }
+      },
+      required: ["text", "url", "variant", "size"]
     }
   }
 };
@@ -242,15 +253,171 @@ var landingPageSchema = {
 var sectionConfigSchemas = {
   // Placeholder for individual section schemas
   // These will be populated with actual JSON schemas for each section type (HeroConfig, FeatureConfig, etc.)
-  hero: { type: "object" },
-  features: { type: "object" },
-  testimonials: { type: "object" },
-  pricing: { type: "object" },
-  cta: { type: "object" },
-  footer: { type: "object" },
-  stats: { type: "object" },
-  faq: { type: "object" },
-  header: { type: "object" }
+  hero: {
+    type: "object",
+    properties: {
+      title: { type: "string" },
+      subtitle: { type: "string" },
+      image: { type: "string", format: "uri" },
+      video: { type: "string", format: "uri" },
+      buttons: {
+        type: "array",
+        items: { $ref: "urn:landing-page:schema#/definitions/ButtonConfig" }
+      },
+      alignment: { type: "string", enum: ["left", "center", "right"] }
+    },
+    required: ["title", "subtitle", "buttons"]
+  },
+  features: {
+    type: "object",
+    properties: {
+      title: { type: "string" },
+      description: { type: "string" },
+      icon: { type: "string" },
+      image: { type: "string", format: "uri" }
+    },
+    required: ["title", "description"]
+  },
+  testimonials: {
+    type: "object",
+    properties: {
+      quote: { type: "string" },
+      author: { type: "string" },
+      role: { type: "string" },
+      avatar: { type: "string", format: "uri" }
+    },
+    required: ["quote", "author"]
+  },
+  pricing: {
+    type: "object",
+    properties: {
+      plans: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            id: { type: "string" },
+            title: { type: "string" },
+            description: { type: "string" },
+            price: { type: "number" },
+            period: { type: "string" },
+            features: {
+              type: "array",
+              items: { type: "string" }
+            },
+            button: { $ref: "urn:landing-page:schema#/definitions/ButtonConfig" },
+            featured: { type: "boolean" }
+          },
+          required: ["title", "description", "price", "features", "button"]
+        }
+      }
+    },
+    required: ["plans"]
+  },
+  cta: {
+    type: "object",
+    properties: {
+      title: { type: "string" },
+      description: { type: "string" },
+      button: { $ref: "urn:landing-page:schema#/definitions/ButtonConfig" },
+      image: { type: "string", format: "uri" }
+    },
+    required: ["title", "description", "button"]
+  },
+  footer: {
+    type: "object",
+    properties: {
+      logo: { type: "string", format: "uri" },
+      title: { type: "string" },
+      description: { type: "string" },
+      links: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            title: { type: "string" },
+            items: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  text: { type: "string" },
+                  url: { type: "string", format: "uri" },
+                  target: { type: "string", enum: ["_blank", "_self"] }
+                },
+                required: ["text", "url"]
+              }
+            }
+          },
+          required: ["title", "items"]
+        }
+      },
+      socialLinks: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            platform: { type: "string" },
+            url: { type: "string", format: "uri" },
+            icon: { type: "string" }
+          },
+          required: ["platform", "url"]
+        }
+      },
+      copyright: { type: "string" }
+    },
+    required: ["links", "socialLinks"]
+  },
+  stats: {
+    type: "object",
+    properties: {
+      number: { type: "string" },
+      label: { type: "string" },
+      icon: { type: "string" },
+      prefix: { type: "string" },
+      suffix: { type: "string" }
+    },
+    required: ["number", "label"]
+  },
+  faq: {
+    type: "object",
+    properties: {
+      items: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            id: { type: "string" },
+            question: { type: "string" },
+            answer: { type: "string" }
+          },
+          required: ["question", "answer"]
+        }
+      }
+    },
+    required: ["items"]
+  },
+  header: {
+    type: "object",
+    properties: {
+      logo: { type: "string", format: "uri" },
+      title: { type: "string" },
+      links: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            id: { type: "string" },
+            text: { type: "string" },
+            url: { type: "string", format: "uri" },
+            target: { type: "string", enum: ["_blank", "_self"] }
+          },
+          required: ["text", "url"]
+        }
+      }
+    },
+    required: ["links"]
+  }
 };
 
 // src/schema/validate.ts

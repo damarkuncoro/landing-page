@@ -403,36 +403,314 @@ declare const landingPageSchema: {
             };
             required: string[];
         };
+        ButtonConfig: {
+            type: string;
+            properties: {
+                text: {
+                    type: string;
+                };
+                url: {
+                    type: string;
+                    format: string;
+                };
+                variant: {
+                    type: string;
+                    enum: string[];
+                };
+                size: {
+                    type: string;
+                    enum: string[];
+                };
+                target: {
+                    type: string;
+                    enum: string[];
+                };
+            };
+            required: string[];
+        };
     };
 };
 
 declare const sectionConfigSchemas: {
     hero: {
         type: string;
+        properties: {
+            title: {
+                type: string;
+            };
+            subtitle: {
+                type: string;
+            };
+            image: {
+                type: string;
+                format: string;
+            };
+            video: {
+                type: string;
+                format: string;
+            };
+            buttons: {
+                type: string;
+                items: {
+                    $ref: string;
+                };
+            };
+            alignment: {
+                type: string;
+                enum: string[];
+            };
+        };
+        required: string[];
     };
     features: {
         type: string;
+        properties: {
+            title: {
+                type: string;
+            };
+            description: {
+                type: string;
+            };
+            icon: {
+                type: string;
+            };
+            image: {
+                type: string;
+                format: string;
+            };
+        };
+        required: string[];
     };
     testimonials: {
         type: string;
+        properties: {
+            quote: {
+                type: string;
+            };
+            author: {
+                type: string;
+            };
+            role: {
+                type: string;
+            };
+            avatar: {
+                type: string;
+                format: string;
+            };
+        };
+        required: string[];
     };
     pricing: {
         type: string;
+        properties: {
+            plans: {
+                type: string;
+                items: {
+                    type: string;
+                    properties: {
+                        id: {
+                            type: string;
+                        };
+                        title: {
+                            type: string;
+                        };
+                        description: {
+                            type: string;
+                        };
+                        price: {
+                            type: string;
+                        };
+                        period: {
+                            type: string;
+                        };
+                        features: {
+                            type: string;
+                            items: {
+                                type: string;
+                            };
+                        };
+                        button: {
+                            $ref: string;
+                        };
+                        featured: {
+                            type: string;
+                        };
+                    };
+                    required: string[];
+                };
+            };
+        };
+        required: string[];
     };
     cta: {
         type: string;
+        properties: {
+            title: {
+                type: string;
+            };
+            description: {
+                type: string;
+            };
+            button: {
+                $ref: string;
+            };
+            image: {
+                type: string;
+                format: string;
+            };
+        };
+        required: string[];
     };
     footer: {
         type: string;
+        properties: {
+            logo: {
+                type: string;
+                format: string;
+            };
+            title: {
+                type: string;
+            };
+            description: {
+                type: string;
+            };
+            links: {
+                type: string;
+                items: {
+                    type: string;
+                    properties: {
+                        title: {
+                            type: string;
+                        };
+                        items: {
+                            type: string;
+                            items: {
+                                type: string;
+                                properties: {
+                                    text: {
+                                        type: string;
+                                    };
+                                    url: {
+                                        type: string;
+                                        format: string;
+                                    };
+                                    target: {
+                                        type: string;
+                                        enum: string[];
+                                    };
+                                };
+                                required: string[];
+                            };
+                        };
+                    };
+                    required: string[];
+                };
+            };
+            socialLinks: {
+                type: string;
+                items: {
+                    type: string;
+                    properties: {
+                        platform: {
+                            type: string;
+                        };
+                        url: {
+                            type: string;
+                            format: string;
+                        };
+                        icon: {
+                            type: string;
+                        };
+                    };
+                    required: string[];
+                };
+            };
+            copyright: {
+                type: string;
+            };
+        };
+        required: string[];
     };
     stats: {
         type: string;
+        properties: {
+            number: {
+                type: string;
+            };
+            label: {
+                type: string;
+            };
+            icon: {
+                type: string;
+            };
+            prefix: {
+                type: string;
+            };
+            suffix: {
+                type: string;
+            };
+        };
+        required: string[];
     };
     faq: {
         type: string;
+        properties: {
+            items: {
+                type: string;
+                items: {
+                    type: string;
+                    properties: {
+                        id: {
+                            type: string;
+                        };
+                        question: {
+                            type: string;
+                        };
+                        answer: {
+                            type: string;
+                        };
+                    };
+                    required: string[];
+                };
+            };
+        };
+        required: string[];
     };
     header: {
         type: string;
+        properties: {
+            logo: {
+                type: string;
+                format: string;
+            };
+            title: {
+                type: string;
+            };
+            links: {
+                type: string;
+                items: {
+                    type: string;
+                    properties: {
+                        id: {
+                            type: string;
+                        };
+                        text: {
+                            type: string;
+                        };
+                        url: {
+                            type: string;
+                            format: string;
+                        };
+                        target: {
+                            type: string;
+                            enum: string[];
+                        };
+                    };
+                    required: string[];
+                };
+            };
+        };
+        required: string[];
     };
 };
 
