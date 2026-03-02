@@ -1,27 +1,29 @@
-import React from 'react'
-import type { FeaturesContractProps } from '../contracts/FeaturesContract'
-import { Container, Box, Flex } from './LayoutBase'
+import React from "react";
+import type { FeaturesContractProps } from "../contracts/FeaturesContract";
+import { Container, Box } from "./LayoutBase";
 
 /**
  * Base UI untuk Features Section.
  * Memisahkan struktur DOM dari styling.
  * Depend pada UI Contract (aturan 13).
  */
-export const FeaturesBase = React.forwardRef<HTMLElement, FeaturesContractProps & { theme: any }>((props, ref) => {
-  const { 
-    features, 
-    className, 
-    style, 
-    containerStyle, 
-    gridStyle, 
-    featureStyle, 
-    iconStyle, 
-    titleStyle, 
+export const FeaturesBase = React.forwardRef<
+  HTMLElement,
+  FeaturesContractProps & { theme: any }
+>((props, ref) => {
+  const {
+    features,
+    className,
+    style,
+    containerStyle,
+    gridStyle,
+    featureStyle,
+    iconStyle,
+    titleStyle,
     descriptionStyle,
     onFeatureMouseEnter,
     onFeatureMouseLeave,
-    theme 
-  } = props
+  } = props;
 
   return (
     <Box as="section" ref={ref} className={className} style={style}>
@@ -47,7 +49,7 @@ export const FeaturesBase = React.forwardRef<HTMLElement, FeaturesContractProps 
         </Box>
       </Container>
     </Box>
-  )
-})
+  );
+});
 
-FeaturesBase.displayName = 'FeaturesBase'
+FeaturesBase.displayName = "FeaturesBase";

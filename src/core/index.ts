@@ -1,7 +1,13 @@
-export { defineLandingPage } from "./define"
-export { createTheme, validateTheme, defaultTheme } from "./theme"
-export { validateConfig, validateSection, isValidConfig, isValidSection } from "./validators"
-export { createHeroSection,
+export { defineLandingPage } from "./define";
+export { createTheme, validateTheme, defaultTheme } from "./theme";
+export {
+  validateConfig,
+  validateSection,
+  isValidConfig,
+  isValidSection,
+} from "./validators";
+export {
+  createHeroSection,
   createFeaturesSection,
   createTestimonialsSection,
   createPricingSection,
@@ -10,8 +16,8 @@ export { createHeroSection,
   createStatsSection,
   createFaqSection,
   createHeaderSection,
-} from "./sections"
-export * from "./utils/contrast"
+} from "./sections";
+export * from "./utils/contrast";
 
 export type {
   LandingPageConfig,
@@ -21,7 +27,7 @@ export type {
   SectionConfig,
   Component,
   BaseConfig,
-} from "./types"
+} from "./types";
 
 export type {
   HeroSection,
@@ -34,4 +40,4 @@ export type {
   FaqSection,
   HeaderSection,
   SectionTypes,
-} from "./sections"
+} from "./sections";

@@ -1,16 +1,20 @@
-import type { SectionConfig } from '../types'
-import type { FaqConfig } from '../../components/types'
+import type { SectionConfig } from "../types";
+import type { FaqConfig } from "../../components/types";
 
 export interface FaqSection extends SectionConfig {
-  type: 'faq'
-  config: FaqConfig
+  type: "faq";
+  config: FaqConfig;
 }
 
-export function createFaqSection(config: FaqConfig, id?: string, className?: string): FaqSection {
+export function createFaqSection(
+  config: FaqConfig,
+  id?: string,
+  className?: string,
+): FaqSection {
   return {
     id: id || `faq-${Date.now()}`,
     className,
-    type: 'faq',
+    type: "faq",
     config,
-  }
+  };
 }

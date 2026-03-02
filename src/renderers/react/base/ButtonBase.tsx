@@ -1,18 +1,21 @@
-import React from 'react'
-import type { ButtonContractProps } from '../contracts/ButtonContract'
+import React from "react";
+import type { ButtonContractProps } from "../contracts/ButtonContract";
 
 /**
  * Base UI untuk Button.
  * Memisahkan struktur DOM dari styling.
  * Depend pada UI Contract (aturan 13).
  */
-export const ButtonBase = React.forwardRef<HTMLAnchorElement, ButtonContractProps>((props, ref) => {
+export const ButtonBase = React.forwardRef<
+  HTMLAnchorElement,
+  ButtonContractProps
+>((props, ref) => {
   const {
     text,
     url,
-    target = '_self',
-    variant,
-    size,
+    target = "_self",
+    variant: _variant, // Destructure to avoid spreading to DOM
+    size: _size, // Destructure to avoid spreading to DOM
     className,
     style,
     onMouseEnter,
@@ -21,14 +24,14 @@ export const ButtonBase = React.forwardRef<HTMLAnchorElement, ButtonContractProp
     onBlur,
     onKeyDown,
     ...rest
-  } = props
+  } = props;
 
   return (
     <a
       ref={ref}
       href={url}
       target={target}
-      rel={target === '_blank' ? 'noopener noreferrer' : undefined}
+      rel={target === "_blank" ? "noopener noreferrer" : undefined}
       style={style}
       className={className}
       onMouseEnter={onMouseEnter}
@@ -42,7 +45,7 @@ export const ButtonBase = React.forwardRef<HTMLAnchorElement, ButtonContractProp
     >
       {text}
     </a>
-  )
-})
+  );
+});
 
-ButtonBase.displayName = 'ButtonBase'
+ButtonBase.displayName = "ButtonBase";

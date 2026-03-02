@@ -1,6 +1,6 @@
 {
   "name": "@damarkuncoro/landing-page",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Config-driven landing page library",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -32,12 +32,16 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/damarkuncoro/landing-page.git"
+    "url": "git+https://github.com/damarkuncoro/landing-page.git"
   },
   "homepage": "https://damarkuncoro.com/landing-page",
   "bugs": {
     "url": "https://github.com/damarkuncoro/landing-page/issues"
   },
+  "publishConfig": {
+    "access": "public"
+  },
+  "sideEffects": false,
   "devDependencies": {
     "@types/ajv": "^0.0.5",
     "@types/react": "^19.2.14",

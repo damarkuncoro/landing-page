@@ -1,22 +1,22 @@
-import React from 'react'
-import { MenuToggleSkin } from './skins/MenuToggleSkin'
+import React from "react";
+import { MenuToggleSkin } from "./skins/MenuToggleSkin";
 
 /**
  * Komponen MenuToggle yang menggunakan arsitektur Skin.
  * Depend pada Skins + Modules (aturan 16).
  */
-const MenuToggle = ({ 
-  isOpen, 
-  onClick, 
-  theme, 
-  className, 
-  style 
-}: { 
-  isOpen: boolean; 
-  onClick: () => void; 
-  theme: any; 
-  className?: string; 
-  style?: React.CSSProperties 
+const MenuToggle = ({
+  isOpen,
+  onClick,
+  theme,
+  className,
+  style,
+}: {
+  isOpen: boolean;
+  onClick: () => void;
+  theme: any;
+  className?: string;
+  style?: React.CSSProperties;
 }) => {
   return (
     <MenuToggleSkin
@@ -26,7 +26,7 @@ const MenuToggle = ({
       className={className}
       style={style}
     />
-  )
-}
+  );
+};
 
-export default MenuToggle
+export default MenuToggle;

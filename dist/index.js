@@ -322,22 +322,42 @@ var sectionConfigSchemas = {
   features: {
     type: "object",
     properties: {
-      title: { type: "string" },
-      description: { type: "string" },
-      icon: { type: "string" },
-      image: { type: "string", format: "uri" }
+      features: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            id: { type: "string" },
+            className: { type: "string" },
+            title: { type: "string" },
+            description: { type: "string" },
+            icon: { type: "string" },
+            image: { type: "string", format: "uri" }
+          },
+          required: ["title", "description"]
+        }
+      }
     },
-    required: ["title", "description"]
+    required: ["features"]
   },
   testimonials: {
     type: "object",
     properties: {
-      quote: { type: "string" },
-      author: { type: "string" },
-      role: { type: "string" },
-      avatar: { type: "string", format: "uri" }
+      testimonials: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            quote: { type: "string" },
+            author: { type: "string" },
+            role: { type: "string" },
+            avatar: { type: "string", format: "uri" }
+          },
+          required: ["quote", "author"]
+        }
+      }
     },
-    required: ["quote", "author"]
+    required: ["testimonials"]
   },
   pricing: {
     type: "object",
@@ -422,13 +442,22 @@ var sectionConfigSchemas = {
   stats: {
     type: "object",
     properties: {
-      number: { type: "string" },
-      label: { type: "string" },
-      icon: { type: "string" },
-      prefix: { type: "string" },
-      suffix: { type: "string" }
+      stats: {
+        type: "array",
+        items: {
+          type: "object",
+          properties: {
+            number: { type: "string" },
+            label: { type: "string" },
+            icon: { type: "string" },
+            prefix: { type: "string" },
+            suffix: { type: "string" }
+          },
+          required: ["number", "label"]
+        }
+      }
     },
-    required: ["number", "label"]
+    required: ["stats"]
   },
   faq: {
     type: "object",
@@ -579,7 +608,8 @@ function defineLandingPage(config) {
     },
     // Render method - returns the raw config for consumption by renderers
     toJSON() {
-      return JSON.parse(JSON.stringify(this));
+      const { id, className, title, description, sections, theme } = this;
+      return { id, className, title, description, sections, theme };
     },
     // Validate the landing page configuration
     validate() {

@@ -51,7 +51,14 @@ declare function defineLandingPage(config: LandingPageConfig): {
     addSection(section: SectionConfig): /*elided*/ any;
     removeSection(id: string): /*elided*/ any;
     updateSection(id: string, updates: Partial<SectionConfig>): /*elided*/ any;
-    toJSON(): any;
+    toJSON(): {
+        id: any;
+        className: any;
+        title: any;
+        description: any;
+        sections: any;
+        theme: any;
+    };
     validate(): string[];
     getSectionsByType(type: string): SectionConfig[];
     isValid(): boolean;
@@ -465,18 +472,33 @@ declare const sectionConfigSchemas: {
     features: {
         type: string;
         properties: {
-            title: {
+            features: {
                 type: string;
-            };
-            description: {
-                type: string;
-            };
-            icon: {
-                type: string;
-            };
-            image: {
-                type: string;
-                format: string;
+                items: {
+                    type: string;
+                    properties: {
+                        id: {
+                            type: string;
+                        };
+                        className: {
+                            type: string;
+                        };
+                        title: {
+                            type: string;
+                        };
+                        description: {
+                            type: string;
+                        };
+                        icon: {
+                            type: string;
+                        };
+                        image: {
+                            type: string;
+                            format: string;
+                        };
+                    };
+                    required: string[];
+                };
             };
         };
         required: string[];
@@ -484,18 +506,27 @@ declare const sectionConfigSchemas: {
     testimonials: {
         type: string;
         properties: {
-            quote: {
+            testimonials: {
                 type: string;
-            };
-            author: {
-                type: string;
-            };
-            role: {
-                type: string;
-            };
-            avatar: {
-                type: string;
-                format: string;
+                items: {
+                    type: string;
+                    properties: {
+                        quote: {
+                            type: string;
+                        };
+                        author: {
+                            type: string;
+                        };
+                        role: {
+                            type: string;
+                        };
+                        avatar: {
+                            type: string;
+                            format: string;
+                        };
+                    };
+                    required: string[];
+                };
             };
         };
         required: string[];
@@ -634,20 +665,29 @@ declare const sectionConfigSchemas: {
     stats: {
         type: string;
         properties: {
-            number: {
+            stats: {
                 type: string;
-            };
-            label: {
-                type: string;
-            };
-            icon: {
-                type: string;
-            };
-            prefix: {
-                type: string;
-            };
-            suffix: {
-                type: string;
+                items: {
+                    type: string;
+                    properties: {
+                        number: {
+                            type: string;
+                        };
+                        label: {
+                            type: string;
+                        };
+                        icon: {
+                            type: string;
+                        };
+                        prefix: {
+                            type: string;
+                        };
+                        suffix: {
+                            type: string;
+                        };
+                    };
+                    required: string[];
+                };
             };
         };
         required: string[];

@@ -1,18 +1,22 @@
-import type { SectionConfig } from '../types'
-import type { FeatureConfig } from '../../components/types'
+import type { SectionConfig } from "../types";
+import type { FeatureConfig } from "../../components/types";
 
 export interface FeaturesSection extends SectionConfig {
-  type: 'features'
+  type: "features";
   config: {
-    features: FeatureConfig[]
-  }
+    features: FeatureConfig[];
+  };
 }
 
-export function createFeaturesSection(config: { features: FeatureConfig[] }, id?: string, className?: string): FeaturesSection {
+export function createFeaturesSection(
+  config: { features: FeatureConfig[] },
+  id?: string,
+  className?: string,
+): FeaturesSection {
   return {
     id: id || `features-${Date.now()}`,
     className,
-    type: 'features',
+    type: "features",
     config,
-  }
+  };
 }

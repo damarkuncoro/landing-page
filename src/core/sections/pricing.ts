@@ -1,16 +1,20 @@
-import type { SectionConfig } from '../types'
-import type { PricingConfig } from '../../components/types'
+import type { SectionConfig } from "../types";
+import type { PricingConfig } from "../../components/types";
 
 export interface PricingSection extends SectionConfig {
-  type: 'pricing'
-  config: PricingConfig
+  type: "pricing";
+  config: PricingConfig;
 }
 
-export function createPricingSection(config: PricingConfig, id?: string, className?: string): PricingSection {
+export function createPricingSection(
+  config: PricingConfig,
+  id?: string,
+  className?: string,
+): PricingSection {
   return {
     id: id || `pricing-${Date.now()}`,
     className,
-    type: 'pricing',
+    type: "pricing",
     config,
-  }
+  };
 }

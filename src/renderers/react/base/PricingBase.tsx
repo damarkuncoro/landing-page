@@ -1,32 +1,35 @@
-import React from 'react'
-import type { PricingContractProps } from '../contracts/PricingContract'
-import { Container, Box, Flex } from './LayoutBase'
-import Button from '../Button'
+import React from "react";
+import type { PricingContractProps } from "../contracts/PricingContract";
+import { Container, Box } from "./LayoutBase";
+import Button from "../Button";
 
 /**
  * Base UI untuk Pricing Section.
  * Memisahkan struktur DOM dari styling.
  * Depend pada UI Contract (aturan 13).
  */
-export const PricingBase = React.forwardRef<HTMLElement, PricingContractProps & { theme: any }>((props, ref) => {
-  const { 
-    plans, 
-    className, 
-    style, 
-    containerStyle, 
-    gridStyle, 
-    planStyle, 
-    featuredBadgeStyle, 
-    titleStyle, 
-    descriptionStyle, 
-    priceContainerStyle, 
-    priceStyle, 
-    periodStyle, 
-    featuresListStyle, 
-    featureItemStyle, 
+export const PricingBase = React.forwardRef<
+  HTMLElement,
+  PricingContractProps & { theme: any }
+>((props, ref) => {
+  const {
+    plans,
+    className,
+    style,
+    containerStyle,
+    gridStyle,
+    planStyle,
+    featuredBadgeStyle,
+    titleStyle,
+    descriptionStyle,
+    priceContainerStyle,
+    priceStyle,
+    periodStyle,
+    featuresListStyle,
+    featureItemStyle,
     checkIcon,
-    theme 
-  } = props
+    theme,
+  } = props;
 
   return (
     <Box as="section" ref={ref} className={className} style={style}>
@@ -36,22 +39,26 @@ export const PricingBase = React.forwardRef<HTMLElement, PricingContractProps & 
             <Box
               key={plan.id}
               className={plan.className}
-              style={typeof planStyle === 'function' ? planStyle(plan) : planStyle}
+              style={
+                typeof planStyle === "function" ? planStyle(plan) : planStyle
+              }
             >
-              {plan.featured && (
-                <Box style={featuredBadgeStyle}>
-                  Popular
-                </Box>
-              )}
+              {plan.featured && <Box style={featuredBadgeStyle}>Popular</Box>}
               <Box as="h3" style={titleStyle}>
                 {plan.title}
               </Box>
-              <Box as="p" style={descriptionStyle}>{plan.description}</Box>
+              <Box as="p" style={descriptionStyle}>
+                {plan.description}
+              </Box>
               <Box style={priceContainerStyle}>
                 <Box as="span" style={priceStyle}>
                   {plan.price}
                 </Box>
-                {plan.period && <Box as="span" style={periodStyle}>/{plan.period}</Box>}
+                {plan.period && (
+                  <Box as="span" style={periodStyle}>
+                    /{plan.period}
+                  </Box>
+                )}
               </Box>
               <Box as="ul" style={featuresListStyle}>
                 {plan.features.map((feature, index) => (
@@ -79,7 +86,7 @@ export const PricingBase = React.forwardRef<HTMLElement, PricingContractProps & 
         </Box>
       </Container>
     </Box>
-  )
-})
+  );
+});
 
-PricingBase.displayName = 'PricingBase'
+PricingBase.displayName = "PricingBase";

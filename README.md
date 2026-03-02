@@ -1,5 +1,9 @@
 # @damarkuncoro/landing-page
 
+[![npm version](https://img.shields.io/npm/v/%40damarkuncoro%2Flanding-page)](https://www.npmjs.com/package/@damarkuncoro/landing-page)
+[![npm downloads](https://img.shields.io/npm/dm/%40damarkuncoro%2Flanding-page)](https://www.npmjs.com/package/@damarkuncoro/landing-page)
+[![license](https://img.shields.io/npm/l/%40damarkuncoro%2Flanding-page)](./LICENSE)
+
 Config-driven landing page library for building beautiful, responsive landing pages with minimal code.
 
 ## Features

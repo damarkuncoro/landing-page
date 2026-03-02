@@ -1,33 +1,33 @@
-import type { ThemeConfig } from './types'
+import type { ThemeConfig } from "./types";
 
 export const defaultTheme: ThemeConfig = {
   colors: {
-    primary: '#3b82f6',
-    secondary: '#8b5cf6',
-    accent: '#10b981',
-    background: '#ffffff',
-    text: '#1f2937',
-    muted: '#6b7280',
+    primary: "#3b82f6",
+    secondary: "#8b5cf6",
+    accent: "#10b981",
+    background: "#ffffff",
+    text: "#1f2937",
+    muted: "#6b7280",
   },
   spacing: {
-    xs: '0.25rem',
-    sm: '0.5rem',
-    md: '1rem',
-    lg: '1.5rem',
-    xl: '2rem',
+    xs: "0.25rem",
+    sm: "0.5rem",
+    md: "1rem",
+    lg: "1.5rem",
+    xl: "2rem",
   },
   fonts: {
-    heading: 'system-ui, -apple-system, sans-serif',
-    body: 'system-ui, -apple-system, sans-serif',
-    mono: 'monospace',
+    heading: "system-ui, -apple-system, sans-serif",
+    body: "system-ui, -apple-system, sans-serif",
+    mono: "monospace",
   },
   breakpoints: {
-    sm: '640px',
-    md: '768px',
-    lg: '1024px',
-    xl: '1280px',
+    sm: "640px",
+    md: "768px",
+    lg: "1024px",
+    xl: "1280px",
   },
-}
+};
 
 export function createTheme(config?: Partial<ThemeConfig>): ThemeConfig {
   return {
@@ -49,41 +49,53 @@ export function createTheme(config?: Partial<ThemeConfig>): ThemeConfig {
       ...defaultTheme.breakpoints,
       ...config?.breakpoints,
     },
-  }
+  };
 }
 
 export function validateTheme(theme: Partial<ThemeConfig>): string[] {
-  const errors: string[] = []
+  const errors: string[] = [];
 
   if (theme.colors) {
-    const requiredColors = ['primary', 'secondary', 'accent', 'background', 'text', 'muted'] as const
-    requiredColors.forEach(color => {
-      const colorValue = (theme.colors as any)[color]
-      if (colorValue && !/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(colorValue)) {
-        errors.push(`Invalid color format for ${color}: ${colorValue}`)
+    const requiredColors = [
+      "primary",
+      "secondary",
+      "accent",
+      "background",
+      "text",
+      "muted",
+    ] as const;
+    requiredColors.forEach((color) => {
+      const colorValue = (theme.colors as any)[color];
+      if (
+        colorValue &&
+        !/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(colorValue)
+      ) {
+        errors.push(`Invalid color format for ${color}: ${colorValue}`);
       }
-    })
+    });
   }
 
   if (theme.spacing) {
-    const requiredSpacing = ['xs', 'sm', 'md', 'lg', 'xl'] as const
-    requiredSpacing.forEach(size => {
-      const spacingValue = (theme.spacing as any)[size]
+    const requiredSpacing = ["xs", "sm", "md", "lg", "xl"] as const;
+    requiredSpacing.forEach((size) => {
+      const spacingValue = (theme.spacing as any)[size];
       if (spacingValue && !/^\d+(\.\d+)?(px|rem|em)$/.test(spacingValue)) {
-        errors.push(`Invalid spacing format for ${size}: ${spacingValue}`)
+        errors.push(`Invalid spacing format for ${size}: ${spacingValue}`);
       }
-    })
+    });
   }
 
   if (theme.breakpoints) {
-    const requiredBreakpoints = ['sm', 'md', 'lg', 'xl'] as const
-    requiredBreakpoints.forEach(breakpoint => {
-      const breakpointValue = (theme.breakpoints as any)[breakpoint]
+    const requiredBreakpoints = ["sm", "md", "lg", "xl"] as const;
+    requiredBreakpoints.forEach((breakpoint) => {
+      const breakpointValue = (theme.breakpoints as any)[breakpoint];
       if (breakpointValue && !/^\d+(px|em|rem)$/.test(breakpointValue)) {
-        errors.push(`Invalid breakpoint format for ${breakpoint}: ${breakpointValue}`)
+        errors.push(
+          `Invalid breakpoint format for ${breakpoint}: ${breakpointValue}`,
+        );
       }
-    })
+    });
   }
 
-  return errors
+  return errors;
 }

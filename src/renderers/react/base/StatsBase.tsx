@@ -1,26 +1,28 @@
-import React from 'react'
-import type { StatsContractProps } from '../contracts/StatsContract'
-import { Container, Box, Flex } from './LayoutBase'
+import React from "react";
+import type { StatsContractProps } from "../contracts/StatsContract";
+import { Container, Box } from "./LayoutBase";
 
 /**
  * Base UI untuk Stats Section.
  * Memisahkan struktur DOM dari styling.
  * Depend pada UI Contract (aturan 13).
  */
-export const StatsBase = React.forwardRef<HTMLElement, StatsContractProps & { theme: any }>((props, ref) => {
-  const { 
-    stats, 
-    className, 
-    style, 
-    containerStyle, 
-    gridStyle, 
-    statStyle, 
-    iconStyle, 
-    numberContainerStyle, 
-    numberStyle, 
-    labelStyle, 
-    theme 
-  } = props
+export const StatsBase = React.forwardRef<
+  HTMLElement,
+  StatsContractProps & { theme: any }
+>((props, ref) => {
+  const {
+    stats,
+    className,
+    style,
+    containerStyle,
+    gridStyle,
+    statStyle,
+    iconStyle,
+    numberContainerStyle,
+    numberStyle,
+    labelStyle,
+  } = props;
 
   return (
     <Box as="section" ref={ref} className={className} style={style}>
@@ -30,17 +32,29 @@ export const StatsBase = React.forwardRef<HTMLElement, StatsContractProps & { th
             <Box key={stat.id} className={stat.className} style={statStyle}>
               {stat.icon && <Box style={iconStyle}>{stat.icon}</Box>}
               <Box style={numberContainerStyle}>
-                {stat.prefix && <Box as="span" style={numberStyle}>{stat.prefix}</Box>}
-                <Box as="span" style={numberStyle}>{stat.number}</Box>
-                {stat.suffix && <Box as="span" style={numberStyle}>{stat.suffix}</Box>}
+                {stat.prefix && (
+                  <Box as="span" style={numberStyle}>
+                    {stat.prefix}
+                  </Box>
+                )}
+                <Box as="span" style={numberStyle}>
+                  {stat.number}
+                </Box>
+                {stat.suffix && (
+                  <Box as="span" style={numberStyle}>
+                    {stat.suffix}
+                  </Box>
+                )}
               </Box>
-              <Box as="p" style={labelStyle}>{stat.label}</Box>
+              <Box as="p" style={labelStyle}>
+                {stat.label}
+              </Box>
             </Box>
           ))}
         </Box>
       </Container>
     </Box>
-  )
-})
+  );
+});
 
-StatsBase.displayName = 'StatsBase'
+StatsBase.displayName = "StatsBase";

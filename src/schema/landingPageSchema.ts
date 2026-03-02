@@ -1,197 +1,216 @@
-import type { LandingPageConfig, SectionType, ComponentType } from '../core/types'
-import type { ButtonConfig, HeroConfig, FeatureConfig, TestimonialConfig, FooterConfig, PricingConfig, CtaConfig } from '../components/types'
-
 // Landing Page Schema (JSON Schema for validation and documentation)
 export const landingPageSchema = {
-  $id: 'urn:landing-page:schema',
-  title: 'Landing Page',
-  description: 'Configuration for a config-driven landing page',
-  type: 'object',
+  $id: "urn:landing-page:schema",
+  title: "Landing Page",
+  description: "Configuration for a config-driven landing page",
+  type: "object",
   properties: {
     id: {
-      type: 'string',
-      description: 'Unique identifier for the landing page',
+      type: "string",
+      description: "Unique identifier for the landing page",
     },
     className: {
-      type: 'string',
-      description: 'CSS class name for the landing page container',
+      type: "string",
+      description: "CSS class name for the landing page container",
     },
     title: {
-      type: 'string',
-      description: 'Page title for SEO and accessibility',
+      type: "string",
+      description: "Page title for SEO and accessibility",
       minLength: 1,
     },
     description: {
-      type: 'string',
-      description: 'Page description for SEO',
+      type: "string",
+      description: "Page description for SEO",
       minLength: 1,
     },
     sections: {
-      type: 'array',
-      description: 'Sections that make up the landing page',
+      type: "array",
+      description: "Sections that make up the landing page",
       minItems: 1,
       items: {
-        $ref: '#/definitions/Section',
+        $ref: "#/definitions/Section",
       },
     },
     theme: {
-      $ref: '#/definitions/Theme',
+      $ref: "#/definitions/Theme",
     },
   },
-  required: ['title', 'description', 'sections'],
+  required: ["title", "description", "sections"],
   definitions: {
     Section: {
-      type: 'object',
+      type: "object",
       properties: {
         id: {
-          type: 'string',
-          description: 'Unique identifier for the section',
+          type: "string",
+          description: "Unique identifier for the section",
         },
         className: {
-          type: 'string',
-          description: 'CSS class name for the section',
+          type: "string",
+          description: "CSS class name for the section",
         },
         type: {
-          type: 'string',
-          description: 'Section type',
-          enum: ['hero', 'features', 'testimonials', 'pricing', 'cta', 'footer', 'stats', 'faq', 'header'],
+          type: "string",
+          description: "Section type",
+          enum: [
+            "hero",
+            "features",
+            "testimonials",
+            "pricing",
+            "cta",
+            "footer",
+            "stats",
+            "faq",
+            "header",
+          ],
         },
         config: {
-          type: 'object',
-          description: 'Section configuration',
+          type: "object",
+          description: "Section configuration",
         },
       },
-      required: ['type', 'config'],
+      required: ["type", "config"],
     },
     Theme: {
-      type: 'object',
+      type: "object",
       properties: {
         colors: {
-          $ref: '#/definitions/Colors',
+          $ref: "#/definitions/Colors",
         },
         spacing: {
-          $ref: '#/definitions/Spacing',
+          $ref: "#/definitions/Spacing",
         },
         fonts: {
-          $ref: '#/definitions/Fonts',
+          $ref: "#/definitions/Fonts",
         },
         breakpoints: {
-          $ref: '#/definitions/Breakpoints',
+          $ref: "#/definitions/Breakpoints",
         },
       },
     },
     Colors: {
-      type: 'object',
+      type: "object",
       properties: {
         primary: {
-          type: 'string',
-          description: 'Primary brand color',
-          pattern: '^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$',
+          type: "string",
+          description: "Primary brand color",
+          pattern: "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$",
         },
         secondary: {
-          type: 'string',
-          description: 'Secondary brand color',
-          pattern: '^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$',
+          type: "string",
+          description: "Secondary brand color",
+          pattern: "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$",
         },
         accent: {
-          type: 'string',
-          description: 'Accent color',
-          pattern: '^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$',
+          type: "string",
+          description: "Accent color",
+          pattern: "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$",
         },
         background: {
-          type: 'string',
-          description: 'Background color',
-          pattern: '^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$',
+          type: "string",
+          description: "Background color",
+          pattern: "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$",
         },
         text: {
-          type: 'string',
-          description: 'Text color',
-          pattern: '^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$',
+          type: "string",
+          description: "Text color",
+          pattern: "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$",
         },
         muted: {
-          type: 'string',
-          description: 'Muted text color',
-          pattern: '^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$',
+          type: "string",
+          description: "Muted text color",
+          pattern: "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$",
         },
       },
-      required: ['primary', 'secondary', 'accent', 'background', 'text', 'muted'],
+      required: [
+        "primary",
+        "secondary",
+        "accent",
+        "background",
+        "text",
+        "muted",
+      ],
     },
     Spacing: {
-      type: 'object',
+      type: "object",
       properties: {
         xs: {
-          type: 'string',
+          type: "string",
           description: 'Extra small spacing unit (e.g., "4px")',
         },
         sm: {
-          type: 'string',
+          type: "string",
           description: 'Small spacing unit (e.g., "8px")',
         },
         md: {
-          type: 'string',
+          type: "string",
           description: 'Medium spacing unit (e.g., "16px")',
         },
         lg: {
-          type: 'string',
+          type: "string",
           description: 'Large spacing unit (e.g., "24px")',
         },
         xl: {
-          type: 'string',
+          type: "string",
           description: 'Extra large spacing unit (e.g., "32px")',
         },
       },
-      required: ['xs', 'sm', 'md', 'lg', 'xl'],
+      required: ["xs", "sm", "md", "lg", "xl"],
     },
     Fonts: {
-      type: 'object',
+      type: "object",
       properties: {
         heading: {
-          type: 'string',
+          type: "string",
           description: 'Font family for headings (e.g., "Roboto, sans-serif")',
         },
         body: {
-          type: 'string',
-          description: 'Font family for body text (e.g., "Open Sans, sans-serif")',
+          type: "string",
+          description:
+            'Font family for body text (e.g., "Open Sans, sans-serif")',
         },
         mono: {
-          type: 'string',
-          description: 'Font family for monospace text (e.g., "Fira Code, monospace")',
+          type: "string",
+          description:
+            'Font family for monospace text (e.g., "Fira Code, monospace")',
         },
       },
-      required: ['heading', 'body', 'mono'],
+      required: ["heading", "body", "mono"],
     },
     Breakpoints: {
-      type: 'object',
+      type: "object",
       properties: {
         sm: {
-          type: 'string',
+          type: "string",
           description: 'Small breakpoint (e.g., "640px")',
         },
         md: {
-          type: 'string',
+          type: "string",
           description: 'Medium breakpoint (e.g., "768px")',
         },
         lg: {
-          type: 'string',
+          type: "string",
           description: 'Large breakpoint (e.g., "1024px")',
         },
         xl: {
-          type: 'string',
+          type: "string",
           description: 'Extra large breakpoint (e.g., "1280px")',
         },
       },
-      required: ['sm', 'md', 'lg', 'xl'],
+      required: ["sm", "md", "lg", "xl"],
     },
     ButtonConfig: {
-      type: 'object',
+      type: "object",
       properties: {
-        text: { type: 'string' },
-        url: { type: 'string', format: 'uri' },
-        variant: { type: 'string', enum: ['primary', 'secondary', 'outline', 'ghost'] },
-        size: { type: 'string', enum: ['sm', 'md', 'lg'] },
-        target: { type: 'string', enum: ['_blank', '_self'] },
+        text: { type: "string" },
+        url: { type: "string", format: "uri" },
+        variant: {
+          type: "string",
+          enum: ["primary", "secondary", "outline", "ghost"],
+        },
+        size: { type: "string", enum: ["sm", "md", "lg"] },
+        target: { type: "string", enum: ["_blank", "_self"] },
       },
-      required: ['text', 'url', 'variant', 'size'],
+      required: ["text", "url", "variant", "size"],
     },
   },
-}
+};

@@ -1,31 +1,34 @@
-import React from 'react'
-import type { TestimonialsContractProps } from '../contracts/TestimonialsContract'
-import { Container, Box, Flex } from './LayoutBase'
+import React from "react";
+import type { TestimonialsContractProps } from "../contracts/TestimonialsContract";
+import { Container, Box, Flex } from "./LayoutBase";
 
 /**
  * Base UI untuk Testimonials Section.
  * Memisahkan struktur DOM dari styling.
  * Depend pada UI Contract (aturan 13).
  */
-export const TestimonialsBase = React.forwardRef<HTMLElement, TestimonialsContractProps & { theme: any }>((props, ref) => {
-  const { 
-    testimonials, 
-    className, 
-    style, 
-    containerStyle, 
-    gridStyle, 
-    testimonialStyle, 
-    quoteIconStyle, 
-    quoteStyle, 
-    authorContainerStyle, 
-    avatarStyle, 
-    authorInfoStyle, 
-    authorNameStyle, 
+export const TestimonialsBase = React.forwardRef<
+  HTMLElement,
+  TestimonialsContractProps & { theme: any }
+>((props, ref) => {
+  const {
+    testimonials,
+    className,
+    style,
+    containerStyle,
+    gridStyle,
+    testimonialStyle,
+    quoteIconStyle,
+    quoteStyle,
+    authorContainerStyle,
+    avatarStyle,
+    authorInfoStyle,
+    authorNameStyle,
     authorRoleStyle,
     onTestimonialMouseEnter,
     onTestimonialMouseLeave,
-    theme 
-  } = props
+    theme,
+  } = props;
 
   return (
     <Box as="section" ref={ref} className={className} style={style}>
@@ -54,7 +57,11 @@ export const TestimonialsBase = React.forwardRef<HTMLElement, TestimonialsContra
               <Box as="blockquote" style={quoteStyle}>
                 {testimonial.quote}
               </Box>
-              <Flex align="center" gap={theme.spacing.md} style={authorContainerStyle}>
+              <Flex
+                align="center"
+                gap={theme.spacing.md}
+                style={authorContainerStyle}
+              >
                 {testimonial.avatar && (
                   <img
                     src={testimonial.avatar}
@@ -64,8 +71,14 @@ export const TestimonialsBase = React.forwardRef<HTMLElement, TestimonialsContra
                   />
                 )}
                 <Box style={authorInfoStyle}>
-                  <Box as="p" style={authorNameStyle}>{testimonial.author}</Box>
-                  {testimonial.role && <Box as="p" style={authorRoleStyle}>{testimonial.role}</Box>}
+                  <Box as="p" style={authorNameStyle}>
+                    {testimonial.author}
+                  </Box>
+                  {testimonial.role && (
+                    <Box as="p" style={authorRoleStyle}>
+                      {testimonial.role}
+                    </Box>
+                  )}
                 </Box>
               </Flex>
             </Box>
@@ -73,7 +86,7 @@ export const TestimonialsBase = React.forwardRef<HTMLElement, TestimonialsContra
         </Box>
       </Container>
     </Box>
-  )
-})
+  );
+});
 
-TestimonialsBase.displayName = 'TestimonialsBase'
+TestimonialsBase.displayName = "TestimonialsBase";

@@ -1,12 +1,12 @@
-import type { LandingPageConfig, SectionConfig } from './types'
-import { createTheme } from './theme'
-import { validateConfig, validateSection } from './validators'
+import type { LandingPageConfig, SectionConfig } from "./types";
+import { createTheme } from "./theme";
+import { validateConfig, validateSection } from "./validators";
 
 export function defineLandingPage(config: LandingPageConfig) {
   // Validate required fields
-  const errors = validateConfig(config)
+  const errors = validateConfig(config);
   if (errors.length > 0) {
-    throw new Error(`Invalid landing page configuration: ${errors.join(', ')}`)
+    throw new Error(`Invalid landing page configuration: ${errors.join(", ")}`);
   }
 
   // Create the landing page instance
@@ -16,56 +16,60 @@ export function defineLandingPage(config: LandingPageConfig) {
 
     // Methods
     getSection(id: string) {
-      return this.sections.find((section) => section.id === id)
+      return this.sections.find((section) => section.id === id);
     },
 
     addSection(section: SectionConfig) {
-      const sectionErrors = validateSection(section)
+      const sectionErrors = validateSection(section);
       if (sectionErrors.length > 0) {
-        throw new Error(`Invalid section: ${sectionErrors.join(', ')}`)
+        throw new Error(`Invalid section: ${sectionErrors.join(", ")}`);
       }
-      this.sections.push(section)
-      return this
+      this.sections.push(section);
+      return this;
     },
 
     removeSection(id: string) {
-      this.sections = this.sections.filter((section) => section.id !== id)
-      return this
+      this.sections = this.sections.filter((section) => section.id !== id);
+      return this;
     },
 
     updateSection(id: string, updates: Partial<SectionConfig>) {
-      const index = this.sections.findIndex((section) => section.id === id)
+      const index = this.sections.findIndex((section) => section.id === id);
       if (index !== -1) {
-        const updatedSection = { ...this.sections[index], ...updates }
-        const sectionErrors = validateSection(updatedSection)
+        const updatedSection = { ...this.sections[index], ...updates };
+        const sectionErrors = validateSection(updatedSection);
         if (sectionErrors.length > 0) {
-          throw new Error(`Invalid section updates: ${sectionErrors.join(', ')}`)
+          throw new Error(
+            `Invalid section updates: ${sectionErrors.join(", ")}`,
+          );
         }
-        this.sections[index] = updatedSection
+        this.sections[index] = updatedSection;
       }
-      return this
+      return this;
     },
 
     // Render method - returns the raw config for consumption by renderers
     toJSON() {
-      return JSON.parse(JSON.stringify(this))
+      const { id, className, title, description, sections, theme } =
+        this as any;
+      return { id, className, title, description, sections, theme };
     },
 
     // Validate the landing page configuration
     validate() {
-      return validateConfig(this)
+      return validateConfig(this);
     },
 
     // Get section by type
     getSectionsByType(type: string) {
-      return this.sections.filter((section) => section.type === type)
+      return this.sections.filter((section) => section.type === type);
     },
 
     // Check if configuration is valid
     isValid() {
-      return this.validate().length === 0
+      return this.validate().length === 0;
     },
-  }
+  };
 
-  return landingPage
+  return landingPage;
 }
