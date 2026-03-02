@@ -48,7 +48,7 @@ const landing = defineLandingPage({
   },
   sections: [
     createHeaderSection({
-      logo: 'https://images.unsplash.com/photo-1542834369-f10ebf06d3cb?w=120&h=120&fit=crop&crop=faces',
+      logo: 'https://picsum.photos/120',
       title: 'Seedy',
       links: [
         { id: 'home', text: 'Beranda', url: '/' },
@@ -65,8 +65,7 @@ const landing = defineLandingPage({
         { id: 'cta-1', text: 'Pesan Sekarang', url: '#order', variant: 'primary', size: 'lg' },
         { id: 'cta-2', text: 'Lihat Menu', url: '#menu', variant: 'secondary', size: 'lg' },
       ],
-      image:
-        'https://images.unsplash.com/photo-1547592180-85f173990554?w=1280&h=640&fit=crop',
+      image: 'https://picsum.photos/1280/640',
       alignment: 'left',
     }),
     createFeaturesSection({
@@ -136,16 +135,14 @@ const landing = defineLandingPage({
           quote: 'Makanannya enak, porsinya pas, delivery tepat waktu.',
           author: 'Andi',
           role: 'Jakarta',
-          avatar:
-            'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face',
+          avatar: 'https://picsum.photos/100',
         },
         {
           id: 'dewi',
           quote: 'Catering andalan untuk acara kantor.',
           author: 'Dewi',
           role: 'Bandung',
-          avatar:
-            'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face',
+          avatar: 'https://picsum.photos/100?2',
         },
         {
           id: 'budi',
@@ -153,8 +150,7 @@ const landing = defineLandingPage({
             'Menu variatif, tepat waktu, dan layanan ramah.',
           author: 'Budi',
           role: 'Sundaya',
-          avatar:
-            'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop&crop=face',
+          avatar: 'https://picsum.photos/100?3',
         },
       ],
     }),
@@ -205,4 +201,3 @@ const landing = defineLandingPage({
 export default function App() {
   return <Landing config={landing} />
 }
-
