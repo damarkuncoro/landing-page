@@ -48,6 +48,7 @@ const landingPageConfig: LandingPageConfig = defineLandingPage({
       ],
     }),
     createHeroSection({
+      skin: 'skin3',
       title: 'Welcome to Our Platform',
       subtitle: 'Discover the future of web development with our config-driven landing page library',
       buttons: [

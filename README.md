@@ -177,7 +177,22 @@ interface HeroConfig {
   video?: string
   buttons: ButtonConfig[]
   alignment?: 'left' | 'center' | 'right'
+  skin?: 'default' | 'skin2' | 'skin3' | 'skin4'
 }
+
+### Hero Skins
+
+#### Default Skin
+Simple centered layout with image below text.
+
+#### Skin 2
+Two-column layout with image on the left and text on the right.
+
+#### Skin 3
+Gradient background with white text.
+
+#### Skin 4
+Video background with dark overlay.
 ```
 
 #### Features Section

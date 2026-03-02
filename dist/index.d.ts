@@ -93,6 +93,7 @@ interface HeroConfig extends BaseConfig {
     video?: string;
     buttons: ButtonConfig[];
     alignment?: "left" | "center" | "right";
+    skin?: "default" | "skin2" | "skin3" | "skin4";
 }
 interface FeatureConfig extends BaseConfig {
     title: string;

@@ -10,6 +10,7 @@ import {
   createCtaSection,
   createFooterSection,
   createStatsSection,
+  createFaqSection,
 } from '@damarkuncoro/landing-page'
 
 const Landing = createReactRenderer()
@@ -166,6 +167,34 @@ const landing = defineLandingPage({
       description:
         'Konsultasi gratis untuk kebutuhan harian, kantor, atau event besar.',
       button: { text: 'Hubungi Kami', url: '#order', variant: 'primary', size: 'lg' },
+    }),
+    createFaqSection({
+      items: [
+        {
+          id: 'faq-1',
+          question: 'Area layanan catering kami?',
+          answer:
+            'Saat ini kami melayani Jakarta, Depok, Tangerang, dan Bekasi. Area lain on-request.',
+        },
+        {
+          id: 'faq-2',
+          question: 'Berapa minimal pemesanan?',
+          answer:
+            'Minimal 10 porsi untuk menu harian. Untuk event, kami menyesuaikan kebutuhan Anda.',
+        },
+        {
+          id: 'faq-3',
+          question: 'Kapan paling lambat pemesanan dilakukan?',
+          answer:
+            'Untuk harian, H-1 pukul 17.00. Untuk event, idealnya H-7 agar persiapan optimal.',
+        },
+        {
+          id: 'faq-4',
+          question: 'Apakah ada opsi vegetarian/diet tertentu?',
+          answer:
+            'Ada. Kami menyediakan menu vegetarian, low-carb, dan custom diet sesuai arahan.',
+        },
+      ],
     }),
     createFooterSection({
       title: 'Seedy',
