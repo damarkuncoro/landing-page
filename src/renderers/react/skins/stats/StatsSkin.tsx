@@ -1,6 +1,6 @@
 import React from "react";
-import { StatsBase } from "../base/StatsBase";
-import type { StatsContractProps } from "../contracts/StatsContract";
+import { StatsBase } from "../../base/StatsBase";
+import type { StatsContractProps } from "../../contracts/StatsContract";
 
 /**
  * Skin untuk Stats Section.

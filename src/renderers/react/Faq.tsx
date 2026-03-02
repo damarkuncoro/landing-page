@@ -1,6 +1,6 @@
 import React from "react";
 import type { FaqConfig } from "../../components/types";
-import { FaqSkin } from "./skins/FaqSkin";
+import { FaqSkin } from "./skins/faq/FaqSkin";
 
 /**
  * Komponen Faq yang menggunakan arsitektur Skin.

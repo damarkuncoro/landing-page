@@ -1,6 +1,6 @@
 import React from "react";
 import type { StatConfig } from "../../components/types";
-import { StatsSkin } from "./skins/StatsSkin";
+import { StatsSkin } from "./skins/stats/StatsSkin";
 
 /**
  * Komponen Stats yang menggunakan arsitektur Skin.

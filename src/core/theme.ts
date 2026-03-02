@@ -17,15 +17,27 @@ export const defaultTheme: ThemeConfig = {
     xl: "2rem",
   },
   fonts: {
-    heading: "system-ui, -apple-system, sans-serif",
-    body: "system-ui, -apple-system, sans-serif",
-    mono: "monospace",
-  },
-  breakpoints: {
-    sm: "640px",
-    md: "768px",
-    lg: "1024px",
-    xl: "1280px",
+   heading: "system-ui, -apple-system, sans-serif",
+   body: "system-ui, -apple-system, sans-serif",
+   mono: "monospace",
+ },
+ typography: {
+   h1: "3rem",
+   h2: "2.25rem",
+   h3: "1.5rem",
+   body: "1.25rem",
+   small: "0.875rem",
+ },
+ fontWeights: {
+   normal: "400",
+   medium: "500",
+   bold: "700",
+ },
+ breakpoints: {
+   sm: "640px",
+   md: "768px",
+   lg: "1024px",
+   xl: "1280px",
   },
 };
 
@@ -44,6 +56,14 @@ export function createTheme(config?: Partial<ThemeConfig>): ThemeConfig {
     fonts: {
       ...defaultTheme.fonts,
       ...config?.fonts,
+    },
+    typography: {
+      ...defaultTheme.typography,
+      ...config?.typography,
+    },
+    fontWeights: {
+      ...defaultTheme.fontWeights,
+      ...config?.fontWeights,
     },
     breakpoints: {
       ...defaultTheme.breakpoints,

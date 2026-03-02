@@ -38,7 +38,7 @@ export const sectionsConfig = [
     ],
   }),
   createHeroSection({
-    skin: 'skin9',
+    skin: 'skin10',
     title: 'Welcome to Our Platform',
     subtitle: 'Discover the future of web development with our config-driven landing page library',
     buttons: [

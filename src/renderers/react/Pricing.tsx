@@ -1,6 +1,6 @@
 import React from "react";
 import type { PricingConfig } from "../../components/types";
-import { PricingSkin } from "./skins/PricingSkin";
+import { PricingSkin } from "./skins/pricing/PricingSkin";
 
 /**
  * Komponen Pricing yang menggunakan arsitektur Skin.

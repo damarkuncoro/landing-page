@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { HeaderBase } from "../base/HeaderBase";
-import type { HeaderContractProps } from "../contracts/HeaderContract";
+import { HeaderBase } from "../../base/HeaderBase";
+import type { HeaderContractProps } from "../../contracts/HeaderContract";
 
 /**
  * Skin untuk Header.

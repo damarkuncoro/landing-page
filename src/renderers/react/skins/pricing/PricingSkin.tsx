@@ -1,6 +1,6 @@
 import React from "react";
-import { PricingBase } from "../base/PricingBase";
-import type { PricingContractProps } from "../contracts/PricingContract";
+import { PricingBase } from "../../base/PricingBase";
+import type { PricingContractProps } from "../../contracts/PricingContract";
 
 /**
  * Skin untuk Pricing Section.

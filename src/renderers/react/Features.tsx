@@ -1,5 +1,5 @@
 import React from "react";
-import { FeaturesSkin } from "./skins/FeaturesSkin";
+import { FeaturesSkin } from "./skins/features/FeaturesSkin";
 
 /**
  * Komponen Features yang menggunakan arsitektur Skin.

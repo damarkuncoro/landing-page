@@ -1,6 +1,6 @@
 import React from "react";
 import type { HeaderConfig } from "../../components/types";
-import { HeaderSkin } from "./skins/HeaderSkin";
+import { HeaderSkin } from "./skins/header/HeaderSkin";
 
 /**
  * Komponen Header yang menggunakan arsitektur Skin.

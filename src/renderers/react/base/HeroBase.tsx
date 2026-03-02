@@ -28,7 +28,7 @@ export const HeroBase = React.forwardRef<
   } = props;
 
   return (
-    <Box as="section" ref={ref} className={className} style={style}>
+    <Box as="section" ref={ref} className={className} style={style} aria-labelledby="hero-title">
       <Container style={containerStyle}>
         <Flex
           direction="column"
@@ -40,13 +40,14 @@ export const HeroBase = React.forwardRef<
                 ? "flex-end"
                 : "flex-start"
           }
-          style={{ textAlign: alignment, ...contentStyle }}
+          style={{ textAlign: alignment === "center" ? "center" : alignment === "right" ? "right" : "left", ...contentStyle }}
         >
           <Box>
             <h1
+              id="hero-title"
               style={{
-                fontSize: "3rem",
-                fontWeight: "bold",
+                fontSize: theme.typography.h1,
+                fontWeight: theme.fontWeights.bold,
                 color: theme.colors.text,
                 marginBottom: theme.spacing.md,
                 lineHeight: "1.2",
@@ -56,7 +57,7 @@ export const HeroBase = React.forwardRef<
             </h1>
             <p
               style={{
-                fontSize: "1.25rem",
+                fontSize: theme.typography.body,
                 color: theme.colors.muted,
                 marginBottom: theme.spacing.lg,
                 maxWidth: "600px",
@@ -67,38 +68,44 @@ export const HeroBase = React.forwardRef<
               {subtitle}
             </p>
           </Box>
-          {image && (
-            <img
-              src={image}
-              alt={title || "Hero"}
-              style={{
-                maxWidth: "100%",
-                borderRadius: "0.5rem",
-                boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
-              }}
-              loading="lazy"
-            />
+          {(image || video) && (
+            <Box>
+              {image && (
+                <img
+                  src={image}
+                  alt={title || "Hero"}
+                  style={{
+                    maxWidth: "100%",
+                    borderRadius: "0.5rem",
+                    boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
+                  }}
+                  loading="lazy"
+                />
+              )}
+              {video && (
+                <video
+                  src={video}
+                  controls
+                  style={{
+                    maxWidth: "100%",
+                    borderRadius: "0.5rem",
+                    boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
+                  }}
+                />
+              )}
+            </Box>
           )}
-          {video && (
-            <video
-              src={video}
-              controls
-              style={{
-                maxWidth: "100%",
-                borderRadius: "0.5rem",
-                boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
-              }}
-            />
+          {buttons?.length > 0 && (
+            <Flex
+              gap={theme.spacing.md}
+              wrap="wrap"
+              justify={alignment === "center" ? "center" : "flex-start"}
+            >
+              {buttons.map((button) => (
+                <Button key={button.id} config={button} theme={theme} />
+              ))}
+            </Flex>
           )}
-          <Flex
-            gap={theme.spacing.md}
-            wrap="wrap"
-            justify={alignment === "center" ? "center" : "flex-start"}
-          >
-            {buttons.map((button) => (
-              <Button key={button.id} config={button} theme={theme} />
-            ))}
-          </Flex>
         </Flex>
       </Container>
     </Box>

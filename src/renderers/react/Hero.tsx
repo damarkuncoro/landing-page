@@ -1,14 +1,15 @@
 import React from "react";
 import type { HeroConfig } from "../../components/types";
-import { HeroSkin } from "./skins/HeroSkin";
-import { HeroSkin2 } from "./skins/HeroSkin2";
-import { HeroSkin3 } from "./skins/HeroSkin3";
-import { HeroSkin4 } from "./skins/HeroSkin4";
-import { HeroSkin5 } from "./skins/HeroSkin5";
-import { HeroSkin6 } from "./skins/HeroSkin6";
-import { HeroSkin7 } from "./skins/HeroSkin7";
-import { HeroSkin8 } from "./skins/HeroSkin8";
-import { HeroSkin9 } from "./skins/HeroSkin9";
+import { HeroSkin } from "./skins/hero/HeroSkin";
+import { HeroSkin2 } from "./skins/hero/HeroSkin2";
+import { HeroSkin3 } from "./skins/hero/HeroSkin3";
+import { HeroSkin4 } from "./skins/hero/HeroSkin4";
+import { HeroSkin5 } from "./skins/hero/HeroSkin5";
+import { HeroSkin6 } from "./skins/hero/HeroSkin6";
+import { HeroSkin7 } from "./skins/hero/HeroSkin7";
+import { HeroSkin8 } from "./skins/hero/HeroSkin8";
+import { HeroSkin9 } from "./skins/hero/HeroSkin9";
+import { HeroSkin10 } from "./skins/hero/HeroSkin10";
 
 /**
  * Komponen Hero yang menggunakan arsitektur Skin.
@@ -32,6 +33,8 @@ const Hero = ({ config, theme }: { config: HeroConfig; theme: any }) => {
       return <HeroSkin8 {...config} theme={theme} />;
     case "skin9":
       return <HeroSkin9 {...config} theme={theme} />;
+    case "skin10":
+      return <HeroSkin10 {...config} theme={theme} />;
     default:
       return <HeroSkin {...config} theme={theme} />;
   }

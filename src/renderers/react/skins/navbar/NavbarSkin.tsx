@@ -1,6 +1,6 @@
 import React from "react";
-import { NavbarBase } from "../base/NavbarBase";
-import type { NavbarContractProps } from "../contracts/NavbarContract";
+import { NavbarBase } from "../../base/NavbarBase";
+import type { NavbarContractProps } from "../../contracts/NavbarContract";
 
 /**
  * Skin untuk Navbar.

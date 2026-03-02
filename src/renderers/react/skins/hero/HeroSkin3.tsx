@@ -1,17 +1,18 @@
 import React from "react";
-import { HeroBase } from "../base/HeroBase";
-import type { HeroContractProps } from "../contracts/HeroContract";
+import { HeroBase } from "../../base/HeroBase";
+import type { HeroContractProps } from "../../contracts/HeroContract";
 
 /**
- * Skin 5 untuk Hero Section.
- * Gambar di atas dengan teks di bawah, latar belakang berwarna terang.
+ * Skin 3 untuk Hero Section.
+ * Latar belakang gradien dengan teks putih.
  */
-export const HeroSkin5 = (props: HeroContractProps & { theme: any }) => {
+export const HeroSkin3 = (props: HeroContractProps & { theme: any }) => {
   const { theme, ...config } = props;
 
   const sectionStyle: React.CSSProperties = {
-    padding: "6rem 0",
-    backgroundColor: "#f8fafc",
+    padding: "8rem 0",
+    background: `linear-gradient(135deg, ${theme.colors.primary} 0%, ${theme.colors.secondary} 100%)`,
+    color: "#ffffff",
     ...config.style,
   };
 
@@ -31,16 +32,17 @@ export const HeroSkin5 = (props: HeroContractProps & { theme: any }) => {
     ...config.contentStyle,
   };
 
-  const imageStyle: React.CSSProperties = {
-    maxWidth: "80%",
-    borderRadius: "0.5rem",
-    boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
-  };
-
   return (
     <HeroBase
       {...config}
-      theme={theme}
+      theme={{
+        ...theme,
+        colors: {
+          ...theme.colors,
+          text: "#ffffff",
+          muted: "rgba(255, 255, 255, 0.8)",
+        },
+      }}
       style={sectionStyle}
       containerStyle={containerStyle}
       contentStyle={contentStyle}

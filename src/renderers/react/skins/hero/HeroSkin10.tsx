@@ -1,34 +1,38 @@
 import React from "react";
-import { HeroBase } from "../base/HeroBase";
-import type { HeroContractProps } from "../contracts/HeroContract";
+import { HeroBase } from "../../base/HeroBase";
+import type { HeroContractProps } from "../../contracts/HeroContract";
 
 /**
- * Skin 6 untuk Hero Section.
- * Gambar di sebelah kanan dengan teks di kiri, latar belakang hitam dengan gradien.
+ * Skin 10 untuk Hero Section.
+ * Full screen hero dengan latar belakang gradien dan konten di tengah.
  */
-export const HeroSkin6 = (props: HeroContractProps & { theme: any }) => {
+export const HeroSkin10 = (props: HeroContractProps & { theme: any }) => {
   const { theme, ...config } = props;
 
   const sectionStyle: React.CSSProperties = {
-    padding: "8rem 0",
+    minHeight: "100vh",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
     backgroundColor: "#000",
-    backgroundImage: "linear-gradient(to right, #000, #1a1a1a)",
+    backgroundImage: "linear-gradient(135deg, #000, #1a1a1a)",
     color: "#fff",
+    padding: "0 1rem",
     ...config.style,
   };
 
   const containerStyle: React.CSSProperties = {
     maxWidth: "1200px",
     margin: "0 auto",
-    padding: "0 1rem",
     ...config.containerStyle,
   };
 
   const contentStyle: React.CSSProperties = {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
+    display: "flex",
+    flexDirection: "column",
     gap: theme.spacing.xl,
     alignItems: "center",
+    textAlign: "center",
     ...config.contentStyle,
   };
 

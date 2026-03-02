@@ -1,6 +1,6 @@
 import React from "react";
 import type { ButtonConfig } from "../../components/types";
-import { ButtonSkin } from "./skins/ButtonSkin";
+import { ButtonSkin } from "./skins/button/ButtonSkin";
 
 /**
  * Komponen Button yang menggunakan arsitektur Skin.

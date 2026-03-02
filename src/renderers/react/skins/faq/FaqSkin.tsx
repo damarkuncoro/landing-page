@@ -1,6 +1,6 @@
 import React from "react";
-import { FaqBase } from "../base/FaqBase";
-import type { FaqContractProps } from "../contracts/FaqContract";
+import { FaqBase } from "../../base/FaqBase";
+import type { FaqContractProps } from "../../contracts/FaqContract";
 
 /**
  * Skin untuk Faq Section.

@@ -1,7 +1,7 @@
 import React from "react";
-import { CtaBase } from "../base/CtaBase";
-import type { CtaContractProps } from "../contracts/CtaContract";
-import { getBestContrastColor } from "../../../core/utils/contrast";
+import { CtaBase } from "../../base/CtaBase";
+import type { CtaContractProps } from "../../contracts/CtaContract";
+import { getBestContrastColor } from "../../../../core/utils/contrast";
 
 /**
  * Skin untuk Cta Section.

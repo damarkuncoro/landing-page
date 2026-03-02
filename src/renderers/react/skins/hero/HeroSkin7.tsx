@@ -1,6 +1,6 @@
 import React from "react";
-import { HeroBase } from "../base/HeroBase";
-import type { HeroContractProps } from "../contracts/HeroContract";
+import { HeroBase } from "../../base/HeroBase";
+import type { HeroContractProps } from "../../contracts/HeroContract";
 
 /**
  * Skin 7 untuk Hero Section.

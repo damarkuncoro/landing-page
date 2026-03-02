@@ -13,7 +13,7 @@ export const sectionConfigSchemas = {
         items: { $ref: "urn:landing-page:schema#/definitions/ButtonConfig" },
       },
       alignment: { type: "string", enum: ["left", "center", "right"] },
-      skin: { type: "string", enum: ["default", "skin2", "skin3", "skin4", "skin5", "skin6", "skin7", "skin8", "skin9"] },
+      skin: { type: "string", enum: ["default", "skin2", "skin3", "skin4", "skin5", "skin6", "skin7", "skin8", "skin9", "skin10"] },
     },
     required: ["title", "subtitle", "buttons"],
   },

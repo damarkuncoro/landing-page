@@ -33,6 +33,18 @@ interface ThemeConfig {
         body: string;
         mono: string;
     };
+    typography: {
+        h1: string;
+        h2: string;
+        h3: string;
+        body: string;
+        small: string;
+    };
+    fontWeights: {
+        normal: string;
+        medium: string;
+        bold: string;
+    };
     breakpoints: {
         sm: string;
         md: string;
@@ -93,7 +105,7 @@ interface HeroConfig extends BaseConfig {
     video?: string;
     buttons: ButtonConfig[];
     alignment?: "left" | "center" | "right";
-    skin?: "default" | "skin2" | "skin3" | "skin4" | "skin5" | "skin6" | "skin7" | "skin8" | "skin9";
+    skin?: "default" | "skin2" | "skin3" | "skin4" | "skin5" | "skin6" | "skin7" | "skin8" | "skin9" | "skin10";
 }
 interface FeatureConfig extends BaseConfig {
     title: string;

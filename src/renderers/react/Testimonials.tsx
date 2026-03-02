@@ -1,5 +1,5 @@
 import React from "react";
-import { TestimonialsSkin } from "./skins/TestimonialsSkin";
+import { TestimonialsSkin } from "./skins/testimonials/TestimonialsSkin";
 
 /**
  * Komponen Testimonials yang menggunakan arsitektur Skin.

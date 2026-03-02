@@ -40,13 +40,25 @@ export interface ThemeConfig {
     xl: string;
   };
   fonts: {
-    heading: string;
-    body: string;
-    mono: string;
-  };
-  breakpoints: {
-    sm: string;
-    md: string;
+   heading: string;
+   body: string;
+   mono: string;
+ };
+ typography: {
+   h1: string;
+   h2: string;
+   h3: string;
+   body: string;
+   small: string;
+ };
+ fontWeights: {
+   normal: string;
+   medium: string;
+   bold: string;
+ };
+ breakpoints: {
+   sm: string;
+   md: string;
     lg: string;
     xl: string;
   };

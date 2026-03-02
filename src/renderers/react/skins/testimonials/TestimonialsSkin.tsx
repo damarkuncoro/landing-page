@@ -1,6 +1,6 @@
 import React from "react";
-import { TestimonialsBase } from "../base/TestimonialsBase";
-import type { TestimonialsContractProps } from "../contracts/TestimonialsContract";
+import { TestimonialsBase } from "../../base/TestimonialsBase";
+import type { TestimonialsContractProps } from "../../contracts/TestimonialsContract";
 
 /**
  * Skin untuk Testimonials Section.

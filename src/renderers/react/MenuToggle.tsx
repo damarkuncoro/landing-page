@@ -1,5 +1,5 @@
 import React from "react";
-import { MenuToggleSkin } from "./skins/MenuToggleSkin";
+import { MenuToggleSkin } from "./skins/menu-toggle/MenuToggleSkin";
 
 /**
  * Komponen MenuToggle yang menggunakan arsitektur Skin.

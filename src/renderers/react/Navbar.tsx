@@ -1,5 +1,5 @@
 import React from "react";
-import { NavbarSkin } from "./skins/NavbarSkin";
+import { NavbarSkin } from "./skins/navbar/NavbarSkin";
 
 /**
  * Komponen Navbar yang menggunakan arsitektur Skin.

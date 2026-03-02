@@ -1,17 +1,17 @@
 import React from "react";
-import { HeroBase } from "../base/HeroBase";
-import type { HeroContractProps } from "../contracts/HeroContract";
+import { HeroBase } from "../../base/HeroBase";
+import type { HeroContractProps } from "../../contracts/HeroContract";
 
 /**
- * Skin untuk Hero Section.
- * Menggabungkan Base UI dengan styling (Tailwind/inline).
- * Depend pada Base UI + Tailwind (optional) + Contract (aturan 15).
+ * Skin 2 untuk Hero Section.
+ * Gambar di sebelah kiri dengan teks di sebelah kanan.
  */
-export const HeroSkin = (props: HeroContractProps & { theme: any }) => {
+export const HeroSkin2 = (props: HeroContractProps & { theme: any }) => {
   const { theme, ...config } = props;
 
   const sectionStyle: React.CSSProperties = {
-    padding: "4rem 0",
+    padding: "6rem 0",
+    backgroundColor: theme.colors.background,
     ...config.style,
   };
 
@@ -23,11 +23,10 @@ export const HeroSkin = (props: HeroContractProps & { theme: any }) => {
   };
 
   const contentStyle: React.CSSProperties = {
-    display: "flex",
-    flexDirection: "column",
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
     gap: theme.spacing.xl,
-    alignItems: config.alignment || "center",
-    textAlign: config.alignment || "center",
+    alignItems: "center",
     ...config.contentStyle,
   };
 

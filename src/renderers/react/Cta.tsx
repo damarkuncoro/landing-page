@@ -1,6 +1,6 @@
 import React from "react";
 import type { CtaConfig } from "../../components/types";
-import { CtaSkin } from "./skins/CtaSkin";
+import { CtaSkin } from "./skins/cta/CtaSkin";
 
 /**
  * Komponen Cta yang menggunakan arsitektur Skin.

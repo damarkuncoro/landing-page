@@ -1,7 +1,7 @@
 import React from "react";
-import { ButtonBase } from "../base/ButtonBase";
-import type { ButtonContractProps } from "../contracts/ButtonContract";
-import { getBestContrastColor } from "../../../core/utils/contrast";
+import { ButtonBase } from "../../base/ButtonBase";
+import type { ButtonContractProps } from "../../contracts/ButtonContract";
+import { getBestContrastColor } from "../../../../core/utils/contrast";
 
 /**
  * Skin untuk Button.

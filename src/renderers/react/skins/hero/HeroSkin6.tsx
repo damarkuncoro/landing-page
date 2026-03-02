@@ -1,17 +1,19 @@
 import React from "react";
-import { HeroBase } from "../base/HeroBase";
-import type { HeroContractProps } from "../contracts/HeroContract";
+import { HeroBase } from "../../base/HeroBase";
+import type { HeroContractProps } from "../../contracts/HeroContract";
 
 /**
- * Skin 2 untuk Hero Section.
- * Gambar di sebelah kiri dengan teks di sebelah kanan.
+ * Skin 6 untuk Hero Section.
+ * Gambar di sebelah kanan dengan teks di kiri, latar belakang hitam dengan gradien.
  */
-export const HeroSkin2 = (props: HeroContractProps & { theme: any }) => {
+export const HeroSkin6 = (props: HeroContractProps & { theme: any }) => {
   const { theme, ...config } = props;
 
   const sectionStyle: React.CSSProperties = {
-    padding: "6rem 0",
-    backgroundColor: theme.colors.background,
+    padding: "8rem 0",
+    backgroundColor: "#000",
+    backgroundImage: "linear-gradient(to right, #000, #1a1a1a)",
+    color: "#fff",
     ...config.style,
   };
 

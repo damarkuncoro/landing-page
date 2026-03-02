@@ -1,6 +1,6 @@
 import React from "react";
-import { FooterBase } from "../base/FooterBase";
-import type { FooterContractProps } from "../contracts/FooterContract";
+import { FooterBase } from "../../base/FooterBase";
+import type { FooterContractProps } from "../../contracts/FooterContract";
 
 /**
  * Skin untuk Footer Section.

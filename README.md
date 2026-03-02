@@ -208,6 +208,9 @@ Desain dengan latar belakang gradien biru muda dan teks berwarna putih. Gambar d
 
 #### Skin 9
 Title, subtitle, dan buttons di atas gambar.
+
+#### Skin 10
+Full screen hero dengan latar belakang gradien dan konten di tengah.
 ```
 
 #### Features Section

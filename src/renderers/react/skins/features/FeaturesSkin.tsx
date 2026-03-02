@@ -1,6 +1,6 @@
 import React from "react";
-import { FeaturesBase } from "../base/FeaturesBase";
-import type { FeaturesContractProps } from "../contracts/FeaturesContract";
+import { FeaturesBase } from "../../base/FeaturesBase";
+import type { FeaturesContractProps } from "../../contracts/FeaturesContract";
 
 /**
  * Skin untuk Features Section.

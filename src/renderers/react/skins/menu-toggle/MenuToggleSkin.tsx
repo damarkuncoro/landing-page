@@ -1,6 +1,6 @@
 import React from "react";
-import { MenuToggleBase } from "../base/MenuToggleBase";
-import type { MenuToggleContractProps } from "../contracts/MenuToggleContract";
+import { MenuToggleBase } from "../../base/MenuToggleBase";
+import type { MenuToggleContractProps } from "../../contracts/MenuToggleContract";
 
 /**
  * Skin untuk Menu Toggle.
