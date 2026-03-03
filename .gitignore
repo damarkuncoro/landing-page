@@ -1,7 +1,8 @@
 # build
-dist/
-build/
-out/
+dist
+lib
+build
+out
 
 # Logs
 logs
