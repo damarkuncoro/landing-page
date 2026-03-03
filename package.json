@@ -5,13 +5,7 @@
   "main": "lib/cjs/index.js",
   "module": "lib/esm/index.mjs",
   "types": "lib/esm/index.d.mts",
-  "exports": {
-    ".": {
-      "import": "./lib/esm/index.mjs",
-      "require": "./lib/cjs/index.js",
-      "types": "./lib/esm/index.d.mts"
-    }
-  },
+  "exports": "./lib/esm/index.mjs",
   "files": [
     "lib/cjs",
     "lib/esm",
