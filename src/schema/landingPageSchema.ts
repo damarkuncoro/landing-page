@@ -275,6 +275,7 @@ export const landingPageSchema = {
         },
         size: { type: "string", enum: ["sm", "md", "lg"] },
         target: { type: "string", enum: ["_blank", "_self"] },
+        skin: { type: "string", enum: ["default", "tailwind"] },
       },
       required: ["text", "url", "variant", "size"],
     },

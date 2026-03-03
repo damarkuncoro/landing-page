@@ -10,6 +10,7 @@ import { HeroSkin7 } from "./skins/hero/HeroSkin7";
 import { HeroSkin8 } from "./skins/hero/HeroSkin8";
 import { HeroSkin9 } from "./skins/hero/HeroSkin9";
 import { HeroSkin10 } from "./skins/hero/HeroSkin10";
+import { HeroSkinTailwind } from "./skins/hero/HeroSkinTailwind";
 
 /**
  * Komponen Hero yang menggunakan arsitektur Skin.
@@ -35,6 +36,8 @@ const Hero = ({ config }: { config: HeroConfig }) => {
       return <HeroSkin9 {...config} />;
     case "skin10":
       return <HeroSkin10 {...config} />;
+    case "tailwind":
+      return <HeroSkinTailwind {...config} />;
     default:
       return <HeroSkin {...config} />;
   }

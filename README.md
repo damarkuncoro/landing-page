@@ -102,6 +102,112 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 )
 ```
 
+## Using Tailwind CSS
+
+The library supports Tailwind CSS out of the box through Tailwind-based skins. To use Tailwind CSS:
+
+1. Install Tailwind CSS in your project:
+```bash
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
+```
+
+2. Configure Tailwind CSS:
+```javascript
+// tailwind.config.js
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        primary: '#3b82f6',
+        secondary: '#8b5cf6',
+        accent: '#10b981',
+        background: '#ffffff',
+        text: '#1f2937',
+        muted: '#6b7280',
+      },
+    },
+  },
+  plugins: [],
+}
+```
+
+3. Import Tailwind CSS in your main stylesheet:
+```css
+/* index.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+4. Use Tailwind skins in your configuration:
+```typescript
+import { defineLandingPage } from '@damarkuncoro/landing-page'
+
+const landingPage = defineLandingPage({
+  title: 'My Tailwind Landing Page',
+  description: 'A beautiful landing page using Tailwind CSS',
+  sections: [
+    {
+      id: 'hero',
+      type: 'hero',
+      config: {
+        title: 'Welcome to Our Platform',
+        subtitle: 'Discover amazing features that will transform your workflow',
+        buttons: [
+          {
+            id: 'primary-button',
+            text: 'Get Started',
+            url: '/signup',
+            variant: 'primary',
+            size: 'md',
+            skin: 'tailwind',
+          },
+          {
+            id: 'secondary-button',
+            text: 'Learn More',
+            url: '/about',
+            variant: 'secondary',
+            size: 'md',
+            skin: 'tailwind',
+          },
+        ],
+        skin: 'tailwind',
+      },
+    },
+    {
+      id: 'features',
+      type: 'features',
+      config: {
+        features: [
+          {
+            id: 'feature-1',
+            title: 'Fast Performance',
+            description: 'Our platform is optimized for speed and efficiency',
+          },
+          {
+            id: 'feature-2',
+            title: 'Modern Design',
+            description: 'Beautiful, responsive interface that works on all devices',
+          },
+          {
+            id: 'feature-3',
+            title: 'Secure & Reliable',
+            description: 'Enterprise-grade security and reliability',
+          },
+        ],
+        skin: 'tailwind',
+      },
+    },
+  ],
+})
+```
+
 ## Schema & Validation
 
 The library includes comprehensive JSON schemas for validating landing page configurations. You can use these schemas to:
@@ -211,6 +317,9 @@ Title, subtitle, dan buttons di atas gambar.
 
 #### Skin 10
 Full screen hero dengan latar belakang gradien dan konten di tengah.
+
+#### Tailwind Skin
+Tailwind-based skin that uses Tailwind CSS classes for styling. Requires Tailwind CSS to be installed in your project.
 ```
 
 #### Features Section

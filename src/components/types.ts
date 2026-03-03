@@ -6,6 +6,7 @@ export interface ButtonConfig extends WithBaseConfig<{
   variant: "primary" | "secondary" | "outline" | "ghost";
   size: "sm" | "md" | "lg";
   target?: "_blank" | "_self";
+  skin?: "default" | "tailwind";
 }> {}
 
 export interface HeaderConfig extends WithBaseConfig<{
@@ -28,7 +29,7 @@ export interface HeroConfig extends WithBaseConfig<{
   captionsSrc?: string;
   buttons: ButtonConfig[];
   alignment?: "left" | "center" | "right";
-  skin?: "default" | "skin2" | "skin3" | "skin4" | "skin5" | "skin6" | "skin7" | "skin8" | "skin9" | "skin10";
+  skin?: "default" | "skin2" | "skin3" | "skin4" | "skin5" | "skin6" | "skin7" | "skin8" | "skin9" | "skin10" | "tailwind";
 }> {}
 
 export interface FeatureConfig extends WithBaseConfig<{
@@ -36,6 +37,7 @@ export interface FeatureConfig extends WithBaseConfig<{
   description: string;
   icon?: string;
   image?: string;
+  skin?: "default" | "tailwind";
 }> {}
 
 export interface TestimonialConfig extends WithBaseConfig<{
