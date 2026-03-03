@@ -5,6 +5,14 @@ export interface BaseLayoutProps {
   children?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
+  color?: string;
+  fontSize?: string | number;
+  lineHeight?: string | number;
+  backgroundColor?: string;
+  padding?: string | number;
+  margin?: string | number;
+  borderRadius?: string | number;
+  border?: string;
 }
 
 // Box: TIDAK ADA as, TIDAK ADA HTMLAttributes

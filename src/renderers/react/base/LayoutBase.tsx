@@ -14,6 +14,14 @@ interface BaseLayoutProps {
   children?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
+  color?: string;
+  fontSize?: string | number;
+  lineHeight?: string | number;
+  backgroundColor?: string;
+  padding?: string | number;
+  margin?: string | number;
+  borderRadius?: string | number;
+  border?: string;
 }
 
 // Shared style properties type
@@ -29,12 +37,23 @@ const createLayoutComponent = <P extends BaseLayoutProps>(
 ) => {
   const Component = React.forwardRef<HTMLElement, P & { as?: React.ElementType }>((props, ref) => {
     const { as: Element = defaultElement, children, ...restProps } = props;
+    const castProps = props as unknown as BaseLayoutProps;
+    const baseStyle = {
+      color: castProps.color,
+      fontSize: normalizeUnit(castProps.fontSize),
+      lineHeight: normalizeUnit(castProps.lineHeight),
+      backgroundColor: castProps.backgroundColor,
+      padding: normalizeUnit(castProps.padding),
+      margin: normalizeUnit(castProps.margin),
+      borderRadius: normalizeUnit(castProps.borderRadius),
+      border: castProps.border,
+    };
     const resolvedStyle = styleResolver ? styleResolver(props as unknown as P) : undefined;
 
     return (
       <Element
         ref={ref}
-        style={{ ...props.style, ...resolvedStyle }}
+        style={{ ...baseStyle, ...props.style, ...resolvedStyle }}
         {...restProps as any}
       >
         {children}
