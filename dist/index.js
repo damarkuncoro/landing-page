@@ -1403,7 +1403,7 @@ var Button = ({ config }) => {
 };
 var Button_default = Button;
 
-// src/renderers/react/base/heroStyles.ts
+// src/renderers/react/base/HeroStyles.ts
 function getHeroStyles(theme, alignment) {
   return {
     title: {
