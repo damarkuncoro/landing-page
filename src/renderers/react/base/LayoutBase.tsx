@@ -48,7 +48,7 @@ const resolveContainerStyle = (props: {
 export const Box = React.forwardRef<any, BoxProps>((props, ref) => {
   const { as: Component = "div", children, className, style, ...rest } = props;
   return (
-    <Component ref={ref} className={className} style={style} {...rest as any}>
+    <Component ref={ref} className={className} style={style} {...rest}>
       {children}
     </Component>
   );
@@ -65,7 +65,7 @@ export const Flex = React.forwardRef<any, FlexProps>((props, ref) => {
     style,
   });
   return (
-    <Component ref={ref} className={className} style={flexStyle} {...rest as any}>
+    <Component ref={ref} className={className} style={flexStyle} {...rest}>
       {children}
     </Component>
   );
@@ -80,12 +80,13 @@ export const Container = React.forwardRef<any, ContainerProps>((props, ref) => {
     style,
   });
   return (
-    <Component ref={ref} className={className} style={containerStyle} {...rest as any}>
+    <Component ref={ref} className={className} style={containerStyle} {...rest}>
       {children}
     </Component>
   );
 });
 
+// Set display names for better debugging
 Box.displayName = "Box";
 Flex.displayName = "Flex";
 Container.displayName = "Container";
