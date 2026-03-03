@@ -6,46 +6,47 @@ import type { ButtonContractProps } from "../contracts/ButtonContract";
  * Memisahkan struktur DOM dari styling.
  * Depend pada UI Contract (aturan 13).
  */
-export const ButtonBase = React.forwardRef<
-  HTMLAnchorElement,
-  ButtonContractProps
->((props, ref) => {
-  const {
-    text,
-    url,
-    target = "_self",
-    variant: _variant, // Destructure to avoid spreading to DOM
-    size: _size, // Destructure to avoid spreading to DOM
-    className,
-    style,
-    onMouseEnter,
-    onMouseLeave,
-    onFocus,
-    onBlur,
-    onKeyDown,
-    ...rest
-  } = props;
-
-  return (
-    <a
-      ref={ref}
-      href={url}
-      target={target}
-      rel={target === "_blank" ? "noopener noreferrer" : undefined}
-      style={style}
-      className={className}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-      onFocus={onFocus}
-      onBlur={onBlur}
-      onKeyDown={onKeyDown}
-      role="button"
-      tabIndex={0}
-      {...rest}
-    >
-      {text}
-    </a>
-  );
-});
+export const ButtonBase = React.forwardRef(
+  <C extends React.ElementType = "a">(
+    {
+      text,
+      url,
+      target = "_self",
+      variant: _variant, // Destructure to avoid spreading to DOM
+      size: _size, // Destructure to avoid spreading to DOM
+      className,
+      style,
+      onMouseEnter,
+      onMouseLeave,
+      onFocus,
+      onBlur,
+      onKeyDown,
+      as: Component = "a" as unknown as C,
+      ...rest
+    }: ButtonContractProps & { as?: C },
+    ref: React.ComponentPropsWithRef<C>["ref"]
+  ) => {
+    return (
+      <Component
+        ref={ref}
+        href={Component === "a" ? url : undefined}
+        target={Component === "a" ? target : undefined}
+        rel={Component === "a" && target === "_blank" ? "noopener noreferrer" : undefined}
+        style={style}
+        className={className}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+        onFocus={onFocus}
+        onBlur={onBlur}
+        onKeyDown={onKeyDown}
+        role={Component !== "button" && Component !== "a" ? "button" : undefined}
+        tabIndex={Component !== "button" && Component !== "a" ? 0 : undefined}
+        {...rest as any}
+      >
+        {text}
+      </Component>
+    );
+  }
+);
 
 ButtonBase.displayName = "ButtonBase";
