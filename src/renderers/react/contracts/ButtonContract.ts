@@ -6,12 +6,17 @@ import React from "react";
  */
 export interface ButtonContractProps {
   text: string;
-  url: string;
+  url?: string;
   target?: "_blank" | "_self";
-  variant: "primary" | "secondary" | "outline" | "ghost";
+  variant?: "primary" | "secondary" | "outline" | "ghost";
   size?: "sm" | "md" | "lg";
   className?: string;
   style?: React.CSSProperties;
+  disabled?: boolean;
+  loading?: boolean;
+  icon?: React.ReactNode;
+  iconPosition?: "left" | "right";
+  fullWidth?: boolean;
   onMouseEnter?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
   onMouseLeave?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
   onFocus?: (e: React.FocusEvent<HTMLAnchorElement>) => void;

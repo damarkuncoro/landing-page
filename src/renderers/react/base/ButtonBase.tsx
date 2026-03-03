@@ -21,6 +21,11 @@ export const ButtonBase = React.forwardRef(
       onFocus,
       onBlur,
       onKeyDown,
+      disabled = false,
+      loading = false,
+      icon,
+      iconPosition = "left",
+      fullWidth = false,
       as: Component = "a" as unknown as C,
       ...rest
     }: ButtonContractProps & { as?: C },
@@ -32,7 +37,7 @@ export const ButtonBase = React.forwardRef(
         href={Component === "a" ? url : undefined}
         target={Component === "a" ? target : undefined}
         rel={Component === "a" && target === "_blank" ? "noopener noreferrer" : undefined}
-        style={style}
+        style={{ ...style, width: fullWidth ? "100%" : undefined }}
         className={className}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
@@ -41,9 +46,14 @@ export const ButtonBase = React.forwardRef(
         onKeyDown={onKeyDown}
         role={Component !== "button" && Component !== "a" ? "button" : undefined}
         tabIndex={Component !== "button" && Component !== "a" ? 0 : undefined}
+        disabled={disabled}
+        aria-disabled={disabled}
         {...rest as any}
       >
+        {loading && <span className="loading-spinner mr-2">⏳</span>}
+        {icon && iconPosition === "left" && <span className="button-icon mr-2">{icon}</span>}
         {text}
+        {icon && iconPosition === "right" && <span className="button-icon ml-2">{icon}</span>}
       </Component>
     );
   }
