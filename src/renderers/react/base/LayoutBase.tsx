@@ -1,8 +1,8 @@
 import React from "react";
 import type {
-  BoxProps,
-  FlexProps,
-  ContainerProps,
+  BoxOwnProps,
+  FlexOwnProps,
+  ContainerOwnProps,
 } from "../contracts/LayoutContract";
 
 const normalizeUnit = (value?: string | number): string | undefined => {
@@ -45,17 +45,17 @@ const resolveContainerStyle = (props: {
   };
 };
 
-export const Box = React.forwardRef<any, BoxProps>((props, ref) => {
-  const { as: Component = "div", children, className, style, ...rest } = props;
+export const Box = React.forwardRef<HTMLElement, BoxOwnProps & React.HTMLAttributes<HTMLElement> & { as?: React.ElementType }>((props, ref) => {
+  const { as: Component = "div", children, ...rest } = props;
   return (
-    <Component ref={ref} className={className} style={style} {...rest}>
+    <Component ref={ref} {...rest}>
       {children}
     </Component>
   );
 });
 
-export const Flex = React.forwardRef<any, FlexProps>((props, ref) => {
-  const { as: Component = "div", children, className, style, direction = "row", justify = "flex-start", align = "stretch", gap = 0, wrap = "nowrap", ...rest } = props;
+export const Flex = React.forwardRef<HTMLElement, FlexOwnProps & React.HTMLAttributes<HTMLElement> & { as?: React.ElementType }>((props, ref) => {
+  const { as: Component = "div", children, direction = "row", justify = "flex-start", align = "stretch", gap = 0, wrap = "nowrap", style, ...rest } = props;
   const flexStyle = resolveFlexStyle({
     direction,
     justify,
@@ -65,14 +65,14 @@ export const Flex = React.forwardRef<any, FlexProps>((props, ref) => {
     style,
   });
   return (
-    <Component ref={ref} className={className} style={flexStyle} {...rest}>
+    <Component ref={ref} style={flexStyle} {...rest}>
       {children}
     </Component>
   );
 });
 
-export const Container = React.forwardRef<any, ContainerProps>((props, ref) => {
-  const { as: Component = "div", children, className, style, maxWidth, padding, center, ...rest } = props;
+export const Container = React.forwardRef<HTMLElement, ContainerOwnProps & React.HTMLAttributes<HTMLElement> & { as?: React.ElementType }>((props, ref) => {
+  const { as: Component = "div", children, maxWidth, padding, center, style, ...rest } = props;
   const containerStyle = resolveContainerStyle({
     maxWidth,
     padding,
@@ -80,7 +80,7 @@ export const Container = React.forwardRef<any, ContainerProps>((props, ref) => {
     style,
   });
   return (
-    <Component ref={ref} className={className} style={containerStyle} {...rest}>
+    <Component ref={ref} style={containerStyle} {...rest}>
       {children}
     </Component>
   );

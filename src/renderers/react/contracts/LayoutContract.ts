@@ -2,23 +2,22 @@ import React from "react";
 
 /**
  * Kontrak UI untuk Layout Dasar (Box, Flex, Container).
- * ❌ Tidak boleh depend apa pun (aturan 12).
+ * ❌ Tidak boleh depend ke HTML element apa pun
+ * ✅ HANYA own props
  */
 
-// Base properties
+// Base properties (shared)
 export interface BaseLayoutProps {
   children?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
 }
 
-// Box properties
-export interface BoxProps extends BaseLayoutProps, React.HTMLAttributes<HTMLElement> {
-  as?: React.ElementType;
-}
+// Box: TIDAK ADA as, TIDAK ADA HTMLAttributes
+export interface BoxOwnProps extends BaseLayoutProps {}
 
-// Flex properties
-export interface FlexProps extends BoxProps {
+// Flex: hanya behavior layout
+export interface FlexOwnProps extends BoxOwnProps {
   direction?: "row" | "column" | "row-reverse" | "column-reverse";
   justify?: "flex-start" | "flex-end" | "center" | "space-between" | "space-around" | "space-evenly";
   align?: "flex-start" | "flex-end" | "center" | "baseline" | "stretch";
@@ -26,9 +25,14 @@ export interface FlexProps extends BoxProps {
   wrap?: "nowrap" | "wrap" | "wrap-reverse";
 }
 
-// Container properties
-export interface ContainerProps extends BoxProps {
+// Container: layout constraint
+export interface ContainerOwnProps extends BoxOwnProps {
   maxWidth?: string | number;
   padding?: string | number;
   center?: boolean;
 }
+
+// Component props with HTML attributes support
+export type BoxProps = BoxOwnProps & React.HTMLAttributes<HTMLElement> & { as?: React.ElementType };
+export type FlexProps = FlexOwnProps & React.HTMLAttributes<HTMLElement> & { as?: React.ElementType };
+export type ContainerProps = ContainerOwnProps & React.HTMLAttributes<HTMLElement> & { as?: React.ElementType };
