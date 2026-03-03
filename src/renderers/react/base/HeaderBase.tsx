@@ -28,6 +28,11 @@ export const HeaderBase = React.forwardRef<
     onMobileMenuToggle,
     style,
     containerStyle,
+    searchPlaceholder,
+    onSearch,
+    initialSearchValue,
+    languageSelector,
+    themeSwitcher,
   } = props;
 
   const [isScrolled, setIsScrolled] = useState(false);

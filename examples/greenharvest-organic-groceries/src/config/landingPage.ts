@@ -54,7 +54,7 @@ export const greenHarvestLandingPage = defineLandingPage({
           currentTheme: 'light',
         },
         skin: 'tailwind',
-      },
+      } as any,
     },
     {
       id: 'hero',

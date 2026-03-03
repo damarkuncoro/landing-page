@@ -193,9 +193,49 @@ export const sectionConfigSchemas = {
             text: { type: "string" },
             url: { type: "string", format: "uri-reference" },
             target: { type: "string", enum: ["_blank", "_self"] },
+            isActive: { type: "boolean" },
+            isLoading: { type: "boolean" },
+            children: {
+              type: "array",
+              items: { $ref: "#/properties/links/items" },
+            },
           },
-          required: ["text", "url"],
+          required: ["text"],
         },
+      },
+      buttons: {
+        type: "array",
+        items: { $ref: "urn:landing-page:schema#/definitions/ButtonConfig" },
+      },
+      fixed: { type: "boolean" },
+      scrollEffect: { type: "boolean" },
+      skin: { type: "string", enum: ["default", "tailwind"] },
+      searchPlaceholder: { type: "string" },
+      initialSearchValue: { type: "string" },
+      languageSelector: {
+        type: "object",
+        properties: {
+          currentLanguage: { type: "string" },
+          languages: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                code: { type: "string" },
+                name: { type: "string" },
+              },
+              required: ["code", "name"],
+            },
+          },
+        },
+        required: ["currentLanguage", "languages"],
+      },
+      themeSwitcher: {
+        type: "object",
+        properties: {
+          currentTheme: { type: "string", enum: ["light", "dark"] },
+        },
+        required: ["currentTheme"],
       },
     },
     required: ["links"],

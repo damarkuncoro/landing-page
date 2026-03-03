@@ -33,7 +33,7 @@ export const NavbarBase = React.forwardRef<HTMLElement, NavbarContractProps>(
     } = props;
 
     const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-    const [searchQuery, setSearchQuery] = useState(searchValue || "");
+    const [searchQuery, setSearchQuery] = useState(searchValue ?? "");
 
     // Handle outside clicks to close dropdown
     useEffect(() => {
@@ -48,7 +48,7 @@ export const NavbarBase = React.forwardRef<HTMLElement, NavbarContractProps>(
     // Update search query when searchValue prop changes
     useEffect(() => {
       if (searchValue !== undefined) {
-        setSearchQuery(searchValue);
+        setSearchQuery(searchValue ?? "");
       }
     }, [searchValue]);
 
@@ -67,7 +67,7 @@ export const NavbarBase = React.forwardRef<HTMLElement, NavbarContractProps>(
       e.preventDefault();
       e.stopPropagation();
       
-      const newActiveDropdown = activeDropdown === link.id ? null : link.id;
+      const newActiveDropdown = activeDropdown === link.id ? null : (link.id || null);
       setActiveDropdown(newActiveDropdown);
       onDropdownToggle?.(e, link);
     };
