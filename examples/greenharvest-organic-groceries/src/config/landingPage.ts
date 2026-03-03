@@ -7,6 +7,27 @@ export const greenHarvestLandingPage = defineLandingPage({
   theme: organicGroceriesTheme,
   sections: [
     {
+      id: 'header',
+      type: 'header',
+      config: {
+        logo: 'https://picsum.photos/seed/logo/40/40',
+        title: 'GreenHarvest',
+        links: [
+          { text: 'Shop', url: '/shop' },
+          { text: 'Our Story', url: '/about' },
+          { text: 'Farmers', url: '/farmers' },
+          { text: 'Recipes', url: '/recipes' },
+        ],
+        buttons: [
+          { text: 'Login', url: '/login', variant: 'outline' },
+          { text: 'Get Started', url: '/signup', variant: 'primary' },
+        ],
+        fixed: true,
+        scrollEffect: true,
+        skin: 'tailwind',
+      },
+    },
+    {
       id: 'hero',
       type: 'hero',
       config: {

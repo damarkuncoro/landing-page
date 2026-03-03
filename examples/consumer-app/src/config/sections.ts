@@ -36,6 +36,13 @@ export const sectionsConfig = [
         url: "#contact",
       },
     ],
+    buttons: [
+      { text: "Login", url: "/login", variant: "outline" },
+      { text: "Get Started", url: "/signup", variant: "primary" },
+    ],
+    fixed: true,
+    scrollEffect: true,
+    skin: "tailwind",
   }),
   createHeroSection({
     skin: 'skin10',

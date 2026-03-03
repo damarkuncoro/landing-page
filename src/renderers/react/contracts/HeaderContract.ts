@@ -12,6 +12,14 @@ export interface HeaderContractProps {
     url: string;
     target?: "_blank" | "_self";
   }[];
+  buttons?: {
+    text: string;
+    url: string;
+    variant: "primary" | "secondary" | "outline" | "ghost";
+    target?: "_blank" | "_self";
+  }[];
+  fixed?: boolean;
+  scrollEffect?: boolean;
   className?: string;
   isMobileMenuOpen?: boolean;
   onMobileMenuToggle?: () => void;

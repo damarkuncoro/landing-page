@@ -4,7 +4,7 @@ export interface ButtonConfig extends WithBaseConfig<{
   text: string;
   url: string;
   variant: "primary" | "secondary" | "outline" | "ghost";
-  size: "sm" | "md" | "lg";
+  size?: "sm" | "md" | "lg";
   target?: "_blank" | "_self";
   skin?: "default" | "tailwind";
 }> {}
@@ -18,6 +18,15 @@ export interface HeaderConfig extends WithBaseConfig<{
     url: string;
     target?: "_blank" | "_self";
   }[];
+  buttons?: {
+    text: string;
+    url: string;
+    variant: "primary" | "secondary" | "outline" | "ghost";
+    target?: "_blank" | "_self";
+  }[];
+  fixed?: boolean;
+  scrollEffect?: boolean;
+  skin?: "default" | "tailwind";
 }> {}
 
 export interface HeroConfig extends WithBaseConfig<{

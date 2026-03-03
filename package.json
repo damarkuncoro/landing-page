@@ -3,7 +3,8 @@
   "version": "0.1.4",
   "description": "Config-driven landing page library",
   "main": "lib/cjs/index.js",
-  "module": "lib/esm/index.js",
+  "module": "lib/esm/index.mjs",
+  "types": "lib/esm/index.d.mts",
   "exports": {
     ".": {
       "import": "./lib/esm/index.mjs",
@@ -11,7 +12,6 @@
       "types": "./lib/esm/index.d.mts"
     }
   },
-  "types": "lib/esm/index.d.mts",
   "files": [
     "lib/cjs",
     "lib/esm",

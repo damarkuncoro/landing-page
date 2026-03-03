@@ -4,16 +4,16 @@ import type { HeaderContractProps } from "../../contracts/HeaderContract";
 import { useTheme } from "../../ThemeProvider";
 
 /**
- * Default Skin untuk Header.
- * Menggabungkan Base UI dengan styling inline.
- * Depend pada Base UI + Contract (aturan 15).
+ * Tailwind-based Skin untuk Header dengan desain seperti GreenHarvest.
+ * Menggabungkan Base UI dengan styling Tailwind.
+ * Depend pada Base UI + Tailwind + Contract (aturan 15).
  */
-export const HeaderSkin = (props: HeaderContractProps) => {
+export const HeaderSkinTailwind = (props: HeaderContractProps) => {
   const theme = useTheme();
-  const {
-    fixed = false,
-    scrollEffect = false,
-    ...config
+  const { 
+    fixed = true, 
+    scrollEffect = true, 
+    ...config 
   } = props;
   
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -27,23 +27,14 @@ export const HeaderSkin = (props: HeaderContractProps) => {
     }
   }, [scrollEffect]);
 
-  const headerStyle: React.CSSProperties = {
-    position: fixed ? 'fixed' : 'relative',
-    top: 0,
-    left: 0,
-    right: 0,
-    zIndex: fixed ? 50 : 'auto',
-    padding: "1rem 0",
-    backgroundColor: isScrolled
-      ? 'rgba(255, 255, 255, 0.8)'
-      : theme.colors.background,
-    backdropFilter: isScrolled ? 'blur(8px)' : 'none',
-    boxShadow: isScrolled ? '0 2px 4px rgba(0, 0, 0, 0.1)' : 'none',
-    transition: 'all 0.3s ease',
-    ...config.style,
-  };
+  const headerClassName = `
+    ${fixed ? 'fixed top-0 left-0 right-0 z-50' : ''}
+    transition-all duration-300 px-6 py-4
+    ${isScrolled ? 'bg-white/80 backdrop-blur-md shadow-sm py-3' : 'bg-transparent'}
+    ${config.className || ''}
+  `;
 
-  const containerStyle: React.CSSProperties = {
+  const containerStyle = {
     maxWidth: "1200px",
     margin: "0 auto",
     padding: "0 1rem",
@@ -53,7 +44,7 @@ export const HeaderSkin = (props: HeaderContractProps) => {
   return (
     <HeaderBase
       {...config}
-      style={headerStyle}
+      className={headerClassName}
       containerStyle={containerStyle}
       isMobileMenuOpen={mobileMenuOpen}
       onMobileMenuToggle={() => setMobileMenuOpen(!mobileMenuOpen)}
