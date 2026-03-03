@@ -118,6 +118,7 @@ export const createReactRenderer = () => {
             background-color: ${config.theme?.colors?.background || "#ffffff"};
             color: ${config.theme?.colors?.text || "#000000"};
             line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
           }
         `;
       document.head.appendChild(style);
@@ -127,7 +128,7 @@ export const createReactRenderer = () => {
     }, [config]);
 
     return (
-      <ThemeProvider theme={config.theme as any}>
+      <ThemeProvider theme={config.theme as any} dark={config.theme?.colors?.background === '#000000'}>
         <Box>
           {config.sections.map((section) => (
             <SectionRenderer
