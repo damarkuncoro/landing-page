@@ -1,6 +1,4 @@
-import type { ThemeConfig } from '@damarkuncoro/landing-page'
-
-export const organicGroceriesTheme: ThemeConfig = {
+export const organicGroceriesTheme = {
   colors: {
     primary: '#22c55e', // Fresh green
     secondary: '#16a34a', // Dark green
@@ -39,4 +37,8 @@ export const organicGroceriesTheme: ThemeConfig = {
     lg: '1024px',
     xl: '1280px',
   },
-}
+  sizes: {
+    subtitleMaxWidth: '600px',
+    containerMaxWidth: '1280px',
+  },
+};

@@ -6,12 +6,12 @@
   "module": "lib/esm/index.js",
   "exports": {
     ".": {
-      "import": "./lib/esm/index.js",
+      "import": "./lib/esm/index.mjs",
       "require": "./lib/cjs/index.js",
-      "types": "./lib/index.d.ts"
+      "types": "./lib/esm/index.d.mts"
     }
   },
-  "types": "lib/index.d.ts",
+  "types": "lib/esm/index.d.mts",
   "files": [
     "lib/cjs",
     "lib/esm",

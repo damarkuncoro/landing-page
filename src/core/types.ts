@@ -76,12 +76,12 @@ export interface BaseSectionConfig {
 
 export type SectionConfig =
   | WithBaseConfig<{ type: "hero"; config: import("../components/types").HeroConfig; label?: string }>
-  | WithBaseConfig<{ type: "features"; config: import("../components/types").FeatureConfig[]; label?: string }>
-  | WithBaseConfig<{ type: "testimonials"; config: import("../components/types").TestimonialConfig[]; label?: string }>
+  | WithBaseConfig<{ type: "features"; config: { features: import("../components/types").FeatureConfig[] }; label?: string }>
+  | WithBaseConfig<{ type: "testimonials"; config: { testimonials: import("../components/types").TestimonialConfig[] }; label?: string }>
   | WithBaseConfig<{ type: "pricing"; config: import("../components/types").PricingConfig; label?: string }>
   | WithBaseConfig<{ type: "cta"; config: import("../components/types").CtaConfig; label?: string }>
   | WithBaseConfig<{ type: "footer"; config: import("../components/types").FooterConfig; label?: string }>
-  | WithBaseConfig<{ type: "stats"; config: import("../components/types").StatConfig[]; label?: string }>
+  | WithBaseConfig<{ type: "stats"; config: { stats: import("../components/types").StatConfig[] }; label?: string }>
   | WithBaseConfig<{ type: "faq"; config: import("../components/types").FaqConfig; label?: string }>
   | WithBaseConfig<{ type: "header"; config: import("../components/types").HeaderConfig; label?: string }>;
 

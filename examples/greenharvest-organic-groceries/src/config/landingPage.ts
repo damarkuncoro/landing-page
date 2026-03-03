@@ -19,6 +19,7 @@ export const greenHarvestLandingPage = defineLandingPage({
             url: '/shop',
             variant: 'primary',
             size: 'lg',
+            skin: 'default',
           },
           {
             id: 'view-menu',
@@ -26,6 +27,7 @@ export const greenHarvestLandingPage = defineLandingPage({
             url: '/menu',
             variant: 'secondary',
             size: 'lg',
+            skin: 'default',
           },
         ],
         alignment: 'left',

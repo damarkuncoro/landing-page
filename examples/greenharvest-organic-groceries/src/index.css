@@ -1,36 +1,33 @@
-/* Tailwind CSS directives (v4 syntax) */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Inter:wght@300;400;500;600&display=swap');
 @import "tailwindcss";
-@import "tailwindcss/typography";
 
-/* GreenHarvest Organic Groceries - Tailwind Theme */
 @theme {
-  --color-primary: #22c55e; /* Fresh green */
-  --color-secondary: #16a34a; /* Dark green */
-  --color-accent: #a3e635; /* Lime green */
-  --color-background: #f6fef9; /* Very light green */
-  --color-foreground: #052e16; /* Dark green text */
-  --color-muted: #64748b; /* Gray for muted text */
-
-  --font-sans: Inter, system-ui, sans-serif;
-  --font-serif: serif;
-  --font-mono: monospace;
-
-  --spacing-4: 1rem;
-  --spacing-8: 2rem;
-  --spacing-16: 4rem;
-  --spacing-24: 6rem;
-  --spacing-32: 8rem;
+  --font-serif: "Cormorant Garamond", serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  
+  --color-harvest-gold: #D4A373;
+  --color-harvest-green: #606C38;
+  --color-harvest-dark: #283618;
+  --color-harvest-cream: #FEFAE0;
+  --color-harvest-earth: #BC6C25;
 }
 
-/* Custom styles */
+@layer base {
+  body {
+    @apply bg-harvest-cream text-harvest-dark font-sans antialiased;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
+  }
+}
+
 .pill-image {
-  @apply rounded-[2rem] shadow-2xl;
+  border-radius: 9999px;
+  aspect-ratio: 3/4;
+  object-fit: cover;
 }
 
 .card-soft {
-  @apply rounded-[2rem] bg-white/5 backdrop-blur-sm border border-white/10 shadow-xl;
-}
-
-.soft-shadow {
-  @apply shadow-xl shadow-emerald-500/20;
+  @apply bg-white rounded-[32px] shadow-sm border border-harvest-green/5;
 }
