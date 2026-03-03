@@ -9,7 +9,7 @@ export interface ButtonContractProps {
   url: string;
   target?: "_blank" | "_self";
   variant: "primary" | "secondary" | "outline" | "ghost";
-  size: "sm" | "md" | "lg";
+  size?: "sm" | "md" | "lg";
   className?: string;
   style?: React.CSSProperties;
   onMouseEnter?: (e: React.MouseEvent<HTMLAnchorElement>) => void;

@@ -40,7 +40,7 @@ export const ButtonSkinTailwind = (props: ButtonContractProps) => {
   return (
     <ButtonBase
       {...config}
-      className={`inline-flex items-center justify-center font-semibold rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${sizeClasses[config.size]} ${variantClasses[config.variant]} ${config.className || ""}`}
+      className={`inline-flex items-center justify-center font-semibold rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${sizeClasses[config.size || "md"]} ${variantClasses[config.variant]} ${config.className || ""}`}
       onMouseEnter={(e) => {
         if (config.variant === "primary") {
           e.currentTarget.classList.add("brightness-95", "shadow-lg", "translate-y-[-1px]");
