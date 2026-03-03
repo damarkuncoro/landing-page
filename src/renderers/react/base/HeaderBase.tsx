@@ -3,7 +3,7 @@ import type { HeaderContractProps } from "../contracts/HeaderContract";
 import Navbar from "../Navbar";
 import MenuToggle from "../MenuToggle";
 import { Container, Flex, Box } from "./LayoutBase";
-import type { ThemeConfig } from "../../../core/types";
+import { useTheme } from "../ThemeProvider";
 
 /**
  * Base UI untuk Header.
@@ -12,8 +12,9 @@ import type { ThemeConfig } from "../../../core/types";
  */
 export const HeaderBase = React.forwardRef<
   HTMLElement,
-  HeaderContractProps & { theme: ThemeConfig }
+  HeaderContractProps
 >((props, ref) => {
+  const theme = useTheme();
   const {
     logo,
     title,
@@ -23,7 +24,6 @@ export const HeaderBase = React.forwardRef<
     onMobileMenuToggle,
     style,
     containerStyle,
-    theme,
   } = props;
 
   return (
@@ -53,7 +53,6 @@ export const HeaderBase = React.forwardRef<
             <MenuToggle
               isOpen={isMobileMenuOpen}
               onClick={onMobileMenuToggle}
-              theme={theme}
             />
           )}
         </Flex>
@@ -61,7 +60,6 @@ export const HeaderBase = React.forwardRef<
         {/* Mobile Navbar */}
         <Navbar
           links={links}
-          theme={theme}
           isMobile={true}
           isOpen={isMobileMenuOpen}
         />

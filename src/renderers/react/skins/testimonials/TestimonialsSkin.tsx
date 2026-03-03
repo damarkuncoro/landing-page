@@ -1,6 +1,7 @@
 import React from "react";
 import { TestimonialsBase } from "../../base/TestimonialsBase";
 import type { TestimonialsContractProps } from "../../contracts/TestimonialsContract";
+import { useTheme } from "../../ThemeProvider";
 
 /**
  * Skin untuk Testimonials Section.
@@ -8,9 +9,10 @@ import type { TestimonialsContractProps } from "../../contracts/TestimonialsCont
  * Depend pada Base UI + Tailwind (optional) + Contract (aturan 15).
  */
 export const TestimonialsSkin = (
-  props: TestimonialsContractProps & { theme: any },
+  props: TestimonialsContractProps,
 ) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
 
   const sectionStyle: React.CSSProperties = {
     padding: "4rem 0",
@@ -98,7 +100,6 @@ export const TestimonialsSkin = (
   return (
     <TestimonialsBase
       {...config}
-      theme={theme}
       style={sectionStyle}
       containerStyle={containerStyle}
       gridStyle={gridStyle}

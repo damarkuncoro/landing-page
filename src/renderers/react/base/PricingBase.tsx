@@ -2,6 +2,7 @@ import React from "react";
 import type { PricingContractProps } from "../contracts/PricingContract";
 import { Container, Box } from "./LayoutBase";
 import Button from "../Button";
+import { useTheme } from "../ThemeProvider";
 
 /**
  * Base UI untuk Pricing Section.
@@ -10,8 +11,9 @@ import Button from "../Button";
  */
 export const PricingBase = React.forwardRef<
   HTMLElement,
-  PricingContractProps & { theme: any }
+  PricingContractProps
 >((props, ref) => {
+  const theme = useTheme();
   const {
     plans,
     className,
@@ -28,7 +30,6 @@ export const PricingBase = React.forwardRef<
     featuresListStyle,
     featureItemStyle,
     checkIcon,
-    theme,
   } = props;
 
   return (
@@ -80,7 +81,7 @@ export const PricingBase = React.forwardRef<
                   </Box>
                 ))}
               </Box>
-              <Button config={plan.button} theme={theme} />
+              <Button config={plan.button} />
             </Box>
           ))}
         </Box>

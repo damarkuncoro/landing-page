@@ -8,12 +8,10 @@ import { StatsSkin } from "./skins/stats/StatsSkin";
  */
 const Stats = ({
   config,
-  theme,
 }: {
   config: { stats: StatConfig[]; className?: string };
-  theme: any;
 }) => {
-  return <StatsSkin {...config} theme={theme} />;
+  return <StatsSkin {...config} />;
 };
 
 export default Stats;

@@ -1,14 +1,16 @@
 import React from "react";
 import { FeaturesBase } from "../../base/FeaturesBase";
 import type { FeaturesContractProps } from "../../contracts/FeaturesContract";
+import { useTheme } from "../../ThemeProvider";
 
 /**
  * Skin untuk Features Section.
  * Menggabungkan Base UI dengan styling (Tailwind/inline).
  * Depend pada Base UI + Tailwind (optional) + Contract (aturan 15).
  */
-export const FeaturesSkin = (props: FeaturesContractProps & { theme: any }) => {
-  const { theme, ...config } = props;
+export const FeaturesSkin = (props: FeaturesContractProps) => {
+  const theme = useTheme();
+  const { ...config } = props;
 
   const sectionStyle: React.CSSProperties = {
     padding: "4rem 0",
@@ -73,7 +75,6 @@ export const FeaturesSkin = (props: FeaturesContractProps & { theme: any }) => {
   return (
     <FeaturesBase
       {...config}
-      theme={theme}
       style={sectionStyle}
       containerStyle={containerStyle}
       gridStyle={gridStyle}

@@ -1,14 +1,16 @@
 import React from "react";
 import { StatsBase } from "../../base/StatsBase";
 import type { StatsContractProps } from "../../contracts/StatsContract";
+import { useTheme } from "../../ThemeProvider";
 
 /**
  * Skin untuk Stats Section.
  * Menggabungkan Base UI dengan styling (Tailwind/inline).
  * Depend pada Base UI + Tailwind (optional) + Contract (aturan 15).
  */
-export const StatsSkin = (props: StatsContractProps & { theme: any }) => {
-  const { theme, ...config } = props;
+export const StatsSkin = (props: StatsContractProps) => {
+  const theme = useTheme();
+  const { ...config } = props;
 
   const sectionStyle: React.CSSProperties = {
     padding: "4rem 0",
@@ -64,7 +66,6 @@ export const StatsSkin = (props: StatsContractProps & { theme: any }) => {
   return (
     <StatsBase
       {...config}
-      theme={theme}
       style={sectionStyle}
       containerStyle={containerStyle}
       gridStyle={gridStyle}

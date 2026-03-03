@@ -1,6 +1,7 @@
 import React from "react";
 import type { FaqContractProps } from "../contracts/FaqContract";
 import { Container, Box } from "./LayoutBase";
+import { useTheme } from "../ThemeProvider";
 
 /**
  * Base UI untuk Faq Section.
@@ -9,8 +10,9 @@ import { Container, Box } from "./LayoutBase";
  */
 export const FaqBase = React.forwardRef<
   HTMLElement,
-  FaqContractProps & { theme: any }
+  FaqContractProps
 >((props, ref) => {
+  const theme = useTheme();
   const {
     items,
     className,
@@ -19,7 +21,6 @@ export const FaqBase = React.forwardRef<
     itemStyle,
     questionStyle,
     answerStyle,
-    theme,
   } = props;
 
   return (

@@ -72,14 +72,6 @@ export const HeroSkin4 = (props: HeroContractProps) => {
       <div style={overlayStyle} />
       <HeroBase
         {...config}
-        theme={{
-          ...theme,
-          colors: {
-            ...theme.colors,
-            text: "#ffffff",
-            muted: "rgba(255, 255, 255, 0.8)",
-          },
-        }}
         style={{ position: "relative", zIndex: 1 }}
         containerStyle={containerStyle}
         contentStyle={contentStyle}

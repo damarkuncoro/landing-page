@@ -12,8 +12,9 @@ import { getHeroStyles, getAlignmentStyles } from "./heroStyles";
  */
 export const HeroBase = React.forwardRef<
   HTMLElement,
-  HeroContractProps & { theme?: any }
+  HeroContractProps
 >((props, ref) => {
+  const theme = useTheme();
   const {
     title,
     subtitle,
@@ -28,12 +29,7 @@ export const HeroBase = React.forwardRef<
     containerStyle,
     contentStyle,
     testId,
-    theme: customTheme,
   } = props;
-
-  // Get theme from context or use custom theme if provided
-  const contextTheme = useTheme();
-  const theme = customTheme || contextTheme;
 
   // Derive unique heading id from props for accessibility
   const headingId = props.id ? `${props.id}-title` : "hero-title";
@@ -118,7 +114,7 @@ export const HeroBase = React.forwardRef<
               data-testid="hero-buttons"
             >
               {buttons.map((button, index) => (
-                <Button key={button.id || index} config={button} theme={theme} />
+                <Button key={button.id || index} config={button} />
               ))}
             </Flex>
           )}

@@ -6,8 +6,8 @@ import { ButtonSkin } from "./skins/button/ButtonSkin";
  * Komponen Button yang menggunakan arsitektur Skin.
  * Depend pada Skins + Modules (aturan 16).
  */
-const Button = ({ config, theme }: { config: ButtonConfig; theme: any }) => {
-  return <ButtonSkin {...config} theme={theme} />;
+const Button = ({ config }: { config: ButtonConfig }) => {
+  return <ButtonSkin {...config} />;
 };
 
 export default Button;

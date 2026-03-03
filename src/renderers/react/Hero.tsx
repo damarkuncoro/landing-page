@@ -15,7 +15,7 @@ import { HeroSkin10 } from "./skins/hero/HeroSkin10";
  * Komponen Hero yang menggunakan arsitektur Skin.
  * Depend pada Skins + Modules (aturan 16).
  */
-const Hero = ({ config }: { config: HeroConfig; theme: any }) => {
+const Hero = ({ config }: { config: HeroConfig }) => {
   switch (config.skin) {
     case "skin2":
       return <HeroSkin2 {...config} />;

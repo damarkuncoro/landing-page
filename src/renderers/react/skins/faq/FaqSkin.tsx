@@ -1,14 +1,16 @@
 import React from "react";
 import { FaqBase } from "../../base/FaqBase";
 import type { FaqContractProps } from "../../contracts/FaqContract";
+import { useTheme } from "../../ThemeProvider";
 
 /**
  * Skin untuk Faq Section.
  * Menggabungkan Base UI dengan styling (Tailwind/inline).
  * Depend pada Base UI + Tailwind (optional) + Contract (aturan 15).
  */
-export const FaqSkin = (props: FaqContractProps & { theme: any }) => {
-  const { theme, ...config } = props;
+export const FaqSkin = (props: FaqContractProps) => {
+  const theme = useTheme();
+  const { ...config } = props;
 
   const sectionStyle: React.CSSProperties = {
     padding: "4rem 0",
@@ -49,7 +51,6 @@ export const FaqSkin = (props: FaqContractProps & { theme: any }) => {
   return (
     <FaqBase
       {...config}
-      theme={theme}
       style={sectionStyle}
       containerStyle={containerStyle}
       itemStyle={itemStyle}

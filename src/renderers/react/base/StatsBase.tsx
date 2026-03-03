@@ -1,6 +1,7 @@
 import React from "react";
 import type { StatsContractProps } from "../contracts/StatsContract";
 import { Container, Box } from "./LayoutBase";
+import { useTheme } from "../ThemeProvider";
 
 /**
  * Base UI untuk Stats Section.
@@ -9,8 +10,9 @@ import { Container, Box } from "./LayoutBase";
  */
 export const StatsBase = React.forwardRef<
   HTMLElement,
-  StatsContractProps & { theme: any }
+  StatsContractProps
 >((props, ref) => {
+  const theme = useTheme();
   const {
     stats,
     className,

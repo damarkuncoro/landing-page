@@ -1,14 +1,16 @@
 import React from "react";
 import { FooterBase } from "../../base/FooterBase";
 import type { FooterContractProps } from "../../contracts/FooterContract";
+import { useTheme } from "../../ThemeProvider";
 
 /**
  * Skin untuk Footer Section.
  * Menggabungkan Base UI dengan styling (Tailwind/inline).
  * Depend pada Base UI + Tailwind (optional) + Contract (aturan 15).
  */
-export const FooterSkin = (props: FooterContractProps & { theme: any }) => {
-  const { theme, ...config } = props;
+export const FooterSkin = (props: FooterContractProps) => {
+  const theme = useTheme();
+  const { ...config } = props;
 
   const sectionStyle: React.CSSProperties = {
     padding: "4rem 0",
@@ -56,7 +58,6 @@ export const FooterSkin = (props: FooterContractProps & { theme: any }) => {
   return (
     <FooterBase
       {...config}
-      theme={theme}
       style={sectionStyle}
       containerStyle={containerStyle}
       gridStyle={gridStyle}

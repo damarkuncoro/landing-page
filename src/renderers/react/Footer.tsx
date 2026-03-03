@@ -6,8 +6,8 @@ import { FooterSkin } from "./skins/footer/FooterSkin";
  * Komponen Footer yang menggunakan arsitektur Skin.
  * Depend pada Skins + Modules (aturan 16).
  */
-const Footer = ({ config, theme }: { config: FooterConfig; theme: any }) => {
-  return <FooterSkin {...config} theme={theme} />;
+const Footer = ({ config }: { config: FooterConfig }) => {
+  return <FooterSkin {...config} />;
 };
 
 export default Footer;

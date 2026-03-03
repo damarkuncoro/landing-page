@@ -2,7 +2,7 @@ import React from "react";
 import type { CtaContractProps } from "../contracts/CtaContract";
 import Button from "../Button";
 import { Container, Box } from "./LayoutBase";
-import type { ThemeConfig } from "../../../core/types";
+import { useTheme } from "../ThemeProvider";
 
 /**
  * Base UI untuk Cta Section.
@@ -11,8 +11,9 @@ import type { ThemeConfig } from "../../../core/types";
  */
 export const CtaBase = React.forwardRef<
   HTMLElement,
-  CtaContractProps & { theme: ThemeConfig }
+  CtaContractProps
 >((props, ref) => {
+  const theme = useTheme();
   const {
     title,
     description,
@@ -21,7 +22,6 @@ export const CtaBase = React.forwardRef<
     style,
     containerStyle,
     contentStyle,
-    theme,
   } = props;
 
   return (
@@ -42,7 +42,7 @@ export const CtaBase = React.forwardRef<
           >
             {description}
           </p>
-          <Button config={button} theme={theme} />
+          <Button config={button} />
         </Box>
       </Container>
     </Box>

@@ -2,14 +2,16 @@ import React from "react";
 import { ButtonBase } from "../../base/ButtonBase";
 import type { ButtonContractProps } from "../../contracts/ButtonContract";
 import { getBestContrastColor } from "../../../../core/utils/contrast";
+import { useTheme } from "../../ThemeProvider";
 
 /**
  * Skin untuk Button.
  * Menggabungkan Base UI dengan styling (Tailwind/inline).
  * Depend pada Base UI + Tailwind (optional) + Contract (aturan 15).
  */
-export const ButtonSkin = (props: ButtonContractProps & { theme: any }) => {
-  const { theme, ...config } = props;
+export const ButtonSkin = (props: ButtonContractProps) => {
+  const theme = useTheme();
+  const { ...config } = props;
 
   const backgroundColor =
     config.variant === "primary"

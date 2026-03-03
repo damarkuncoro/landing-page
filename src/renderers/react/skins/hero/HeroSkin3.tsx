@@ -37,14 +37,6 @@ export const HeroSkin3 = (props: HeroContractProps) => {
   return (
     <HeroBase
       {...config}
-      theme={{
-        ...theme,
-        colors: {
-          ...theme.colors,
-          text: "#ffffff",
-          muted: "rgba(255, 255, 255, 0.8)",
-        },
-      }}
       style={sectionStyle}
       containerStyle={containerStyle}
       contentStyle={contentStyle}

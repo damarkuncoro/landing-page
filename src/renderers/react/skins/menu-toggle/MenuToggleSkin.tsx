@@ -1,6 +1,7 @@
 import React from "react";
 import { MenuToggleBase } from "../../base/MenuToggleBase";
 import type { MenuToggleContractProps } from "../../contracts/MenuToggleContract";
+import { useTheme } from "../../ThemeProvider";
 
 /**
  * Skin untuk Menu Toggle.
@@ -8,9 +9,10 @@ import type { MenuToggleContractProps } from "../../contracts/MenuToggleContract
  * Depend pada Base UI + Tailwind (optional) + Contract (aturan 15).
  */
 export const MenuToggleSkin = (
-  props: MenuToggleContractProps & { theme: any },
+  props: MenuToggleContractProps,
 ) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
 
   const toggleStyle: React.CSSProperties = {
     backgroundColor: "transparent",

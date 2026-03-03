@@ -8,21 +8,19 @@ import { MenuToggleSkin } from "./skins/menu-toggle/MenuToggleSkin";
 const MenuToggle = ({
   isOpen,
   onClick,
-  theme,
   className,
   style,
 }: {
   isOpen: boolean;
   onClick: () => void;
-  theme: any;
   className?: string;
   style?: React.CSSProperties;
 }) => {
+  
   return (
     <MenuToggleSkin
       isOpen={isOpen}
       onClick={onClick}
-      theme={theme}
       className={className}
       style={style}
     />

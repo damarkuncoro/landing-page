@@ -1,6 +1,7 @@
 import React from "react";
 import type { TestimonialsContractProps } from "../contracts/TestimonialsContract";
 import { Container, Box, Flex } from "./LayoutBase";
+import { useTheme } from "../ThemeProvider";
 
 /**
  * Base UI untuk Testimonials Section.
@@ -9,8 +10,9 @@ import { Container, Box, Flex } from "./LayoutBase";
  */
 export const TestimonialsBase = React.forwardRef<
   HTMLElement,
-  TestimonialsContractProps & { theme: any }
+  TestimonialsContractProps
 >((props, ref) => {
+  const theme = useTheme();
   const {
     testimonials,
     className,
@@ -27,7 +29,6 @@ export const TestimonialsBase = React.forwardRef<
     authorRoleStyle,
     onTestimonialMouseEnter,
     onTestimonialMouseLeave,
-    theme,
   } = props;
 
   return (

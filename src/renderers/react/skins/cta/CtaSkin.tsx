@@ -2,14 +2,16 @@ import React from "react";
 import { CtaBase } from "../../base/CtaBase";
 import type { CtaContractProps } from "../../contracts/CtaContract";
 import { getBestContrastColor } from "../../../../core/utils/contrast";
+import { useTheme } from "../../ThemeProvider";
 
 /**
  * Skin untuk Cta Section.
  * Menggabungkan Base UI dengan styling (Tailwind/inline).
  * Depend pada Base UI + Tailwind (optional) + Contract (aturan 15).
  */
-export const CtaSkin = (props: CtaContractProps & { theme: any }) => {
-  const { theme, ...config } = props;
+export const CtaSkin = (props: CtaContractProps) => {
+  const theme = useTheme();
+  const { ...config } = props;
 
   // Gunakan primary color dari theme atau config jika ada
   const backgroundColor = theme.colors.primary;
@@ -61,7 +63,6 @@ export const CtaSkin = (props: CtaContractProps & { theme: any }) => {
     <CtaBase
       {...config}
       button={buttonConfig}
-      theme={buttonTheme}
       style={sectionStyle}
       containerStyle={containerStyle}
       contentStyle={contentStyle}

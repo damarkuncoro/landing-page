@@ -7,23 +7,21 @@ import { NavbarSkin } from "./skins/navbar/NavbarSkin";
  */
 const Navbar = ({
   links,
-  theme,
   isMobile,
   isOpen,
   className,
   style,
 }: {
   links: any[];
-  theme: any;
   isMobile?: boolean;
   isOpen?: boolean;
   className?: string;
   style?: React.CSSProperties;
 }) => {
+  
   return (
     <NavbarSkin
       links={links}
-      theme={theme}
       isMobile={isMobile}
       isOpen={isOpen}
       className={className}

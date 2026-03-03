@@ -1,14 +1,16 @@
 import React from "react";
 import { NavbarBase } from "../../base/NavbarBase";
 import type { NavbarContractProps } from "../../contracts/NavbarContract";
+import { useTheme } from "../../ThemeProvider";
 
 /**
  * Skin untuk Navbar.
  * Menggabungkan Base UI dengan styling (Tailwind/inline).
  * Depend pada Base UI + Tailwind (optional) + Contract (aturan 15).
  */
-export const NavbarSkin = (props: NavbarContractProps & { theme: any }) => {
-  const { theme, ...config } = props;
+export const NavbarSkin = (props: NavbarContractProps) => {
+  const theme = useTheme();
+  const { ...config } = props;
 
   const navbarStyle: React.CSSProperties = {
     marginTop: config.isMobile ? theme.spacing.md : 0,

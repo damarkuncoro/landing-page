@@ -28,17 +28,14 @@ import { ThemeProvider } from "./ThemeProvider";
 export const createReactRenderer = () => {
   const SectionRenderer = ({
     section,
-    theme,
   }: {
     section: SectionConfig;
-    theme: any;
   }) => {
     switch (section.type as any) {
       case "header":
         return (
           <Header
             config={section.config as HeaderConfig}
-            theme={theme}
             key={section.id}
           />
         );
@@ -46,7 +43,6 @@ export const createReactRenderer = () => {
         return (
           <Hero
             config={section.config as HeroConfig}
-            theme={theme}
             key={section.id}
           />
         );
@@ -54,7 +50,6 @@ export const createReactRenderer = () => {
         return (
           <Features
             config={section.config as FeatureConfig}
-            theme={theme}
             key={section.id}
           />
         );
@@ -62,7 +57,6 @@ export const createReactRenderer = () => {
         return (
           <Testimonials
             config={section.config as unknown as TestimonialConfig}
-            theme={theme}
             key={section.id}
           />
         );
@@ -70,7 +64,6 @@ export const createReactRenderer = () => {
         return (
           <Pricing
             config={section.config as PricingConfig}
-            theme={theme}
             key={section.id}
           />
         );
@@ -78,7 +71,6 @@ export const createReactRenderer = () => {
         return (
           <Cta
             config={section.config as CtaConfig}
-            theme={theme}
             key={section.id}
           />
         );
@@ -86,7 +78,6 @@ export const createReactRenderer = () => {
         return (
           <Footer
             config={section.config as FooterConfig}
-            theme={theme}
             key={section.id}
           />
         );
@@ -96,7 +87,6 @@ export const createReactRenderer = () => {
             config={
               section.config as unknown as { stats: StatConfig[]; className?: string }
             }
-            theme={theme}
             key={section.id}
           />
         );
@@ -104,7 +94,6 @@ export const createReactRenderer = () => {
         return (
           <Faq
             config={section.config as FaqConfig}
-            theme={theme}
             key={section.id}
           />
         );
@@ -144,7 +133,6 @@ export const createReactRenderer = () => {
             <SectionRenderer
               key={section.id}
               section={section}
-              theme={config.theme}
             />
           ))}
         </Box>

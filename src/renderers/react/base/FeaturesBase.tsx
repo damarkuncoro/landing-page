@@ -1,6 +1,7 @@
 import React from "react";
 import type { FeaturesContractProps } from "../contracts/FeaturesContract";
 import { Container, Box } from "./LayoutBase";
+import { useTheme } from "../ThemeProvider";
 
 /**
  * Base UI untuk Features Section.
@@ -9,8 +10,9 @@ import { Container, Box } from "./LayoutBase";
  */
 export const FeaturesBase = React.forwardRef<
   HTMLElement,
-  FeaturesContractProps & { theme: any }
+  FeaturesContractProps
 >((props, ref) => {
+  const theme = useTheme();
   const {
     features,
     className,

@@ -1,6 +1,7 @@
 import React from "react";
 import type { FooterContractProps } from "../contracts/FooterContract";
 import { Container, Box } from "./LayoutBase";
+import { useTheme } from "../ThemeProvider";
 
 /**
  * Base UI untuk Footer Section.
@@ -9,8 +10,9 @@ import { Container, Box } from "./LayoutBase";
  */
 export const FooterBase = React.forwardRef<
   HTMLElement,
-  FooterContractProps & { theme: any }
+  FooterContractProps
 >((props, ref) => {
+  const theme = useTheme();
   const {
     logo,
     title,
@@ -25,7 +27,6 @@ export const FooterBase = React.forwardRef<
     linkStyle,
     onLinkMouseEnter,
     onLinkMouseLeave,
-    theme,
   } = props;
 
   return (

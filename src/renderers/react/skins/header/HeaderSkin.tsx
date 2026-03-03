@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import { HeaderBase } from "../../base/HeaderBase";
 import type { HeaderContractProps } from "../../contracts/HeaderContract";
+import { useTheme } from "../../ThemeProvider";
 
 /**
  * Skin untuk Header.
  * Menggabungkan Base UI dengan styling (Tailwind/inline).
  * Depend pada Base UI + Tailwind (optional) + Contract (aturan 15).
  */
-export const HeaderSkin = (props: HeaderContractProps & { theme: any }) => {
-  const { theme, ...config } = props;
+export const HeaderSkin = (props: HeaderContractProps) => {
+  const theme = useTheme();
+  const { ...config } = props;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const headerStyle: React.CSSProperties = {
@@ -28,7 +30,6 @@ export const HeaderSkin = (props: HeaderContractProps & { theme: any }) => {
   return (
     <HeaderBase
       {...config}
-      theme={theme}
       style={headerStyle}
       containerStyle={containerStyle}
       isMobileMenuOpen={mobileMenuOpen}

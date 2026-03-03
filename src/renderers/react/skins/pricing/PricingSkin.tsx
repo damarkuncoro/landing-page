@@ -1,14 +1,16 @@
 import React from "react";
 import { PricingBase } from "../../base/PricingBase";
 import type { PricingContractProps } from "../../contracts/PricingContract";
+import { useTheme } from "../../ThemeProvider";
 
 /**
  * Skin untuk Pricing Section.
  * Menggabungkan Base UI dengan styling (Tailwind/inline).
  * Depend pada Base UI + Tailwind (optional) + Contract (aturan 15).
  */
-export const PricingSkin = (props: PricingContractProps & { theme: any }) => {
-  const { theme, ...config } = props;
+export const PricingSkin = (props: PricingContractProps) => {
+  const theme = useTheme();
+  const { ...config } = props;
 
   const sectionStyle: React.CSSProperties = {
     padding: "4rem 0",
@@ -109,7 +111,6 @@ export const PricingSkin = (props: PricingContractProps & { theme: any }) => {
   return (
     <PricingBase
       {...config}
-      theme={theme}
       style={sectionStyle}
       containerStyle={containerStyle}
       gridStyle={gridStyle}

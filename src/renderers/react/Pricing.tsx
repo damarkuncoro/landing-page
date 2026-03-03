@@ -6,8 +6,8 @@ import { PricingSkin } from "./skins/pricing/PricingSkin";
  * Komponen Pricing yang menggunakan arsitektur Skin.
  * Depend pada Skins + Modules (aturan 16).
  */
-const Pricing = ({ config, theme }: { config: PricingConfig; theme: any }) => {
-  return <PricingSkin {...config} theme={theme} />;
+const Pricing = ({ config }: { config: PricingConfig }) => {
+  return <PricingSkin {...config} />;
 };
 
 export default Pricing;

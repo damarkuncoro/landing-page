@@ -1,51 +1,35 @@
-import React, { createContext, useContext, useMemo } from "react";
-import type { ThemeConfig, DeepPartial } from "../../core/types";
-import { createTheme } from "../../core/theme";
+import React, { createContext, useContext, useMemo, ReactNode } from 'react';
+import type { ThemeConfig, DeepPartial } from '../../core/types';
+import { createTheme } from '../../core/theme';
 
-// Create theme context
-const ThemeContext = createContext<ThemeConfig | undefined>(undefined);
+// Create context
+const ThemeContext = createContext<ThemeConfig>(createTheme());
 
-/**
- * Provider to pass theme configuration through the React component tree
- * using context API.
- */
+// ThemeProvider component
 interface ThemeProviderProps {
-  /** Theme configuration or partial theme overrides */
   theme?: DeepPartial<ThemeConfig>;
-  /** Children components to wrap */
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
-/**
- * Theme provider component that wraps your application and provides
- * theme context to all nested components.
- */
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({
-  theme,
+  theme = {},
   children,
 }) => {
-  // Create complete theme by merging with default theme
-  const resolvedTheme = useMemo(() => createTheme(theme), [theme]);
+  // Merge user theme with default theme
+  const mergedTheme = useMemo(
+    () => createTheme(theme),
+    [theme],
+  );
 
   return (
-    <ThemeContext.Provider value={resolvedTheme}>
+    <ThemeContext.Provider value={mergedTheme}>
       {children}
     </ThemeContext.Provider>
   );
 };
 
-/**
- * Custom hook to access the current theme configuration from context.
- * @returns Complete theme configuration
- */
+// useTheme hook
 export const useTheme = (): ThemeConfig => {
   const theme = useContext(ThemeContext);
-  
-  if (!theme) {
-    throw new Error(
-      "useTheme hook must be used within a ThemeProvider component"
-    );
-  }
-  
   return theme;
 };
