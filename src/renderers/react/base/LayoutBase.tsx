@@ -9,26 +9,33 @@ const normalizeUnit = (value?: string | number): string | undefined => {
   return value;
 };
 
+// Base properties (shared)
+interface BaseLayoutProps {
+  children?: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
 // Shared style properties type
 type StyleProps = {
   style?: React.CSSProperties;
 };
 
 // Shared component implementation
-const createLayoutComponent = (
+const createLayoutComponent = <P extends BaseLayoutProps>(
   displayName: string,
   defaultElement: string,
-  styleResolver?: (props: any) => React.CSSProperties
+  styleResolver?: (props: P) => React.CSSProperties
 ) => {
-  const Component = React.forwardRef<HTMLElement, any>((props, ref) => {
+  const Component = React.forwardRef<HTMLElement, P & { as?: React.ElementType }>((props, ref) => {
     const { as: Element = defaultElement, children, ...restProps } = props;
-    const resolvedStyle = styleResolver ? styleResolver(props) : undefined;
+    const resolvedStyle = styleResolver ? styleResolver(props as unknown as P) : undefined;
 
     return (
       <Element
         ref={ref}
         style={{ ...props.style, ...resolvedStyle }}
-        {...restProps}
+        {...restProps as any}
       >
         {children}
       </Element>
@@ -40,7 +47,7 @@ const createLayoutComponent = (
 };
 
 // Box component - no style resolver needed
-export const Box = createLayoutComponent("Box", "div");
+export const Box = createLayoutComponent<BoxOwnProps>("Box", "div");
 
 // Flex specific style resolver
 const resolveFlexStyle = ({
@@ -61,7 +68,7 @@ const resolveFlexStyle = ({
 });
 
 // Flex component - with style resolver
-export const Flex = createLayoutComponent("Flex", "div", resolveFlexStyle);
+export const Flex = createLayoutComponent<FlexOwnProps>("Flex", "div", resolveFlexStyle);
 
 // Container specific style resolver
 const resolveContainerStyle = ({
@@ -77,4 +84,4 @@ const resolveContainerStyle = ({
 });
 
 // Container component - with style resolver
-export const Container = createLayoutComponent("Container", "div", resolveContainerStyle);
+export const Container = createLayoutComponent<ContainerOwnProps>("Container", "div", resolveContainerStyle);
