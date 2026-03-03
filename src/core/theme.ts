@@ -39,6 +39,10 @@ export const defaultTheme: ThemeConfig = {
     lg: "1024px",
     xl: "1280px",
   },
+  sizes: {
+    subtitleMaxWidth: "600px",
+    containerMaxWidth: "1280px",
+  },
 };
 
 export function createTheme(config?: DeepPartial<ThemeConfig>): ThemeConfig {
@@ -68,6 +72,10 @@ export function createTheme(config?: DeepPartial<ThemeConfig>): ThemeConfig {
     breakpoints: {
       ...defaultTheme.breakpoints,
       ...config?.breakpoints,
+    },
+    sizes: {
+      ...defaultTheme.sizes,
+      ...config?.sizes,
     },
   };
 }

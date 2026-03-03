@@ -29,9 +29,9 @@ export const themeConfig: ThemeConfig = {
     small: '0.875rem',
   },
   fontWeights: {
-    normal: '400',
-    medium: '500',
-    bold: '700',
+    normal: 400,
+    medium: 500,
+    bold: 700,
   },
   breakpoints: {
     sm: '640px',

@@ -49,9 +49,9 @@ export interface ThemeConfig {
     small: string;
   };
   fontWeights: {
-    normal: number;
-    medium: number;
-    bold: number;
+    normal: string | number;
+    medium: string | number;
+    bold: string | number;
   };
   breakpoints: {
     sm: string;

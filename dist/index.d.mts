@@ -41,9 +41,9 @@ interface ThemeConfig {
         small: string;
     };
     fontWeights: {
-        normal: string;
-        medium: string;
-        bold: string;
+        normal: number;
+        medium: number;
+        bold: number;
     };
     breakpoints: {
         sm: string;

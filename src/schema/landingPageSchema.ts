@@ -82,8 +82,74 @@ export const landingPageSchema = {
         fonts: {
           $ref: "#/definitions/Fonts",
         },
+        typography: {
+          $ref: "#/definitions/Typography",
+        },
+        fontWeights: {
+          $ref: "#/definitions/FontWeights",
+        },
         breakpoints: {
           $ref: "#/definitions/Breakpoints",
+        },
+        sizes: {
+          $ref: "#/definitions/Sizes",
+        },
+      },
+    },
+    Typography: {
+      type: "object",
+      properties: {
+        h1: {
+          type: "string",
+          description: 'Font size for H1 headings (e.g., "3rem")',
+        },
+        h2: {
+          type: "string",
+          description: 'Font size for H2 headings (e.g., "2.25rem")',
+        },
+        h3: {
+          type: "string",
+          description: 'Font size for H3 headings (e.g., "1.5rem")',
+        },
+        body: {
+          type: "string",
+          description: 'Font size for body text (e.g., "1.25rem")',
+        },
+        small: {
+          type: "string",
+          description: 'Font size for small text (e.g., "0.875rem")',
+        },
+      },
+      required: ["h1", "h2", "h3", "body", "small"],
+    },
+    FontWeights: {
+      type: "object",
+      properties: {
+        normal: {
+          type: ["number", "string"],
+          description: "Normal font weight (e.g., 400 or 'normal')",
+        },
+        medium: {
+          type: ["number", "string"],
+          description: "Medium font weight (e.g., 500 or 'medium')",
+        },
+        bold: {
+          type: ["number", "string"],
+          description: "Bold font weight (e.g., 700 or 'bold')",
+        },
+      },
+      required: ["normal", "medium", "bold"],
+    },
+    Sizes: {
+      type: "object",
+      properties: {
+        subtitleMaxWidth: {
+          type: "string",
+          description: 'Maximum width for subtitles (e.g., "600px")',
+        },
+        containerMaxWidth: {
+          type: "string",
+          description: 'Maximum width for containers (e.g., "1280px")',
         },
       },
     },
