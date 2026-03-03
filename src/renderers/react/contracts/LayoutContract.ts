@@ -1,11 +1,5 @@
 import React from "react";
 
-/**
- * Kontrak UI untuk Layout Dasar (Box, Flex, Container).
- * ❌ Tidak boleh depend ke HTML element apa pun
- * ✅ HANYA own props
- */
-
 // Base properties (shared)
 export interface BaseLayoutProps {
   children?: React.ReactNode;
