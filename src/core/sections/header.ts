@@ -1,7 +1,7 @@
-import type { SectionConfig } from "../types";
+import type { BaseSectionConfig } from "../types";
 import type { HeaderConfig } from "../../components/types";
 
-export interface HeaderSection extends SectionConfig {
+export interface HeaderSection extends BaseSectionConfig {
   type: "header";
   config: HeaderConfig;
 }

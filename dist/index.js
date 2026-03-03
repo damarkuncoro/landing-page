@@ -79,15 +79,19 @@ var defaultTheme = {
     small: "0.875rem"
   },
   fontWeights: {
-    normal: "400",
-    medium: "500",
-    bold: "700"
+    normal: 400,
+    medium: 500,
+    bold: 700
   },
   breakpoints: {
     sm: "640px",
     md: "768px",
     lg: "1024px",
     xl: "1280px"
+  },
+  sizes: {
+    subtitleMaxWidth: "600px",
+    containerMaxWidth: "1280px"
   }
 };
 function createTheme(config) {
@@ -117,6 +121,10 @@ function createTheme(config) {
     breakpoints: {
       ...defaultTheme.breakpoints,
       ...config?.breakpoints
+    },
+    sizes: {
+      ...defaultTheme.sizes,
+      ...config?.sizes
     }
   };
 }
@@ -209,8 +217,74 @@ var landingPageSchema = {
         fonts: {
           $ref: "#/definitions/Fonts"
         },
+        typography: {
+          $ref: "#/definitions/Typography"
+        },
+        fontWeights: {
+          $ref: "#/definitions/FontWeights"
+        },
         breakpoints: {
           $ref: "#/definitions/Breakpoints"
+        },
+        sizes: {
+          $ref: "#/definitions/Sizes"
+        }
+      }
+    },
+    Typography: {
+      type: "object",
+      properties: {
+        h1: {
+          type: "string",
+          description: 'Font size for H1 headings (e.g., "3rem")'
+        },
+        h2: {
+          type: "string",
+          description: 'Font size for H2 headings (e.g., "2.25rem")'
+        },
+        h3: {
+          type: "string",
+          description: 'Font size for H3 headings (e.g., "1.5rem")'
+        },
+        body: {
+          type: "string",
+          description: 'Font size for body text (e.g., "1.25rem")'
+        },
+        small: {
+          type: "string",
+          description: 'Font size for small text (e.g., "0.875rem")'
+        }
+      },
+      required: ["h1", "h2", "h3", "body", "small"]
+    },
+    FontWeights: {
+      type: "object",
+      properties: {
+        normal: {
+          type: ["number", "string"],
+          description: "Normal font weight (e.g., 400 or 'normal')"
+        },
+        medium: {
+          type: ["number", "string"],
+          description: "Medium font weight (e.g., 500 or 'medium')"
+        },
+        bold: {
+          type: ["number", "string"],
+          description: "Bold font weight (e.g., 700 or 'bold')"
+        }
+      },
+      required: ["normal", "medium", "bold"]
+    },
+    Sizes: {
+      type: "object",
+      properties: {
+        subtitleMaxWidth: {
+          type: "string",
+          description: 'Maximum width for subtitles (e.g., "600px")'
+        },
+        containerMaxWidth: {
+          type: "string",
+          description: 'Maximum width for containers (e.g., "1280px")'
         }
       }
     },
@@ -350,7 +424,9 @@ var sectionConfigSchemas = {
       title: { type: "string" },
       subtitle: { type: "string" },
       image: { type: "string", format: "uri-reference" },
+      imageAlt: { type: "string" },
       video: { type: "string", format: "uri-reference" },
+      captionsSrc: { type: "string", format: "uri-reference" },
       buttons: {
         type: "array",
         items: { $ref: "urn:landing-page:schema#/definitions/ButtonConfig" }
@@ -627,6 +703,8 @@ function defineLandingPage(config) {
   }
   const landingPage = {
     ...config,
+    sections: [...config.sections],
+    // Convert to mutable array
     theme: createTheme(config.theme),
     // Methods
     getSection(id) {
@@ -770,13 +848,13 @@ function createFaqSection(config, id, className) {
 }
 
 // src/renderers/react/index.tsx
-var import_react15 = __toESM(require("react"));
+var import_react16 = __toESM(require("react"));
 
 // src/renderers/react/skins/header/HeaderSkin.tsx
-var import_react5 = require("react");
+var import_react6 = require("react");
 
 // src/renderers/react/base/HeaderBase.tsx
-var import_react4 = __toESM(require("react"));
+var import_react5 = __toESM(require("react"));
 
 // src/renderers/react/base/NavbarBase.tsx
 var import_react2 = __toESM(require("react"));
@@ -891,10 +969,44 @@ var NavbarBase = import_react2.default.forwardRef(
 );
 NavbarBase.displayName = "NavbarBase";
 
-// src/renderers/react/skins/navbar/NavbarSkin.tsx
+// src/renderers/react/ThemeProvider.tsx
+var import_react3 = require("react");
 var import_jsx_runtime3 = require("react/jsx-runtime");
+var ThemeContext = (0, import_react3.createContext)(createTheme());
+var ThemeProvider = ({
+  theme = {},
+  children,
+  dark = false
+}) => {
+  const mergedTheme = (0, import_react3.useMemo)(() => {
+    const baseTheme = createTheme(theme);
+    if (dark) {
+      return {
+        ...baseTheme,
+        colors: {
+          ...baseTheme.colors,
+          background: "#000000",
+          text: "#ffffff",
+          muted: "#64748b",
+          mutedBackground: "#1e293b",
+          border: "#334155"
+        }
+      };
+    }
+    return baseTheme;
+  }, [theme, dark]);
+  return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(ThemeContext.Provider, { value: mergedTheme, children });
+};
+var useTheme = () => {
+  const theme = (0, import_react3.useContext)(ThemeContext);
+  return theme;
+};
+
+// src/renderers/react/skins/navbar/NavbarSkin.tsx
+var import_jsx_runtime4 = require("react/jsx-runtime");
 var NavbarSkin = (props) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
   const navbarStyle = {
     marginTop: config.isMobile ? theme.spacing.md : 0,
     ...config.style
@@ -920,7 +1032,7 @@ var NavbarSkin = (props) => {
     el.style.color = theme.colors.muted;
     config.onLinkMouseLeave?.(e, {});
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime3.jsx)(
+  return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
     NavbarBase,
     {
       ...config,
@@ -933,20 +1045,18 @@ var NavbarSkin = (props) => {
 };
 
 // src/renderers/react/Navbar.tsx
-var import_jsx_runtime4 = require("react/jsx-runtime");
+var import_jsx_runtime5 = require("react/jsx-runtime");
 var Navbar = ({
   links,
-  theme,
   isMobile,
   isOpen,
   className,
   style
 }) => {
-  return /* @__PURE__ */ (0, import_jsx_runtime4.jsx)(
+  return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
     NavbarSkin,
     {
       links,
-      theme,
       isMobile,
       isOpen,
       className,
@@ -957,9 +1067,9 @@ var Navbar = ({
 var Navbar_default = Navbar;
 
 // src/renderers/react/base/MenuToggleBase.tsx
-var import_react3 = __toESM(require("react"));
-var import_jsx_runtime5 = require("react/jsx-runtime");
-var MenuToggleBase = import_react3.default.forwardRef((props, ref) => {
+var import_react4 = __toESM(require("react"));
+var import_jsx_runtime6 = require("react/jsx-runtime");
+var MenuToggleBase = import_react4.default.forwardRef((props, ref) => {
   const {
     isOpen,
     onClick,
@@ -969,7 +1079,7 @@ var MenuToggleBase = import_react3.default.forwardRef((props, ref) => {
     iconOpen = "\u2630",
     iconClose = "\u2715"
   } = props;
-  return /* @__PURE__ */ (0, import_jsx_runtime5.jsx)(
+  return /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(
     Box,
     {
       as: "button",
@@ -985,9 +1095,10 @@ var MenuToggleBase = import_react3.default.forwardRef((props, ref) => {
 MenuToggleBase.displayName = "MenuToggleBase";
 
 // src/renderers/react/skins/menu-toggle/MenuToggleSkin.tsx
-var import_jsx_runtime6 = require("react/jsx-runtime");
+var import_jsx_runtime7 = require("react/jsx-runtime");
 var MenuToggleSkin = (props) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
   const toggleStyle = {
     backgroundColor: "transparent",
     border: "none",
@@ -1001,24 +1112,22 @@ var MenuToggleSkin = (props) => {
     transition: "color 0.2s ease",
     ...config.style
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime6.jsx)(MenuToggleBase, { ...config, style: toggleStyle });
+  return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(MenuToggleBase, { ...config, style: toggleStyle });
 };
 
 // src/renderers/react/MenuToggle.tsx
-var import_jsx_runtime7 = require("react/jsx-runtime");
+var import_jsx_runtime8 = require("react/jsx-runtime");
 var MenuToggle = ({
   isOpen,
   onClick,
-  theme,
   className,
   style
 }) => {
-  return /* @__PURE__ */ (0, import_jsx_runtime7.jsx)(
+  return /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
     MenuToggleSkin,
     {
       isOpen,
       onClick,
-      theme,
       className,
       style
     }
@@ -1027,8 +1136,9 @@ var MenuToggle = ({
 var MenuToggle_default = MenuToggle;
 
 // src/renderers/react/base/HeaderBase.tsx
-var import_jsx_runtime8 = require("react/jsx-runtime");
-var HeaderBase = import_react4.default.forwardRef((props, ref) => {
+var import_jsx_runtime9 = require("react/jsx-runtime");
+var HeaderBase = import_react5.default.forwardRef((props, ref) => {
+  const theme = useTheme();
   const {
     logo,
     title,
@@ -1037,13 +1147,12 @@ var HeaderBase = import_react4.default.forwardRef((props, ref) => {
     isMobileMenuOpen = false,
     onMobileMenuToggle,
     style,
-    containerStyle,
-    theme
+    containerStyle
   } = props;
-  return /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(Box, { as: "header", ref, style, className, children: /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(Container, { style: containerStyle, children: [
-    /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(Flex, { justify: "space-between", align: "center", children: [
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsxs)(Flex, { align: "center", gap: "1rem", children: [
-        logo && /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+  return /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(Box, { as: "header", ref, style, className, children: /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)(Container, { style: containerStyle, children: [
+    /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)(Flex, { justify: "space-between", align: "center", children: [
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsxs)(Flex, { align: "center", gap: "1rem", children: [
+        logo && /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
           "img",
           {
             src: logo,
@@ -1052,23 +1161,21 @@ var HeaderBase = import_react4.default.forwardRef((props, ref) => {
             loading: "lazy"
           }
         ),
-        title && /* @__PURE__ */ (0, import_jsx_runtime8.jsx)("h1", { style: { fontSize: "1.5rem", color: theme.colors.text }, children: title })
+        title && /* @__PURE__ */ (0, import_jsx_runtime9.jsx)("h1", { style: { fontSize: "1.5rem", color: theme.colors.text }, children: title })
       ] }),
-      /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(Box, { style: { display: "none" } }),
-      onMobileMenuToggle && /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+      /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(Box, { style: { display: "none" } }),
+      onMobileMenuToggle && /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
         MenuToggle_default,
         {
           isOpen: isMobileMenuOpen,
-          onClick: onMobileMenuToggle,
-          theme
+          onClick: onMobileMenuToggle
         }
       )
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime8.jsx)(
+    /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
       Navbar_default,
       {
         links,
-        theme,
         isMobile: true,
         isOpen: isMobileMenuOpen
       }
@@ -1078,10 +1185,11 @@ var HeaderBase = import_react4.default.forwardRef((props, ref) => {
 HeaderBase.displayName = "HeaderBase";
 
 // src/renderers/react/skins/header/HeaderSkin.tsx
-var import_jsx_runtime9 = require("react/jsx-runtime");
+var import_jsx_runtime10 = require("react/jsx-runtime");
 var HeaderSkin = (props) => {
-  const { theme, ...config } = props;
-  const [mobileMenuOpen, setMobileMenuOpen] = (0, import_react5.useState)(false);
+  const theme = useTheme();
+  const { ...config } = props;
+  const [mobileMenuOpen, setMobileMenuOpen] = (0, import_react6.useState)(false);
   const headerStyle = {
     padding: "1rem 0",
     backgroundColor: theme.colors.background,
@@ -1094,11 +1202,10 @@ var HeaderSkin = (props) => {
     padding: "0 1rem",
     ...config.containerStyle
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime9.jsx)(
+  return /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(
     HeaderBase,
     {
       ...config,
-      theme,
       style: headerStyle,
       containerStyle,
       isMobileMenuOpen: mobileMenuOpen,
@@ -1108,19 +1215,19 @@ var HeaderSkin = (props) => {
 };
 
 // src/renderers/react/Header.tsx
-var import_jsx_runtime10 = require("react/jsx-runtime");
-var Header = ({ config, theme }) => {
-  return /* @__PURE__ */ (0, import_jsx_runtime10.jsx)(HeaderSkin, { ...config, theme });
+var import_jsx_runtime11 = require("react/jsx-runtime");
+var Header = ({ config }) => {
+  return /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(HeaderSkin, { ...config });
 };
 var Header_default = Header;
 
 // src/renderers/react/base/HeroBase.tsx
-var import_react7 = __toESM(require("react"));
+var import_react8 = __toESM(require("react"));
 
 // src/renderers/react/base/ButtonBase.tsx
-var import_react6 = __toESM(require("react"));
-var import_jsx_runtime11 = require("react/jsx-runtime");
-var ButtonBase = import_react6.default.forwardRef((props, ref) => {
+var import_react7 = __toESM(require("react"));
+var import_jsx_runtime12 = require("react/jsx-runtime");
+var ButtonBase = import_react7.default.forwardRef((props, ref) => {
   const {
     text,
     url,
@@ -1138,7 +1245,7 @@ var ButtonBase = import_react6.default.forwardRef((props, ref) => {
     onKeyDown,
     ...rest
   } = props;
-  return /* @__PURE__ */ (0, import_jsx_runtime11.jsx)(
+  return /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
     "a",
     {
       ref,
@@ -1200,9 +1307,10 @@ function getBestContrastColor(bgColor, lightColor = "#ffffff", darkColor = "#000
 }
 
 // src/renderers/react/skins/button/ButtonSkin.tsx
-var import_jsx_runtime12 = require("react/jsx-runtime");
+var import_jsx_runtime13 = require("react/jsx-runtime");
 var ButtonSkin = (props) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
   const backgroundColor = config.variant === "primary" ? theme.colors.primary : config.variant === "secondary" ? theme.colors.secondary : "transparent";
   const textColor = config.variant === "primary" || config.variant === "secondary" ? getBestContrastColor(backgroundColor) : theme.colors.primary;
   const buttonStyles = {
@@ -1267,7 +1375,7 @@ var ButtonSkin = (props) => {
     }
     config.onKeyDown?.(e);
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime12.jsx)(
+  return /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(
     ButtonBase,
     {
       ...config,
@@ -1289,112 +1397,153 @@ var ButtonSkin = (props) => {
 };
 
 // src/renderers/react/Button.tsx
-var import_jsx_runtime13 = require("react/jsx-runtime");
-var Button = ({ config, theme }) => {
-  return /* @__PURE__ */ (0, import_jsx_runtime13.jsx)(ButtonSkin, { ...config, theme });
+var import_jsx_runtime14 = require("react/jsx-runtime");
+var Button = ({ config }) => {
+  return /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(ButtonSkin, { ...config });
 };
 var Button_default = Button;
 
+// src/renderers/react/base/heroStyles.ts
+function getHeroStyles(theme, alignment) {
+  return {
+    title: {
+      fontSize: theme.typography.h1,
+      fontWeight: theme.fontWeights.bold,
+      color: theme.colors.text,
+      marginBottom: theme.spacing.md,
+      lineHeight: "1.2"
+    },
+    subtitle: {
+      fontSize: theme.typography.body,
+      color: theme.colors.muted,
+      marginBottom: theme.spacing.lg,
+      maxWidth: theme.sizes?.subtitleMaxWidth ?? "600px",
+      marginInline: alignment === "center" ? "auto" : void 0
+    },
+    media: {
+      maxWidth: "100%",
+      borderRadius: "0.5rem",
+      boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)"
+    }
+  };
+}
+function getAlignmentStyles(alignment) {
+  const styles = {
+    flexAlign: alignment === "center" ? "center" : alignment === "right" ? "flex-end" : "flex-start",
+    textAlign: alignment === "left" ? "left" : alignment === "center" ? "center" : "right",
+    justifyContent: alignment === "center" ? "center" : alignment === "right" ? "flex-end" : "flex-start"
+  };
+  return styles;
+}
+
 // src/renderers/react/base/HeroBase.tsx
-var import_jsx_runtime14 = require("react/jsx-runtime");
-var HeroBase = import_react7.default.forwardRef((props, ref) => {
+var import_jsx_runtime15 = require("react/jsx-runtime");
+var HeroBase = import_react8.default.forwardRef((props, ref) => {
+  const theme = useTheme();
   const {
     title,
     subtitle,
     buttons,
     image,
+    imageAlt,
     video,
+    captionsSrc,
     alignment = "center",
     className,
     style,
     containerStyle,
     contentStyle,
-    theme
+    testId
   } = props;
-  return /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(Box, { as: "section", ref, className, style, "aria-labelledby": "hero-title", children: /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(Container, { style: containerStyle, children: /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(
-    Flex,
+  const headingId = props.id ? `${props.id}-title` : "hero-title";
+  const styles = (0, import_react8.useMemo)(
+    () => getHeroStyles(theme, alignment),
+    [theme, alignment]
+  );
+  const alignmentStyles = (0, import_react8.useMemo)(
+    () => getAlignmentStyles(alignment),
+    [alignment]
+  );
+  return /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(
+    Box,
     {
-      direction: "column",
-      gap: theme.spacing.xl,
-      align: alignment === "center" ? "center" : alignment === "right" ? "flex-end" : "flex-start",
-      style: { textAlign: alignment === "center" ? "center" : alignment === "right" ? "right" : "left", ...contentStyle },
-      children: [
-        /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(Box, { children: [
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
-            "h1",
-            {
-              id: "hero-title",
-              style: {
-                fontSize: theme.typography.h1,
-                fontWeight: theme.fontWeights.bold,
-                color: theme.colors.text,
-                marginBottom: theme.spacing.md,
-                lineHeight: "1.2"
-              },
-              children: title
-            }
-          ),
-          /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
-            "p",
-            {
-              style: {
-                fontSize: theme.typography.body,
-                color: theme.colors.muted,
-                marginBottom: theme.spacing.lg,
-                maxWidth: "600px",
-                marginLeft: alignment === "center" ? "auto" : "0",
-                marginRight: alignment === "center" ? "auto" : "0"
-              },
-              children: subtitle
-            }
-          )
-        ] }),
-        (image || video) && /* @__PURE__ */ (0, import_jsx_runtime14.jsxs)(Box, { children: [
-          image && /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
-            "img",
-            {
-              src: image,
-              alt: title || "Hero",
-              style: {
-                maxWidth: "100%",
-                borderRadius: "0.5rem",
-                boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)"
-              },
-              loading: "lazy"
-            }
-          ),
-          video && /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
-            "video",
-            {
-              src: video,
-              controls: true,
-              style: {
-                maxWidth: "100%",
-                borderRadius: "0.5rem",
-                boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)"
+      as: "section",
+      ref,
+      className,
+      style,
+      "aria-labelledby": headingId,
+      "data-testid": testId || "hero-section",
+      children: /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(Container, { style: containerStyle, "data-testid": "hero-container", children: /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)(
+        Flex,
+        {
+          direction: "column",
+          gap: theme.spacing.xl,
+          align: alignmentStyles.flexAlign,
+          style: {
+            textAlign: alignmentStyles.textAlign,
+            ...contentStyle
+          },
+          "data-testid": "hero-content",
+          children: [
+            /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)(Box, { "data-testid": "hero-text-content", children: [
+              /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(
+                "h1",
+                {
+                  id: headingId,
+                  style: styles.title,
+                  "data-testid": "hero-title",
+                  children: title
+                }
+              ),
+              subtitle && /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("p", { style: styles.subtitle, "data-testid": "hero-subtitle", children: subtitle })
+            ] }),
+            (image || video) && /* @__PURE__ */ (0, import_jsx_runtime15.jsxs)(Box, { "data-testid": "hero-media", children: [
+              image && !video && /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(
+                "img",
+                {
+                  src: image,
+                  alt: imageAlt || title || "Hero",
+                  style: styles.media,
+                  loading: "lazy",
+                  "data-testid": "hero-image"
+                }
+              ),
+              video && /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(
+                "video",
+                {
+                  src: video,
+                  controls: true,
+                  "aria-label": title || "Hero video",
+                  title: title || "Hero video",
+                  style: styles.media,
+                  "data-testid": "hero-video",
+                  children: captionsSrc && /* @__PURE__ */ (0, import_jsx_runtime15.jsx)("track", { kind: "captions", src: captionsSrc, default: true })
+                }
+              )
+            ] }),
+            !!buttons?.length && /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(
+              Flex,
+              {
+                gap: theme.spacing.md,
+                wrap: "wrap",
+                justify: alignmentStyles.justifyContent,
+                "data-testid": "hero-buttons",
+                children: buttons.map((button, index) => /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(Button_default, { config: button }, button.id || index))
               }
-            }
-          )
-        ] }),
-        buttons?.length > 0 && /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(
-          Flex,
-          {
-            gap: theme.spacing.md,
-            wrap: "wrap",
-            justify: alignment === "center" ? "center" : "flex-start",
-            children: buttons.map((button) => /* @__PURE__ */ (0, import_jsx_runtime14.jsx)(Button_default, { config: button, theme }, button.id))
-          }
-        )
-      ]
+            )
+          ]
+        }
+      ) })
     }
-  ) }) });
+  );
 });
 HeroBase.displayName = "HeroBase";
 
 // src/renderers/react/skins/hero/HeroSkin.tsx
-var import_jsx_runtime15 = require("react/jsx-runtime");
+var import_jsx_runtime16 = require("react/jsx-runtime");
 var HeroSkin = (props) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
   const sectionStyle = {
     padding: "4rem 0",
     ...config.style
@@ -1413,11 +1562,10 @@ var HeroSkin = (props) => {
     textAlign: config.alignment || "center",
     ...config.contentStyle
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime15.jsx)(
+  return /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
     HeroBase,
     {
       ...config,
-      theme,
       style: sectionStyle,
       containerStyle,
       contentStyle
@@ -1426,9 +1574,10 @@ var HeroSkin = (props) => {
 };
 
 // src/renderers/react/skins/hero/HeroSkin2.tsx
-var import_jsx_runtime16 = require("react/jsx-runtime");
+var import_jsx_runtime17 = require("react/jsx-runtime");
 var HeroSkin2 = (props) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
   const sectionStyle = {
     padding: "6rem 0",
     backgroundColor: theme.colors.background,
@@ -1447,11 +1596,10 @@ var HeroSkin2 = (props) => {
     alignItems: "center",
     ...config.contentStyle
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime16.jsx)(
+  return /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(
     HeroBase,
     {
       ...config,
-      theme,
       style: sectionStyle,
       containerStyle,
       contentStyle
@@ -1460,9 +1608,10 @@ var HeroSkin2 = (props) => {
 };
 
 // src/renderers/react/skins/hero/HeroSkin3.tsx
-var import_jsx_runtime17 = require("react/jsx-runtime");
+var import_jsx_runtime18 = require("react/jsx-runtime");
 var HeroSkin3 = (props) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
   const sectionStyle = {
     padding: "8rem 0",
     background: `linear-gradient(135deg, ${theme.colors.primary} 0%, ${theme.colors.secondary} 100%)`,
@@ -1483,18 +1632,10 @@ var HeroSkin3 = (props) => {
     textAlign: "center",
     ...config.contentStyle
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime17.jsx)(
+  return /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
     HeroBase,
     {
       ...config,
-      theme: {
-        ...theme,
-        colors: {
-          ...theme.colors,
-          text: "#ffffff",
-          muted: "rgba(255, 255, 255, 0.8)"
-        }
-      },
       style: sectionStyle,
       containerStyle,
       contentStyle
@@ -1503,9 +1644,10 @@ var HeroSkin3 = (props) => {
 };
 
 // src/renderers/react/skins/hero/HeroSkin4.tsx
-var import_jsx_runtime18 = require("react/jsx-runtime");
+var import_jsx_runtime19 = require("react/jsx-runtime");
 var HeroSkin4 = (props) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
   const sectionStyle = {
     padding: "8rem 0",
     position: "relative",
@@ -1547,8 +1689,8 @@ var HeroSkin4 = (props) => {
     background: "rgba(0, 0, 0, 0.7)",
     zIndex: 0
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime18.jsxs)("section", { style: sectionStyle, className: config.className, children: [
-    config.video && /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+  return /* @__PURE__ */ (0, import_jsx_runtime19.jsxs)("section", { style: sectionStyle, className: config.className, children: [
+    config.video && /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(
       "video",
       {
         src: config.video,
@@ -1559,19 +1701,11 @@ var HeroSkin4 = (props) => {
         style: videoStyle
       }
     ),
-    /* @__PURE__ */ (0, import_jsx_runtime18.jsx)("div", { style: overlayStyle }),
-    /* @__PURE__ */ (0, import_jsx_runtime18.jsx)(
+    /* @__PURE__ */ (0, import_jsx_runtime19.jsx)("div", { style: overlayStyle }),
+    /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(
       HeroBase,
       {
         ...config,
-        theme: {
-          ...theme,
-          colors: {
-            ...theme.colors,
-            text: "#ffffff",
-            muted: "rgba(255, 255, 255, 0.8)"
-          }
-        },
         style: { position: "relative", zIndex: 1 },
         containerStyle,
         contentStyle
@@ -1581,9 +1715,10 @@ var HeroSkin4 = (props) => {
 };
 
 // src/renderers/react/skins/hero/HeroSkin5.tsx
-var import_jsx_runtime19 = require("react/jsx-runtime");
+var import_jsx_runtime20 = require("react/jsx-runtime");
 var HeroSkin5 = (props) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
   const sectionStyle = {
     padding: "6rem 0",
     backgroundColor: "#f8fafc",
@@ -1608,11 +1743,10 @@ var HeroSkin5 = (props) => {
     borderRadius: "0.5rem",
     boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)"
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime19.jsx)(
+  return /* @__PURE__ */ (0, import_jsx_runtime20.jsx)(
     HeroBase,
     {
       ...config,
-      theme,
       style: sectionStyle,
       containerStyle,
       contentStyle
@@ -1621,9 +1755,10 @@ var HeroSkin5 = (props) => {
 };
 
 // src/renderers/react/skins/hero/HeroSkin6.tsx
-var import_jsx_runtime20 = require("react/jsx-runtime");
+var import_jsx_runtime21 = require("react/jsx-runtime");
 var HeroSkin6 = (props) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
   const sectionStyle = {
     padding: "8rem 0",
     backgroundColor: "#000",
@@ -1644,11 +1779,10 @@ var HeroSkin6 = (props) => {
     alignItems: "center",
     ...config.contentStyle
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime20.jsx)(
+  return /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(
     HeroBase,
     {
       ...config,
-      theme,
       style: sectionStyle,
       containerStyle,
       contentStyle
@@ -1657,9 +1791,10 @@ var HeroSkin6 = (props) => {
 };
 
 // src/renderers/react/skins/hero/HeroSkin7.tsx
-var import_jsx_runtime21 = require("react/jsx-runtime");
+var import_jsx_runtime22 = require("react/jsx-runtime");
 var HeroSkin7 = (props) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
   const sectionStyle = {
     padding: "5rem 0",
     backgroundColor: "#fff",
@@ -1688,11 +1823,10 @@ var HeroSkin7 = (props) => {
     fontSize: "1.125rem",
     lineHeight: 1.6
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime21.jsx)(
+  return /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(
     HeroBase,
     {
       ...config,
-      theme,
       style: sectionStyle,
       containerStyle,
       contentStyle
@@ -1701,9 +1835,10 @@ var HeroSkin7 = (props) => {
 };
 
 // src/renderers/react/skins/hero/HeroSkin8.tsx
-var import_jsx_runtime22 = require("react/jsx-runtime");
+var import_jsx_runtime23 = require("react/jsx-runtime");
 var HeroSkin8 = (props) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
   const sectionStyle = {
     padding: "8rem 0",
     backgroundColor: "#3b82f6",
@@ -1735,11 +1870,10 @@ var HeroSkin8 = (props) => {
     transition: "all 0.3s ease",
     boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)"
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime22.jsx)(
+  return /* @__PURE__ */ (0, import_jsx_runtime23.jsx)(
     HeroBase,
     {
       ...config,
-      theme,
       style: sectionStyle,
       containerStyle,
       contentStyle
@@ -1748,9 +1882,10 @@ var HeroSkin8 = (props) => {
 };
 
 // src/renderers/react/skins/hero/HeroSkin9.tsx
-var import_jsx_runtime23 = require("react/jsx-runtime");
+var import_jsx_runtime24 = require("react/jsx-runtime");
 var HeroSkin9 = (props) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
   const sectionStyle = {
     padding: "6rem 0",
     backgroundColor: "#f8fafc",
@@ -1770,11 +1905,10 @@ var HeroSkin9 = (props) => {
     textAlign: "center",
     ...config.contentStyle
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime23.jsx)(
+  return /* @__PURE__ */ (0, import_jsx_runtime24.jsx)(
     HeroBase,
     {
       ...config,
-      theme,
       style: sectionStyle,
       containerStyle,
       contentStyle
@@ -1783,9 +1917,10 @@ var HeroSkin9 = (props) => {
 };
 
 // src/renderers/react/skins/hero/HeroSkin10.tsx
-var import_jsx_runtime24 = require("react/jsx-runtime");
+var import_jsx_runtime25 = require("react/jsx-runtime");
 var HeroSkin10 = (props) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
   const sectionStyle = {
     minHeight: "100vh",
     display: "flex",
@@ -1810,11 +1945,10 @@ var HeroSkin10 = (props) => {
     textAlign: "center",
     ...config.contentStyle
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime24.jsx)(
+  return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(
     HeroBase,
     {
       ...config,
-      theme,
       style: sectionStyle,
       containerStyle,
       contentStyle
@@ -1823,37 +1957,38 @@ var HeroSkin10 = (props) => {
 };
 
 // src/renderers/react/Hero.tsx
-var import_jsx_runtime25 = require("react/jsx-runtime");
-var Hero = ({ config, theme }) => {
+var import_jsx_runtime26 = require("react/jsx-runtime");
+var Hero = ({ config }) => {
   switch (config.skin) {
     case "skin2":
-      return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(HeroSkin2, { ...config, theme });
+      return /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(HeroSkin2, { ...config });
     case "skin3":
-      return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(HeroSkin3, { ...config, theme });
+      return /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(HeroSkin3, { ...config });
     case "skin4":
-      return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(HeroSkin4, { ...config, theme });
+      return /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(HeroSkin4, { ...config });
     case "skin5":
-      return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(HeroSkin5, { ...config, theme });
+      return /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(HeroSkin5, { ...config });
     case "skin6":
-      return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(HeroSkin6, { ...config, theme });
+      return /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(HeroSkin6, { ...config });
     case "skin7":
-      return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(HeroSkin7, { ...config, theme });
+      return /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(HeroSkin7, { ...config });
     case "skin8":
-      return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(HeroSkin8, { ...config, theme });
+      return /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(HeroSkin8, { ...config });
     case "skin9":
-      return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(HeroSkin9, { ...config, theme });
+      return /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(HeroSkin9, { ...config });
     case "skin10":
-      return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(HeroSkin10, { ...config, theme });
+      return /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(HeroSkin10, { ...config });
     default:
-      return /* @__PURE__ */ (0, import_jsx_runtime25.jsx)(HeroSkin, { ...config, theme });
+      return /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(HeroSkin, { ...config });
   }
 };
 var Hero_default = Hero;
 
 // src/renderers/react/base/FeaturesBase.tsx
-var import_react8 = __toESM(require("react"));
-var import_jsx_runtime26 = require("react/jsx-runtime");
-var FeaturesBase = import_react8.default.forwardRef((props, ref) => {
+var import_react9 = __toESM(require("react"));
+var import_jsx_runtime27 = require("react/jsx-runtime");
+var FeaturesBase = import_react9.default.forwardRef((props, ref) => {
+  const theme = useTheme();
   const {
     features,
     className,
@@ -1867,7 +2002,7 @@ var FeaturesBase = import_react8.default.forwardRef((props, ref) => {
     onFeatureMouseEnter,
     onFeatureMouseLeave
   } = props;
-  return /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(Box, { as: "section", ref, className, style, children: /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(Container, { style: containerStyle, children: /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(Box, { style: gridStyle, children: features.map((feature) => /* @__PURE__ */ (0, import_jsx_runtime26.jsxs)(
+  return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(Box, { as: "section", ref, className, style, children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(Container, { style: containerStyle, children: /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(Box, { style: gridStyle, children: features.map((feature) => /* @__PURE__ */ (0, import_jsx_runtime27.jsxs)(
     Box,
     {
       className: feature.className,
@@ -1875,9 +2010,9 @@ var FeaturesBase = import_react8.default.forwardRef((props, ref) => {
       onMouseEnter: onFeatureMouseEnter,
       onMouseLeave: onFeatureMouseLeave,
       children: [
-        feature.icon && /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(Box, { style: iconStyle, children: feature.icon }),
-        /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(Box, { as: "h3", style: titleStyle, children: feature.title }),
-        /* @__PURE__ */ (0, import_jsx_runtime26.jsx)(Box, { as: "p", style: descriptionStyle, children: feature.description })
+        feature.icon && /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(Box, { style: iconStyle, children: feature.icon }),
+        /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(Box, { as: "h3", style: titleStyle, children: feature.title }),
+        /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(Box, { as: "p", style: descriptionStyle, children: feature.description })
       ]
     },
     feature.id
@@ -1886,9 +2021,10 @@ var FeaturesBase = import_react8.default.forwardRef((props, ref) => {
 FeaturesBase.displayName = "FeaturesBase";
 
 // src/renderers/react/skins/features/FeaturesSkin.tsx
-var import_jsx_runtime27 = require("react/jsx-runtime");
+var import_jsx_runtime28 = require("react/jsx-runtime");
 var FeaturesSkin = (props) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
   const sectionStyle = {
     padding: "4rem 0",
     ...config.style
@@ -1940,11 +2076,10 @@ var FeaturesSkin = (props) => {
     e.currentTarget.style.boxShadow = "0 4px 6px -1px rgba(0, 0, 0, 0.1)";
     config.onFeatureMouseLeave?.(e);
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime27.jsx)(
+  return /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(
     FeaturesBase,
     {
       ...config,
-      theme,
       style: sectionStyle,
       containerStyle,
       gridStyle,
@@ -1959,16 +2094,17 @@ var FeaturesSkin = (props) => {
 };
 
 // src/renderers/react/Features.tsx
-var import_jsx_runtime28 = require("react/jsx-runtime");
-var Features = ({ config, theme }) => {
-  return /* @__PURE__ */ (0, import_jsx_runtime28.jsx)(FeaturesSkin, { ...config, theme });
+var import_jsx_runtime29 = require("react/jsx-runtime");
+var Features = ({ config }) => {
+  return /* @__PURE__ */ (0, import_jsx_runtime29.jsx)(FeaturesSkin, { ...config });
 };
 var Features_default = Features;
 
 // src/renderers/react/base/TestimonialsBase.tsx
-var import_react9 = __toESM(require("react"));
-var import_jsx_runtime29 = require("react/jsx-runtime");
-var TestimonialsBase = import_react9.default.forwardRef((props, ref) => {
+var import_react10 = __toESM(require("react"));
+var import_jsx_runtime30 = require("react/jsx-runtime");
+var TestimonialsBase = import_react10.default.forwardRef((props, ref) => {
+  const theme = useTheme();
   const {
     testimonials,
     className,
@@ -1984,10 +2120,9 @@ var TestimonialsBase = import_react9.default.forwardRef((props, ref) => {
     authorNameStyle,
     authorRoleStyle,
     onTestimonialMouseEnter,
-    onTestimonialMouseLeave,
-    theme
+    onTestimonialMouseLeave
   } = props;
-  return /* @__PURE__ */ (0, import_jsx_runtime29.jsx)(Box, { as: "section", ref, className, style, children: /* @__PURE__ */ (0, import_jsx_runtime29.jsx)(Container, { style: containerStyle, children: /* @__PURE__ */ (0, import_jsx_runtime29.jsx)(Box, { style: gridStyle, children: testimonials.map((testimonial) => /* @__PURE__ */ (0, import_jsx_runtime29.jsxs)(
+  return /* @__PURE__ */ (0, import_jsx_runtime30.jsx)(Box, { as: "section", ref, className, style, children: /* @__PURE__ */ (0, import_jsx_runtime30.jsx)(Container, { style: containerStyle, children: /* @__PURE__ */ (0, import_jsx_runtime30.jsx)(Box, { style: gridStyle, children: testimonials.map((testimonial) => /* @__PURE__ */ (0, import_jsx_runtime30.jsxs)(
     Box,
     {
       className: testimonial.className,
@@ -1995,7 +2130,7 @@ var TestimonialsBase = import_react9.default.forwardRef((props, ref) => {
       onMouseEnter: onTestimonialMouseEnter,
       onMouseLeave: onTestimonialMouseLeave,
       children: [
-        /* @__PURE__ */ (0, import_jsx_runtime29.jsx)(Box, { style: quoteIconStyle, children: /* @__PURE__ */ (0, import_jsx_runtime29.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime30.jsx)(Box, { style: quoteIconStyle, children: /* @__PURE__ */ (0, import_jsx_runtime30.jsx)(
           "svg",
           {
             width: "24",
@@ -2004,18 +2139,18 @@ var TestimonialsBase = import_react9.default.forwardRef((props, ref) => {
             fill: "none",
             stroke: theme.colors.primary,
             strokeWidth: "2",
-            children: /* @__PURE__ */ (0, import_jsx_runtime29.jsx)("path", { d: "M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" })
+            children: /* @__PURE__ */ (0, import_jsx_runtime30.jsx)("path", { d: "M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" })
           }
         ) }),
-        /* @__PURE__ */ (0, import_jsx_runtime29.jsx)(Box, { as: "blockquote", style: quoteStyle, children: testimonial.quote }),
-        /* @__PURE__ */ (0, import_jsx_runtime29.jsxs)(
+        /* @__PURE__ */ (0, import_jsx_runtime30.jsx)(Box, { as: "blockquote", style: quoteStyle, children: testimonial.quote }),
+        /* @__PURE__ */ (0, import_jsx_runtime30.jsxs)(
           Flex,
           {
             align: "center",
             gap: theme.spacing.md,
             style: authorContainerStyle,
             children: [
-              testimonial.avatar && /* @__PURE__ */ (0, import_jsx_runtime29.jsx)(
+              testimonial.avatar && /* @__PURE__ */ (0, import_jsx_runtime30.jsx)(
                 "img",
                 {
                   src: testimonial.avatar,
@@ -2024,9 +2159,9 @@ var TestimonialsBase = import_react9.default.forwardRef((props, ref) => {
                   loading: "lazy"
                 }
               ),
-              /* @__PURE__ */ (0, import_jsx_runtime29.jsxs)(Box, { style: authorInfoStyle, children: [
-                /* @__PURE__ */ (0, import_jsx_runtime29.jsx)(Box, { as: "p", style: authorNameStyle, children: testimonial.author }),
-                testimonial.role && /* @__PURE__ */ (0, import_jsx_runtime29.jsx)(Box, { as: "p", style: authorRoleStyle, children: testimonial.role })
+              /* @__PURE__ */ (0, import_jsx_runtime30.jsxs)(Box, { style: authorInfoStyle, children: [
+                /* @__PURE__ */ (0, import_jsx_runtime30.jsx)(Box, { as: "p", style: authorNameStyle, children: testimonial.author }),
+                testimonial.role && /* @__PURE__ */ (0, import_jsx_runtime30.jsx)(Box, { as: "p", style: authorRoleStyle, children: testimonial.role })
               ] })
             ]
           }
@@ -2039,9 +2174,10 @@ var TestimonialsBase = import_react9.default.forwardRef((props, ref) => {
 TestimonialsBase.displayName = "TestimonialsBase";
 
 // src/renderers/react/skins/testimonials/TestimonialsSkin.tsx
-var import_jsx_runtime30 = require("react/jsx-runtime");
+var import_jsx_runtime31 = require("react/jsx-runtime");
 var TestimonialsSkin = (props) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
   const sectionStyle = {
     padding: "4rem 0",
     ...config.style
@@ -2112,11 +2248,10 @@ var TestimonialsSkin = (props) => {
     e.currentTarget.style.boxShadow = "0 4px 6px -1px rgba(0, 0, 0, 0.1)";
     config.onTestimonialMouseLeave?.(e);
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime30.jsx)(
+  return /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(
     TestimonialsBase,
     {
       ...config,
-      theme,
       style: sectionStyle,
       containerStyle,
       gridStyle,
@@ -2135,16 +2270,17 @@ var TestimonialsSkin = (props) => {
 };
 
 // src/renderers/react/Testimonials.tsx
-var import_jsx_runtime31 = require("react/jsx-runtime");
-var Testimonials = ({ config, theme }) => {
-  return /* @__PURE__ */ (0, import_jsx_runtime31.jsx)(TestimonialsSkin, { ...config, theme });
+var import_jsx_runtime32 = require("react/jsx-runtime");
+var Testimonials = ({ config }) => {
+  return /* @__PURE__ */ (0, import_jsx_runtime32.jsx)(TestimonialsSkin, { ...config });
 };
 var Testimonials_default = Testimonials;
 
 // src/renderers/react/base/PricingBase.tsx
-var import_react10 = __toESM(require("react"));
-var import_jsx_runtime32 = require("react/jsx-runtime");
-var PricingBase = import_react10.default.forwardRef((props, ref) => {
+var import_react11 = __toESM(require("react"));
+var import_jsx_runtime33 = require("react/jsx-runtime");
+var PricingBase = import_react11.default.forwardRef((props, ref) => {
+  const theme = useTheme();
   const {
     plans,
     className,
@@ -2160,27 +2296,26 @@ var PricingBase = import_react10.default.forwardRef((props, ref) => {
     periodStyle,
     featuresListStyle,
     featureItemStyle,
-    checkIcon,
-    theme
+    checkIcon
   } = props;
-  return /* @__PURE__ */ (0, import_jsx_runtime32.jsx)(Box, { as: "section", ref, className, style, children: /* @__PURE__ */ (0, import_jsx_runtime32.jsx)(Container, { style: containerStyle, children: /* @__PURE__ */ (0, import_jsx_runtime32.jsx)(Box, { style: gridStyle, children: plans.map((plan) => /* @__PURE__ */ (0, import_jsx_runtime32.jsxs)(
+  return /* @__PURE__ */ (0, import_jsx_runtime33.jsx)(Box, { as: "section", ref, className, style, children: /* @__PURE__ */ (0, import_jsx_runtime33.jsx)(Container, { style: containerStyle, children: /* @__PURE__ */ (0, import_jsx_runtime33.jsx)(Box, { style: gridStyle, children: plans.map((plan) => /* @__PURE__ */ (0, import_jsx_runtime33.jsxs)(
     Box,
     {
       className: plan.className,
       style: typeof planStyle === "function" ? planStyle(plan) : planStyle,
       children: [
-        plan.featured && /* @__PURE__ */ (0, import_jsx_runtime32.jsx)(Box, { style: featuredBadgeStyle, children: "Popular" }),
-        /* @__PURE__ */ (0, import_jsx_runtime32.jsx)(Box, { as: "h3", style: titleStyle, children: plan.title }),
-        /* @__PURE__ */ (0, import_jsx_runtime32.jsx)(Box, { as: "p", style: descriptionStyle, children: plan.description }),
-        /* @__PURE__ */ (0, import_jsx_runtime32.jsxs)(Box, { style: priceContainerStyle, children: [
-          /* @__PURE__ */ (0, import_jsx_runtime32.jsx)(Box, { as: "span", style: priceStyle, children: plan.price }),
-          plan.period && /* @__PURE__ */ (0, import_jsx_runtime32.jsxs)(Box, { as: "span", style: periodStyle, children: [
+        plan.featured && /* @__PURE__ */ (0, import_jsx_runtime33.jsx)(Box, { style: featuredBadgeStyle, children: "Popular" }),
+        /* @__PURE__ */ (0, import_jsx_runtime33.jsx)(Box, { as: "h3", style: titleStyle, children: plan.title }),
+        /* @__PURE__ */ (0, import_jsx_runtime33.jsx)(Box, { as: "p", style: descriptionStyle, children: plan.description }),
+        /* @__PURE__ */ (0, import_jsx_runtime33.jsxs)(Box, { style: priceContainerStyle, children: [
+          /* @__PURE__ */ (0, import_jsx_runtime33.jsx)(Box, { as: "span", style: priceStyle, children: plan.price }),
+          plan.period && /* @__PURE__ */ (0, import_jsx_runtime33.jsxs)(Box, { as: "span", style: periodStyle, children: [
             "/",
             plan.period
           ] })
         ] }),
-        /* @__PURE__ */ (0, import_jsx_runtime32.jsx)(Box, { as: "ul", style: featuresListStyle, children: plan.features.map((feature, index) => /* @__PURE__ */ (0, import_jsx_runtime32.jsxs)(Box, { as: "li", style: featureItemStyle, children: [
-          checkIcon || /* @__PURE__ */ (0, import_jsx_runtime32.jsxs)(
+        /* @__PURE__ */ (0, import_jsx_runtime33.jsx)(Box, { as: "ul", style: featuresListStyle, children: plan.features.map((feature, index) => /* @__PURE__ */ (0, import_jsx_runtime33.jsxs)(Box, { as: "li", style: featureItemStyle, children: [
+          checkIcon || /* @__PURE__ */ (0, import_jsx_runtime33.jsxs)(
             "svg",
             {
               width: "20",
@@ -2190,14 +2325,14 @@ var PricingBase = import_react10.default.forwardRef((props, ref) => {
               stroke: theme.colors.accent,
               strokeWidth: "2",
               children: [
-                /* @__PURE__ */ (0, import_jsx_runtime32.jsx)("path", { d: "M22 11.08V12a10 10 0 1 1-5.93-9.14" }),
-                /* @__PURE__ */ (0, import_jsx_runtime32.jsx)("polyline", { points: "22 4 12 14.01 9 11.01" })
+                /* @__PURE__ */ (0, import_jsx_runtime33.jsx)("path", { d: "M22 11.08V12a10 10 0 1 1-5.93-9.14" }),
+                /* @__PURE__ */ (0, import_jsx_runtime33.jsx)("polyline", { points: "22 4 12 14.01 9 11.01" })
               ]
             }
           ),
           feature
         ] }, index)) }),
-        /* @__PURE__ */ (0, import_jsx_runtime32.jsx)(Button_default, { config: plan.button, theme })
+        /* @__PURE__ */ (0, import_jsx_runtime33.jsx)(Button_default, { config: plan.button })
       ]
     },
     plan.id
@@ -2206,9 +2341,10 @@ var PricingBase = import_react10.default.forwardRef((props, ref) => {
 PricingBase.displayName = "PricingBase";
 
 // src/renderers/react/skins/pricing/PricingSkin.tsx
-var import_jsx_runtime33 = require("react/jsx-runtime");
+var import_jsx_runtime34 = require("react/jsx-runtime");
 var PricingSkin = (props) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
   const sectionStyle = {
     padding: "4rem 0",
     ...config.style
@@ -2291,11 +2427,10 @@ var PricingSkin = (props) => {
     gap: theme.spacing.sm,
     ...config.featureItemStyle
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime33.jsx)(
+  return /* @__PURE__ */ (0, import_jsx_runtime34.jsx)(
     PricingBase,
     {
       ...config,
-      theme,
       style: sectionStyle,
       containerStyle,
       gridStyle,
@@ -2313,16 +2448,17 @@ var PricingSkin = (props) => {
 };
 
 // src/renderers/react/Pricing.tsx
-var import_jsx_runtime34 = require("react/jsx-runtime");
-var Pricing = ({ config, theme }) => {
-  return /* @__PURE__ */ (0, import_jsx_runtime34.jsx)(PricingSkin, { ...config, theme });
+var import_jsx_runtime35 = require("react/jsx-runtime");
+var Pricing = ({ config }) => {
+  return /* @__PURE__ */ (0, import_jsx_runtime35.jsx)(PricingSkin, { ...config });
 };
 var Pricing_default = Pricing;
 
 // src/renderers/react/base/CtaBase.tsx
-var import_react11 = __toESM(require("react"));
-var import_jsx_runtime35 = require("react/jsx-runtime");
-var CtaBase = import_react11.default.forwardRef((props, ref) => {
+var import_react12 = __toESM(require("react"));
+var import_jsx_runtime36 = require("react/jsx-runtime");
+var CtaBase = import_react12.default.forwardRef((props, ref) => {
+  const theme = useTheme();
   const {
     title,
     description,
@@ -2330,12 +2466,11 @@ var CtaBase = import_react11.default.forwardRef((props, ref) => {
     className,
     style,
     containerStyle,
-    contentStyle,
-    theme
+    contentStyle
   } = props;
-  return /* @__PURE__ */ (0, import_jsx_runtime35.jsx)(Box, { as: "section", ref, className, style, children: /* @__PURE__ */ (0, import_jsx_runtime35.jsx)(Container, { style: containerStyle, children: /* @__PURE__ */ (0, import_jsx_runtime35.jsxs)(Box, { style: contentStyle, children: [
-    /* @__PURE__ */ (0, import_jsx_runtime35.jsx)("h2", { style: { fontSize: "2rem", marginBottom: theme.spacing.md }, children: title }),
-    /* @__PURE__ */ (0, import_jsx_runtime35.jsx)(
+  return /* @__PURE__ */ (0, import_jsx_runtime36.jsx)(Box, { as: "section", ref, className, style, children: /* @__PURE__ */ (0, import_jsx_runtime36.jsx)(Container, { style: containerStyle, children: /* @__PURE__ */ (0, import_jsx_runtime36.jsxs)(Box, { style: contentStyle, children: [
+    /* @__PURE__ */ (0, import_jsx_runtime36.jsx)("h2", { style: { fontSize: "2rem", marginBottom: theme.spacing.md }, children: title }),
+    /* @__PURE__ */ (0, import_jsx_runtime36.jsx)(
       "p",
       {
         style: {
@@ -2348,15 +2483,16 @@ var CtaBase = import_react11.default.forwardRef((props, ref) => {
         children: description
       }
     ),
-    /* @__PURE__ */ (0, import_jsx_runtime35.jsx)(Button_default, { config: button, theme })
+    /* @__PURE__ */ (0, import_jsx_runtime36.jsx)(Button_default, { config: button })
   ] }) }) });
 });
 CtaBase.displayName = "CtaBase";
 
 // src/renderers/react/skins/cta/CtaSkin.tsx
-var import_jsx_runtime36 = require("react/jsx-runtime");
+var import_jsx_runtime37 = require("react/jsx-runtime");
 var CtaSkin = (props) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
   const backgroundColor = theme.colors.primary;
   const textColor = getBestContrastColor(backgroundColor);
   const sectionStyle = {
@@ -2391,12 +2527,11 @@ var CtaSkin = (props) => {
       // Warna teks saat hover tombol mengikuti warna background CTA
     }
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime36.jsx)(
+  return /* @__PURE__ */ (0, import_jsx_runtime37.jsx)(
     CtaBase,
     {
       ...config,
       button: buttonConfig,
-      theme: buttonTheme,
       style: sectionStyle,
       containerStyle,
       contentStyle
@@ -2405,16 +2540,17 @@ var CtaSkin = (props) => {
 };
 
 // src/renderers/react/Cta.tsx
-var import_jsx_runtime37 = require("react/jsx-runtime");
-var Cta = ({ config, theme }) => {
-  return /* @__PURE__ */ (0, import_jsx_runtime37.jsx)(CtaSkin, { ...config, theme });
+var import_jsx_runtime38 = require("react/jsx-runtime");
+var Cta = ({ config }) => {
+  return /* @__PURE__ */ (0, import_jsx_runtime38.jsx)(CtaSkin, { ...config });
 };
 var Cta_default = Cta;
 
 // src/renderers/react/base/FooterBase.tsx
-var import_react12 = __toESM(require("react"));
-var import_jsx_runtime38 = require("react/jsx-runtime");
-var FooterBase = import_react12.default.forwardRef((props, ref) => {
+var import_react13 = __toESM(require("react"));
+var import_jsx_runtime39 = require("react/jsx-runtime");
+var FooterBase = import_react13.default.forwardRef((props, ref) => {
+  const theme = useTheme();
   const {
     logo,
     title,
@@ -2428,13 +2564,12 @@ var FooterBase = import_react12.default.forwardRef((props, ref) => {
     columnStyle,
     linkStyle,
     onLinkMouseEnter,
-    onLinkMouseLeave,
-    theme
+    onLinkMouseLeave
   } = props;
-  return /* @__PURE__ */ (0, import_jsx_runtime38.jsx)(Box, { as: "footer", ref, className, style, children: /* @__PURE__ */ (0, import_jsx_runtime38.jsxs)(Container, { style: containerStyle, children: [
-    /* @__PURE__ */ (0, import_jsx_runtime38.jsxs)(Box, { style: gridStyle, children: [
-      /* @__PURE__ */ (0, import_jsx_runtime38.jsxs)(Box, { style: columnStyle, children: [
-        logo && /* @__PURE__ */ (0, import_jsx_runtime38.jsx)(
+  return /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(Box, { as: "footer", ref, className, style, children: /* @__PURE__ */ (0, import_jsx_runtime39.jsxs)(Container, { style: containerStyle, children: [
+    /* @__PURE__ */ (0, import_jsx_runtime39.jsxs)(Box, { style: gridStyle, children: [
+      /* @__PURE__ */ (0, import_jsx_runtime39.jsxs)(Box, { style: columnStyle, children: [
+        logo && /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(
           "img",
           {
             src: logo,
@@ -2443,7 +2578,7 @@ var FooterBase = import_react12.default.forwardRef((props, ref) => {
             loading: "lazy"
           }
         ),
-        title && /* @__PURE__ */ (0, import_jsx_runtime38.jsx)(
+        title && /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(
           Box,
           {
             as: "h3",
@@ -2455,7 +2590,7 @@ var FooterBase = import_react12.default.forwardRef((props, ref) => {
             children: title
           }
         ),
-        description && /* @__PURE__ */ (0, import_jsx_runtime38.jsx)(
+        description && /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(
           Box,
           {
             as: "p",
@@ -2464,8 +2599,8 @@ var FooterBase = import_react12.default.forwardRef((props, ref) => {
           }
         )
       ] }),
-      links.map((linkGroup) => /* @__PURE__ */ (0, import_jsx_runtime38.jsxs)(Box, { style: columnStyle, children: [
-        /* @__PURE__ */ (0, import_jsx_runtime38.jsx)(
+      links.map((linkGroup) => /* @__PURE__ */ (0, import_jsx_runtime39.jsxs)(Box, { style: columnStyle, children: [
+        /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(
           Box,
           {
             as: "h4",
@@ -2476,12 +2611,12 @@ var FooterBase = import_react12.default.forwardRef((props, ref) => {
             children: linkGroup.title
           }
         ),
-        /* @__PURE__ */ (0, import_jsx_runtime38.jsx)(Box, { as: "ul", style: { listStyle: "none", padding: 0 }, children: linkGroup.items.map((link, index) => /* @__PURE__ */ (0, import_jsx_runtime38.jsx)(
+        /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(Box, { as: "ul", style: { listStyle: "none", padding: 0 }, children: linkGroup.items.map((link, index) => /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(
           Box,
           {
             as: "li",
             style: { marginBottom: theme.spacing.sm },
-            children: /* @__PURE__ */ (0, import_jsx_runtime38.jsx)(
+            children: /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(
               "a",
               {
                 href: link.url,
@@ -2498,7 +2633,7 @@ var FooterBase = import_react12.default.forwardRef((props, ref) => {
         )) })
       ] }, linkGroup.title))
     ] }),
-    copyright && /* @__PURE__ */ (0, import_jsx_runtime38.jsx)(
+    copyright && /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(
       Box,
       {
         style: {
@@ -2507,7 +2642,7 @@ var FooterBase = import_react12.default.forwardRef((props, ref) => {
           borderTop: `1px solid ${theme.colors.muted}20`,
           textAlign: "center"
         },
-        children: /* @__PURE__ */ (0, import_jsx_runtime38.jsx)(Box, { as: "p", style: { color: theme.colors.muted }, children: copyright })
+        children: /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(Box, { as: "p", style: { color: theme.colors.muted }, children: copyright })
       }
     )
   ] }) });
@@ -2515,9 +2650,10 @@ var FooterBase = import_react12.default.forwardRef((props, ref) => {
 FooterBase.displayName = "FooterBase";
 
 // src/renderers/react/skins/footer/FooterSkin.tsx
-var import_jsx_runtime39 = require("react/jsx-runtime");
+var import_jsx_runtime40 = require("react/jsx-runtime");
 var FooterSkin = (props) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
   const sectionStyle = {
     padding: "4rem 0",
     backgroundColor: theme.colors.background,
@@ -2554,11 +2690,10 @@ var FooterSkin = (props) => {
     e.currentTarget.style.color = theme.colors.muted;
     config.onLinkMouseLeave?.(e);
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime39.jsx)(
+  return /* @__PURE__ */ (0, import_jsx_runtime40.jsx)(
     FooterBase,
     {
       ...config,
-      theme,
       style: sectionStyle,
       containerStyle,
       gridStyle,
@@ -2571,16 +2706,17 @@ var FooterSkin = (props) => {
 };
 
 // src/renderers/react/Footer.tsx
-var import_jsx_runtime40 = require("react/jsx-runtime");
-var Footer = ({ config, theme }) => {
-  return /* @__PURE__ */ (0, import_jsx_runtime40.jsx)(FooterSkin, { ...config, theme });
+var import_jsx_runtime41 = require("react/jsx-runtime");
+var Footer = ({ config }) => {
+  return /* @__PURE__ */ (0, import_jsx_runtime41.jsx)(FooterSkin, { ...config });
 };
 var Footer_default = Footer;
 
 // src/renderers/react/base/StatsBase.tsx
-var import_react13 = __toESM(require("react"));
-var import_jsx_runtime41 = require("react/jsx-runtime");
-var StatsBase = import_react13.default.forwardRef((props, ref) => {
+var import_react14 = __toESM(require("react"));
+var import_jsx_runtime42 = require("react/jsx-runtime");
+var StatsBase = import_react14.default.forwardRef((props, ref) => {
+  const theme = useTheme();
   const {
     stats,
     className,
@@ -2593,22 +2729,23 @@ var StatsBase = import_react13.default.forwardRef((props, ref) => {
     numberStyle,
     labelStyle
   } = props;
-  return /* @__PURE__ */ (0, import_jsx_runtime41.jsx)(Box, { as: "section", ref, className, style, children: /* @__PURE__ */ (0, import_jsx_runtime41.jsx)(Container, { style: containerStyle, children: /* @__PURE__ */ (0, import_jsx_runtime41.jsx)(Box, { style: gridStyle, children: stats.map((stat) => /* @__PURE__ */ (0, import_jsx_runtime41.jsxs)(Box, { className: stat.className, style: statStyle, children: [
-    stat.icon && /* @__PURE__ */ (0, import_jsx_runtime41.jsx)(Box, { style: iconStyle, children: stat.icon }),
-    /* @__PURE__ */ (0, import_jsx_runtime41.jsxs)(Box, { style: numberContainerStyle, children: [
-      stat.prefix && /* @__PURE__ */ (0, import_jsx_runtime41.jsx)(Box, { as: "span", style: numberStyle, children: stat.prefix }),
-      /* @__PURE__ */ (0, import_jsx_runtime41.jsx)(Box, { as: "span", style: numberStyle, children: stat.number }),
-      stat.suffix && /* @__PURE__ */ (0, import_jsx_runtime41.jsx)(Box, { as: "span", style: numberStyle, children: stat.suffix })
+  return /* @__PURE__ */ (0, import_jsx_runtime42.jsx)(Box, { as: "section", ref, className, style, children: /* @__PURE__ */ (0, import_jsx_runtime42.jsx)(Container, { style: containerStyle, children: /* @__PURE__ */ (0, import_jsx_runtime42.jsx)(Box, { style: gridStyle, children: stats.map((stat) => /* @__PURE__ */ (0, import_jsx_runtime42.jsxs)(Box, { className: stat.className, style: statStyle, children: [
+    stat.icon && /* @__PURE__ */ (0, import_jsx_runtime42.jsx)(Box, { style: iconStyle, children: stat.icon }),
+    /* @__PURE__ */ (0, import_jsx_runtime42.jsxs)(Box, { style: numberContainerStyle, children: [
+      stat.prefix && /* @__PURE__ */ (0, import_jsx_runtime42.jsx)(Box, { as: "span", style: numberStyle, children: stat.prefix }),
+      /* @__PURE__ */ (0, import_jsx_runtime42.jsx)(Box, { as: "span", style: numberStyle, children: stat.number }),
+      stat.suffix && /* @__PURE__ */ (0, import_jsx_runtime42.jsx)(Box, { as: "span", style: numberStyle, children: stat.suffix })
     ] }),
-    /* @__PURE__ */ (0, import_jsx_runtime41.jsx)(Box, { as: "p", style: labelStyle, children: stat.label })
+    /* @__PURE__ */ (0, import_jsx_runtime42.jsx)(Box, { as: "p", style: labelStyle, children: stat.label })
   ] }, stat.id)) }) }) });
 });
 StatsBase.displayName = "StatsBase";
 
 // src/renderers/react/skins/stats/StatsSkin.tsx
-var import_jsx_runtime42 = require("react/jsx-runtime");
+var import_jsx_runtime43 = require("react/jsx-runtime");
 var StatsSkin = (props) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
   const sectionStyle = {
     padding: "4rem 0",
     ...config.style
@@ -2652,11 +2789,10 @@ var StatsSkin = (props) => {
     color: theme.colors.muted,
     ...config.labelStyle
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime42.jsx)(
+  return /* @__PURE__ */ (0, import_jsx_runtime43.jsx)(
     StatsBase,
     {
       ...config,
-      theme,
       style: sectionStyle,
       containerStyle,
       gridStyle,
@@ -2670,19 +2806,19 @@ var StatsSkin = (props) => {
 };
 
 // src/renderers/react/Stats.tsx
-var import_jsx_runtime43 = require("react/jsx-runtime");
+var import_jsx_runtime44 = require("react/jsx-runtime");
 var Stats = ({
-  config,
-  theme
+  config
 }) => {
-  return /* @__PURE__ */ (0, import_jsx_runtime43.jsx)(StatsSkin, { ...config, theme });
+  return /* @__PURE__ */ (0, import_jsx_runtime44.jsx)(StatsSkin, { ...config });
 };
 var Stats_default = Stats;
 
 // src/renderers/react/base/FaqBase.tsx
-var import_react14 = __toESM(require("react"));
-var import_jsx_runtime44 = require("react/jsx-runtime");
-var FaqBase = import_react14.default.forwardRef((props, ref) => {
+var import_react15 = __toESM(require("react"));
+var import_jsx_runtime45 = require("react/jsx-runtime");
+var FaqBase = import_react15.default.forwardRef((props, ref) => {
+  const theme = useTheme();
   const {
     items,
     className,
@@ -2690,20 +2826,20 @@ var FaqBase = import_react14.default.forwardRef((props, ref) => {
     containerStyle,
     itemStyle,
     questionStyle,
-    answerStyle,
-    theme
+    answerStyle
   } = props;
-  return /* @__PURE__ */ (0, import_jsx_runtime44.jsx)(Box, { as: "section", ref, className, style, children: /* @__PURE__ */ (0, import_jsx_runtime44.jsx)(Container, { style: containerStyle, children: /* @__PURE__ */ (0, import_jsx_runtime44.jsx)(Box, { style: { maxWidth: "800px", margin: "0 auto" }, children: items.map((item) => /* @__PURE__ */ (0, import_jsx_runtime44.jsx)(Box, { style: itemStyle, children: /* @__PURE__ */ (0, import_jsx_runtime44.jsxs)("details", { style: { padding: theme.spacing.md }, children: [
-    /* @__PURE__ */ (0, import_jsx_runtime44.jsx)("summary", { style: questionStyle, children: item.question }),
-    /* @__PURE__ */ (0, import_jsx_runtime44.jsx)("p", { style: answerStyle, children: item.answer })
+  return /* @__PURE__ */ (0, import_jsx_runtime45.jsx)(Box, { as: "section", ref, className, style, children: /* @__PURE__ */ (0, import_jsx_runtime45.jsx)(Container, { style: containerStyle, children: /* @__PURE__ */ (0, import_jsx_runtime45.jsx)(Box, { style: { maxWidth: "800px", margin: "0 auto" }, children: items.map((item) => /* @__PURE__ */ (0, import_jsx_runtime45.jsx)(Box, { style: itemStyle, children: /* @__PURE__ */ (0, import_jsx_runtime45.jsxs)("details", { style: { padding: theme.spacing.md }, children: [
+    /* @__PURE__ */ (0, import_jsx_runtime45.jsx)("summary", { style: questionStyle, children: item.question }),
+    /* @__PURE__ */ (0, import_jsx_runtime45.jsx)("p", { style: answerStyle, children: item.answer })
   ] }) }, item.id)) }) }) });
 });
 FaqBase.displayName = "FaqBase";
 
 // src/renderers/react/skins/faq/FaqSkin.tsx
-var import_jsx_runtime45 = require("react/jsx-runtime");
+var import_jsx_runtime46 = require("react/jsx-runtime");
 var FaqSkin = (props) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
   const sectionStyle = {
     padding: "4rem 0",
     ...config.style
@@ -2735,11 +2871,10 @@ var FaqSkin = (props) => {
     lineHeight: "1.6",
     ...config.answerStyle
   };
-  return /* @__PURE__ */ (0, import_jsx_runtime45.jsx)(
+  return /* @__PURE__ */ (0, import_jsx_runtime46.jsx)(
     FaqBase,
     {
       ...config,
-      theme,
       style: sectionStyle,
       containerStyle,
       itemStyle,
@@ -2750,98 +2885,88 @@ var FaqSkin = (props) => {
 };
 
 // src/renderers/react/Faq.tsx
-var import_jsx_runtime46 = require("react/jsx-runtime");
-var Faq = ({ config, theme }) => {
-  return /* @__PURE__ */ (0, import_jsx_runtime46.jsx)(FaqSkin, { ...config, theme });
+var import_jsx_runtime47 = require("react/jsx-runtime");
+var Faq = ({ config }) => {
+  return /* @__PURE__ */ (0, import_jsx_runtime47.jsx)(FaqSkin, { ...config });
 };
 var Faq_default = Faq;
 
 // src/renderers/react/index.tsx
-var import_jsx_runtime47 = require("react/jsx-runtime");
+var import_jsx_runtime48 = require("react/jsx-runtime");
 var createReactRenderer = () => {
   const SectionRenderer = ({
-    section,
-    theme
+    section
   }) => {
     switch (section.type) {
       case "header":
-        return /* @__PURE__ */ (0, import_jsx_runtime47.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime48.jsx)(
           Header_default,
           {
-            config: section.config,
-            theme
+            config: section.config
           },
           section.id
         );
       case "hero":
-        return /* @__PURE__ */ (0, import_jsx_runtime47.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime48.jsx)(
           Hero_default,
           {
-            config: section.config,
-            theme
+            config: section.config
           },
           section.id
         );
       case "features":
-        return /* @__PURE__ */ (0, import_jsx_runtime47.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime48.jsx)(
           Features_default,
           {
-            config: section.config,
-            theme
+            config: section.config
           },
           section.id
         );
       case "testimonials":
-        return /* @__PURE__ */ (0, import_jsx_runtime47.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime48.jsx)(
           Testimonials_default,
           {
-            config: section.config,
-            theme
+            config: section.config
           },
           section.id
         );
       case "pricing":
-        return /* @__PURE__ */ (0, import_jsx_runtime47.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime48.jsx)(
           Pricing_default,
           {
-            config: section.config,
-            theme
+            config: section.config
           },
           section.id
         );
       case "cta":
-        return /* @__PURE__ */ (0, import_jsx_runtime47.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime48.jsx)(
           Cta_default,
           {
-            config: section.config,
-            theme
+            config: section.config
           },
           section.id
         );
       case "footer":
-        return /* @__PURE__ */ (0, import_jsx_runtime47.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime48.jsx)(
           Footer_default,
           {
-            config: section.config,
-            theme
+            config: section.config
           },
           section.id
         );
       case "stats":
-        return /* @__PURE__ */ (0, import_jsx_runtime47.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime48.jsx)(
           Stats_default,
           {
-            config: section.config,
-            theme
+            config: section.config
           },
           section.id
         );
       case "faq":
-        return /* @__PURE__ */ (0, import_jsx_runtime47.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime48.jsx)(
           Faq_default,
           {
-            config: section.config,
-            theme
+            config: section.config
           },
           section.id
         );
@@ -2851,7 +2976,7 @@ var createReactRenderer = () => {
     }
   };
   const LandingPage = ({ config }) => {
-    import_react15.default.useEffect(() => {
+    import_react16.default.useEffect(() => {
       const style = document.createElement("style");
       style.textContent = `
           * {
@@ -2864,6 +2989,7 @@ var createReactRenderer = () => {
             background-color: ${config.theme?.colors?.background || "#ffffff"};
             color: ${config.theme?.colors?.text || "#000000"};
             line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
           }
         `;
       document.head.appendChild(style);
@@ -2871,14 +2997,13 @@ var createReactRenderer = () => {
         document.head.removeChild(style);
       };
     }, [config]);
-    return /* @__PURE__ */ (0, import_jsx_runtime47.jsx)(Box, { children: config.sections.map((section) => /* @__PURE__ */ (0, import_jsx_runtime47.jsx)(
+    return /* @__PURE__ */ (0, import_jsx_runtime48.jsx)(ThemeProvider, { theme: config.theme, dark: config.theme?.colors?.background === "#000000", children: /* @__PURE__ */ (0, import_jsx_runtime48.jsx)(Box, { children: config.sections.map((section) => /* @__PURE__ */ (0, import_jsx_runtime48.jsx)(
       SectionRenderer,
       {
-        section,
-        theme: config.theme
+        section
       },
       section.id
-    )) });
+    )) }) });
   };
   return LandingPage;
 };

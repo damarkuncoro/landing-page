@@ -28,15 +28,19 @@ var defaultTheme = {
     small: "0.875rem"
   },
   fontWeights: {
-    normal: "400",
-    medium: "500",
-    bold: "700"
+    normal: 400,
+    medium: 500,
+    bold: 700
   },
   breakpoints: {
     sm: "640px",
     md: "768px",
     lg: "1024px",
     xl: "1280px"
+  },
+  sizes: {
+    subtitleMaxWidth: "600px",
+    containerMaxWidth: "1280px"
   }
 };
 function createTheme(config) {
@@ -66,6 +70,10 @@ function createTheme(config) {
     breakpoints: {
       ...defaultTheme.breakpoints,
       ...config?.breakpoints
+    },
+    sizes: {
+      ...defaultTheme.sizes,
+      ...config?.sizes
     }
   };
 }
@@ -158,8 +166,74 @@ var landingPageSchema = {
         fonts: {
           $ref: "#/definitions/Fonts"
         },
+        typography: {
+          $ref: "#/definitions/Typography"
+        },
+        fontWeights: {
+          $ref: "#/definitions/FontWeights"
+        },
         breakpoints: {
           $ref: "#/definitions/Breakpoints"
+        },
+        sizes: {
+          $ref: "#/definitions/Sizes"
+        }
+      }
+    },
+    Typography: {
+      type: "object",
+      properties: {
+        h1: {
+          type: "string",
+          description: 'Font size for H1 headings (e.g., "3rem")'
+        },
+        h2: {
+          type: "string",
+          description: 'Font size for H2 headings (e.g., "2.25rem")'
+        },
+        h3: {
+          type: "string",
+          description: 'Font size for H3 headings (e.g., "1.5rem")'
+        },
+        body: {
+          type: "string",
+          description: 'Font size for body text (e.g., "1.25rem")'
+        },
+        small: {
+          type: "string",
+          description: 'Font size for small text (e.g., "0.875rem")'
+        }
+      },
+      required: ["h1", "h2", "h3", "body", "small"]
+    },
+    FontWeights: {
+      type: "object",
+      properties: {
+        normal: {
+          type: ["number", "string"],
+          description: "Normal font weight (e.g., 400 or 'normal')"
+        },
+        medium: {
+          type: ["number", "string"],
+          description: "Medium font weight (e.g., 500 or 'medium')"
+        },
+        bold: {
+          type: ["number", "string"],
+          description: "Bold font weight (e.g., 700 or 'bold')"
+        }
+      },
+      required: ["normal", "medium", "bold"]
+    },
+    Sizes: {
+      type: "object",
+      properties: {
+        subtitleMaxWidth: {
+          type: "string",
+          description: 'Maximum width for subtitles (e.g., "600px")'
+        },
+        containerMaxWidth: {
+          type: "string",
+          description: 'Maximum width for containers (e.g., "1280px")'
         }
       }
     },
@@ -299,7 +373,9 @@ var sectionConfigSchemas = {
       title: { type: "string" },
       subtitle: { type: "string" },
       image: { type: "string", format: "uri-reference" },
+      imageAlt: { type: "string" },
       video: { type: "string", format: "uri-reference" },
+      captionsSrc: { type: "string", format: "uri-reference" },
       buttons: {
         type: "array",
         items: { $ref: "urn:landing-page:schema#/definitions/ButtonConfig" }
@@ -576,6 +652,8 @@ function defineLandingPage(config) {
   }
   const landingPage = {
     ...config,
+    sections: [...config.sections],
+    // Convert to mutable array
     theme: createTheme(config.theme),
     // Methods
     getSection(id) {
@@ -719,13 +797,13 @@ function createFaqSection(config, id, className) {
 }
 
 // src/renderers/react/index.tsx
-import React15 from "react";
+import React16 from "react";
 
 // src/renderers/react/skins/header/HeaderSkin.tsx
 import { useState } from "react";
 
 // src/renderers/react/base/HeaderBase.tsx
-import React4 from "react";
+import React5 from "react";
 
 // src/renderers/react/base/NavbarBase.tsx
 import React2 from "react";
@@ -840,10 +918,44 @@ var NavbarBase = React2.forwardRef(
 );
 NavbarBase.displayName = "NavbarBase";
 
-// src/renderers/react/skins/navbar/NavbarSkin.tsx
+// src/renderers/react/ThemeProvider.tsx
+import { createContext, useContext, useMemo } from "react";
 import { jsx as jsx3 } from "react/jsx-runtime";
+var ThemeContext = createContext(createTheme());
+var ThemeProvider = ({
+  theme = {},
+  children,
+  dark = false
+}) => {
+  const mergedTheme = useMemo(() => {
+    const baseTheme = createTheme(theme);
+    if (dark) {
+      return {
+        ...baseTheme,
+        colors: {
+          ...baseTheme.colors,
+          background: "#000000",
+          text: "#ffffff",
+          muted: "#64748b",
+          mutedBackground: "#1e293b",
+          border: "#334155"
+        }
+      };
+    }
+    return baseTheme;
+  }, [theme, dark]);
+  return /* @__PURE__ */ jsx3(ThemeContext.Provider, { value: mergedTheme, children });
+};
+var useTheme = () => {
+  const theme = useContext(ThemeContext);
+  return theme;
+};
+
+// src/renderers/react/skins/navbar/NavbarSkin.tsx
+import { jsx as jsx4 } from "react/jsx-runtime";
 var NavbarSkin = (props) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
   const navbarStyle = {
     marginTop: config.isMobile ? theme.spacing.md : 0,
     ...config.style
@@ -869,7 +981,7 @@ var NavbarSkin = (props) => {
     el.style.color = theme.colors.muted;
     config.onLinkMouseLeave?.(e, {});
   };
-  return /* @__PURE__ */ jsx3(
+  return /* @__PURE__ */ jsx4(
     NavbarBase,
     {
       ...config,
@@ -882,20 +994,18 @@ var NavbarSkin = (props) => {
 };
 
 // src/renderers/react/Navbar.tsx
-import { jsx as jsx4 } from "react/jsx-runtime";
+import { jsx as jsx5 } from "react/jsx-runtime";
 var Navbar = ({
   links,
-  theme,
   isMobile,
   isOpen,
   className,
   style
 }) => {
-  return /* @__PURE__ */ jsx4(
+  return /* @__PURE__ */ jsx5(
     NavbarSkin,
     {
       links,
-      theme,
       isMobile,
       isOpen,
       className,
@@ -906,9 +1016,9 @@ var Navbar = ({
 var Navbar_default = Navbar;
 
 // src/renderers/react/base/MenuToggleBase.tsx
-import React3 from "react";
-import { jsx as jsx5 } from "react/jsx-runtime";
-var MenuToggleBase = React3.forwardRef((props, ref) => {
+import React4 from "react";
+import { jsx as jsx6 } from "react/jsx-runtime";
+var MenuToggleBase = React4.forwardRef((props, ref) => {
   const {
     isOpen,
     onClick,
@@ -918,7 +1028,7 @@ var MenuToggleBase = React3.forwardRef((props, ref) => {
     iconOpen = "\u2630",
     iconClose = "\u2715"
   } = props;
-  return /* @__PURE__ */ jsx5(
+  return /* @__PURE__ */ jsx6(
     Box,
     {
       as: "button",
@@ -934,9 +1044,10 @@ var MenuToggleBase = React3.forwardRef((props, ref) => {
 MenuToggleBase.displayName = "MenuToggleBase";
 
 // src/renderers/react/skins/menu-toggle/MenuToggleSkin.tsx
-import { jsx as jsx6 } from "react/jsx-runtime";
+import { jsx as jsx7 } from "react/jsx-runtime";
 var MenuToggleSkin = (props) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
   const toggleStyle = {
     backgroundColor: "transparent",
     border: "none",
@@ -950,24 +1061,22 @@ var MenuToggleSkin = (props) => {
     transition: "color 0.2s ease",
     ...config.style
   };
-  return /* @__PURE__ */ jsx6(MenuToggleBase, { ...config, style: toggleStyle });
+  return /* @__PURE__ */ jsx7(MenuToggleBase, { ...config, style: toggleStyle });
 };
 
 // src/renderers/react/MenuToggle.tsx
-import { jsx as jsx7 } from "react/jsx-runtime";
+import { jsx as jsx8 } from "react/jsx-runtime";
 var MenuToggle = ({
   isOpen,
   onClick,
-  theme,
   className,
   style
 }) => {
-  return /* @__PURE__ */ jsx7(
+  return /* @__PURE__ */ jsx8(
     MenuToggleSkin,
     {
       isOpen,
       onClick,
-      theme,
       className,
       style
     }
@@ -976,8 +1085,9 @@ var MenuToggle = ({
 var MenuToggle_default = MenuToggle;
 
 // src/renderers/react/base/HeaderBase.tsx
-import { jsx as jsx8, jsxs } from "react/jsx-runtime";
-var HeaderBase = React4.forwardRef((props, ref) => {
+import { jsx as jsx9, jsxs } from "react/jsx-runtime";
+var HeaderBase = React5.forwardRef((props, ref) => {
+  const theme = useTheme();
   const {
     logo,
     title,
@@ -986,13 +1096,12 @@ var HeaderBase = React4.forwardRef((props, ref) => {
     isMobileMenuOpen = false,
     onMobileMenuToggle,
     style,
-    containerStyle,
-    theme
+    containerStyle
   } = props;
-  return /* @__PURE__ */ jsx8(Box, { as: "header", ref, style, className, children: /* @__PURE__ */ jsxs(Container, { style: containerStyle, children: [
+  return /* @__PURE__ */ jsx9(Box, { as: "header", ref, style, className, children: /* @__PURE__ */ jsxs(Container, { style: containerStyle, children: [
     /* @__PURE__ */ jsxs(Flex, { justify: "space-between", align: "center", children: [
       /* @__PURE__ */ jsxs(Flex, { align: "center", gap: "1rem", children: [
-        logo && /* @__PURE__ */ jsx8(
+        logo && /* @__PURE__ */ jsx9(
           "img",
           {
             src: logo,
@@ -1001,23 +1110,21 @@ var HeaderBase = React4.forwardRef((props, ref) => {
             loading: "lazy"
           }
         ),
-        title && /* @__PURE__ */ jsx8("h1", { style: { fontSize: "1.5rem", color: theme.colors.text }, children: title })
+        title && /* @__PURE__ */ jsx9("h1", { style: { fontSize: "1.5rem", color: theme.colors.text }, children: title })
       ] }),
-      /* @__PURE__ */ jsx8(Box, { style: { display: "none" } }),
-      onMobileMenuToggle && /* @__PURE__ */ jsx8(
+      /* @__PURE__ */ jsx9(Box, { style: { display: "none" } }),
+      onMobileMenuToggle && /* @__PURE__ */ jsx9(
         MenuToggle_default,
         {
           isOpen: isMobileMenuOpen,
-          onClick: onMobileMenuToggle,
-          theme
+          onClick: onMobileMenuToggle
         }
       )
     ] }),
-    /* @__PURE__ */ jsx8(
+    /* @__PURE__ */ jsx9(
       Navbar_default,
       {
         links,
-        theme,
         isMobile: true,
         isOpen: isMobileMenuOpen
       }
@@ -1027,9 +1134,10 @@ var HeaderBase = React4.forwardRef((props, ref) => {
 HeaderBase.displayName = "HeaderBase";
 
 // src/renderers/react/skins/header/HeaderSkin.tsx
-import { jsx as jsx9 } from "react/jsx-runtime";
+import { jsx as jsx10 } from "react/jsx-runtime";
 var HeaderSkin = (props) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const headerStyle = {
     padding: "1rem 0",
@@ -1043,11 +1151,10 @@ var HeaderSkin = (props) => {
     padding: "0 1rem",
     ...config.containerStyle
   };
-  return /* @__PURE__ */ jsx9(
+  return /* @__PURE__ */ jsx10(
     HeaderBase,
     {
       ...config,
-      theme,
       style: headerStyle,
       containerStyle,
       isMobileMenuOpen: mobileMenuOpen,
@@ -1057,19 +1164,19 @@ var HeaderSkin = (props) => {
 };
 
 // src/renderers/react/Header.tsx
-import { jsx as jsx10 } from "react/jsx-runtime";
-var Header = ({ config, theme }) => {
-  return /* @__PURE__ */ jsx10(HeaderSkin, { ...config, theme });
+import { jsx as jsx11 } from "react/jsx-runtime";
+var Header = ({ config }) => {
+  return /* @__PURE__ */ jsx11(HeaderSkin, { ...config });
 };
 var Header_default = Header;
 
 // src/renderers/react/base/HeroBase.tsx
-import React7 from "react";
+import React8, { useMemo as useMemo2 } from "react";
 
 // src/renderers/react/base/ButtonBase.tsx
-import React6 from "react";
-import { jsx as jsx11 } from "react/jsx-runtime";
-var ButtonBase = React6.forwardRef((props, ref) => {
+import React7 from "react";
+import { jsx as jsx12 } from "react/jsx-runtime";
+var ButtonBase = React7.forwardRef((props, ref) => {
   const {
     text,
     url,
@@ -1087,7 +1194,7 @@ var ButtonBase = React6.forwardRef((props, ref) => {
     onKeyDown,
     ...rest
   } = props;
-  return /* @__PURE__ */ jsx11(
+  return /* @__PURE__ */ jsx12(
     "a",
     {
       ref,
@@ -1149,9 +1256,10 @@ function getBestContrastColor(bgColor, lightColor = "#ffffff", darkColor = "#000
 }
 
 // src/renderers/react/skins/button/ButtonSkin.tsx
-import { jsx as jsx12 } from "react/jsx-runtime";
+import { jsx as jsx13 } from "react/jsx-runtime";
 var ButtonSkin = (props) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
   const backgroundColor = config.variant === "primary" ? theme.colors.primary : config.variant === "secondary" ? theme.colors.secondary : "transparent";
   const textColor = config.variant === "primary" || config.variant === "secondary" ? getBestContrastColor(backgroundColor) : theme.colors.primary;
   const buttonStyles = {
@@ -1216,7 +1324,7 @@ var ButtonSkin = (props) => {
     }
     config.onKeyDown?.(e);
   };
-  return /* @__PURE__ */ jsx12(
+  return /* @__PURE__ */ jsx13(
     ButtonBase,
     {
       ...config,
@@ -1238,112 +1346,153 @@ var ButtonSkin = (props) => {
 };
 
 // src/renderers/react/Button.tsx
-import { jsx as jsx13 } from "react/jsx-runtime";
-var Button = ({ config, theme }) => {
-  return /* @__PURE__ */ jsx13(ButtonSkin, { ...config, theme });
+import { jsx as jsx14 } from "react/jsx-runtime";
+var Button = ({ config }) => {
+  return /* @__PURE__ */ jsx14(ButtonSkin, { ...config });
 };
 var Button_default = Button;
 
+// src/renderers/react/base/heroStyles.ts
+function getHeroStyles(theme, alignment) {
+  return {
+    title: {
+      fontSize: theme.typography.h1,
+      fontWeight: theme.fontWeights.bold,
+      color: theme.colors.text,
+      marginBottom: theme.spacing.md,
+      lineHeight: "1.2"
+    },
+    subtitle: {
+      fontSize: theme.typography.body,
+      color: theme.colors.muted,
+      marginBottom: theme.spacing.lg,
+      maxWidth: theme.sizes?.subtitleMaxWidth ?? "600px",
+      marginInline: alignment === "center" ? "auto" : void 0
+    },
+    media: {
+      maxWidth: "100%",
+      borderRadius: "0.5rem",
+      boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)"
+    }
+  };
+}
+function getAlignmentStyles(alignment) {
+  const styles = {
+    flexAlign: alignment === "center" ? "center" : alignment === "right" ? "flex-end" : "flex-start",
+    textAlign: alignment === "left" ? "left" : alignment === "center" ? "center" : "right",
+    justifyContent: alignment === "center" ? "center" : alignment === "right" ? "flex-end" : "flex-start"
+  };
+  return styles;
+}
+
 // src/renderers/react/base/HeroBase.tsx
-import { jsx as jsx14, jsxs as jsxs2 } from "react/jsx-runtime";
-var HeroBase = React7.forwardRef((props, ref) => {
+import { jsx as jsx15, jsxs as jsxs2 } from "react/jsx-runtime";
+var HeroBase = React8.forwardRef((props, ref) => {
+  const theme = useTheme();
   const {
     title,
     subtitle,
     buttons,
     image,
+    imageAlt,
     video,
+    captionsSrc,
     alignment = "center",
     className,
     style,
     containerStyle,
     contentStyle,
-    theme
+    testId
   } = props;
-  return /* @__PURE__ */ jsx14(Box, { as: "section", ref, className, style, "aria-labelledby": "hero-title", children: /* @__PURE__ */ jsx14(Container, { style: containerStyle, children: /* @__PURE__ */ jsxs2(
-    Flex,
+  const headingId = props.id ? `${props.id}-title` : "hero-title";
+  const styles = useMemo2(
+    () => getHeroStyles(theme, alignment),
+    [theme, alignment]
+  );
+  const alignmentStyles = useMemo2(
+    () => getAlignmentStyles(alignment),
+    [alignment]
+  );
+  return /* @__PURE__ */ jsx15(
+    Box,
     {
-      direction: "column",
-      gap: theme.spacing.xl,
-      align: alignment === "center" ? "center" : alignment === "right" ? "flex-end" : "flex-start",
-      style: { textAlign: alignment === "center" ? "center" : alignment === "right" ? "right" : "left", ...contentStyle },
-      children: [
-        /* @__PURE__ */ jsxs2(Box, { children: [
-          /* @__PURE__ */ jsx14(
-            "h1",
-            {
-              id: "hero-title",
-              style: {
-                fontSize: theme.typography.h1,
-                fontWeight: theme.fontWeights.bold,
-                color: theme.colors.text,
-                marginBottom: theme.spacing.md,
-                lineHeight: "1.2"
-              },
-              children: title
-            }
-          ),
-          /* @__PURE__ */ jsx14(
-            "p",
-            {
-              style: {
-                fontSize: theme.typography.body,
-                color: theme.colors.muted,
-                marginBottom: theme.spacing.lg,
-                maxWidth: "600px",
-                marginLeft: alignment === "center" ? "auto" : "0",
-                marginRight: alignment === "center" ? "auto" : "0"
-              },
-              children: subtitle
-            }
-          )
-        ] }),
-        (image || video) && /* @__PURE__ */ jsxs2(Box, { children: [
-          image && /* @__PURE__ */ jsx14(
-            "img",
-            {
-              src: image,
-              alt: title || "Hero",
-              style: {
-                maxWidth: "100%",
-                borderRadius: "0.5rem",
-                boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)"
-              },
-              loading: "lazy"
-            }
-          ),
-          video && /* @__PURE__ */ jsx14(
-            "video",
-            {
-              src: video,
-              controls: true,
-              style: {
-                maxWidth: "100%",
-                borderRadius: "0.5rem",
-                boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)"
+      as: "section",
+      ref,
+      className,
+      style,
+      "aria-labelledby": headingId,
+      "data-testid": testId || "hero-section",
+      children: /* @__PURE__ */ jsx15(Container, { style: containerStyle, "data-testid": "hero-container", children: /* @__PURE__ */ jsxs2(
+        Flex,
+        {
+          direction: "column",
+          gap: theme.spacing.xl,
+          align: alignmentStyles.flexAlign,
+          style: {
+            textAlign: alignmentStyles.textAlign,
+            ...contentStyle
+          },
+          "data-testid": "hero-content",
+          children: [
+            /* @__PURE__ */ jsxs2(Box, { "data-testid": "hero-text-content", children: [
+              /* @__PURE__ */ jsx15(
+                "h1",
+                {
+                  id: headingId,
+                  style: styles.title,
+                  "data-testid": "hero-title",
+                  children: title
+                }
+              ),
+              subtitle && /* @__PURE__ */ jsx15("p", { style: styles.subtitle, "data-testid": "hero-subtitle", children: subtitle })
+            ] }),
+            (image || video) && /* @__PURE__ */ jsxs2(Box, { "data-testid": "hero-media", children: [
+              image && !video && /* @__PURE__ */ jsx15(
+                "img",
+                {
+                  src: image,
+                  alt: imageAlt || title || "Hero",
+                  style: styles.media,
+                  loading: "lazy",
+                  "data-testid": "hero-image"
+                }
+              ),
+              video && /* @__PURE__ */ jsx15(
+                "video",
+                {
+                  src: video,
+                  controls: true,
+                  "aria-label": title || "Hero video",
+                  title: title || "Hero video",
+                  style: styles.media,
+                  "data-testid": "hero-video",
+                  children: captionsSrc && /* @__PURE__ */ jsx15("track", { kind: "captions", src: captionsSrc, default: true })
+                }
+              )
+            ] }),
+            !!buttons?.length && /* @__PURE__ */ jsx15(
+              Flex,
+              {
+                gap: theme.spacing.md,
+                wrap: "wrap",
+                justify: alignmentStyles.justifyContent,
+                "data-testid": "hero-buttons",
+                children: buttons.map((button, index) => /* @__PURE__ */ jsx15(Button_default, { config: button }, button.id || index))
               }
-            }
-          )
-        ] }),
-        buttons?.length > 0 && /* @__PURE__ */ jsx14(
-          Flex,
-          {
-            gap: theme.spacing.md,
-            wrap: "wrap",
-            justify: alignment === "center" ? "center" : "flex-start",
-            children: buttons.map((button) => /* @__PURE__ */ jsx14(Button_default, { config: button, theme }, button.id))
-          }
-        )
-      ]
+            )
+          ]
+        }
+      ) })
     }
-  ) }) });
+  );
 });
 HeroBase.displayName = "HeroBase";
 
 // src/renderers/react/skins/hero/HeroSkin.tsx
-import { jsx as jsx15 } from "react/jsx-runtime";
+import { jsx as jsx16 } from "react/jsx-runtime";
 var HeroSkin = (props) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
   const sectionStyle = {
     padding: "4rem 0",
     ...config.style
@@ -1362,11 +1511,10 @@ var HeroSkin = (props) => {
     textAlign: config.alignment || "center",
     ...config.contentStyle
   };
-  return /* @__PURE__ */ jsx15(
+  return /* @__PURE__ */ jsx16(
     HeroBase,
     {
       ...config,
-      theme,
       style: sectionStyle,
       containerStyle,
       contentStyle
@@ -1375,9 +1523,10 @@ var HeroSkin = (props) => {
 };
 
 // src/renderers/react/skins/hero/HeroSkin2.tsx
-import { jsx as jsx16 } from "react/jsx-runtime";
+import { jsx as jsx17 } from "react/jsx-runtime";
 var HeroSkin2 = (props) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
   const sectionStyle = {
     padding: "6rem 0",
     backgroundColor: theme.colors.background,
@@ -1396,11 +1545,10 @@ var HeroSkin2 = (props) => {
     alignItems: "center",
     ...config.contentStyle
   };
-  return /* @__PURE__ */ jsx16(
+  return /* @__PURE__ */ jsx17(
     HeroBase,
     {
       ...config,
-      theme,
       style: sectionStyle,
       containerStyle,
       contentStyle
@@ -1409,9 +1557,10 @@ var HeroSkin2 = (props) => {
 };
 
 // src/renderers/react/skins/hero/HeroSkin3.tsx
-import { jsx as jsx17 } from "react/jsx-runtime";
+import { jsx as jsx18 } from "react/jsx-runtime";
 var HeroSkin3 = (props) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
   const sectionStyle = {
     padding: "8rem 0",
     background: `linear-gradient(135deg, ${theme.colors.primary} 0%, ${theme.colors.secondary} 100%)`,
@@ -1432,18 +1581,10 @@ var HeroSkin3 = (props) => {
     textAlign: "center",
     ...config.contentStyle
   };
-  return /* @__PURE__ */ jsx17(
+  return /* @__PURE__ */ jsx18(
     HeroBase,
     {
       ...config,
-      theme: {
-        ...theme,
-        colors: {
-          ...theme.colors,
-          text: "#ffffff",
-          muted: "rgba(255, 255, 255, 0.8)"
-        }
-      },
       style: sectionStyle,
       containerStyle,
       contentStyle
@@ -1452,9 +1593,10 @@ var HeroSkin3 = (props) => {
 };
 
 // src/renderers/react/skins/hero/HeroSkin4.tsx
-import { jsx as jsx18, jsxs as jsxs3 } from "react/jsx-runtime";
+import { jsx as jsx19, jsxs as jsxs3 } from "react/jsx-runtime";
 var HeroSkin4 = (props) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
   const sectionStyle = {
     padding: "8rem 0",
     position: "relative",
@@ -1497,7 +1639,7 @@ var HeroSkin4 = (props) => {
     zIndex: 0
   };
   return /* @__PURE__ */ jsxs3("section", { style: sectionStyle, className: config.className, children: [
-    config.video && /* @__PURE__ */ jsx18(
+    config.video && /* @__PURE__ */ jsx19(
       "video",
       {
         src: config.video,
@@ -1508,19 +1650,11 @@ var HeroSkin4 = (props) => {
         style: videoStyle
       }
     ),
-    /* @__PURE__ */ jsx18("div", { style: overlayStyle }),
-    /* @__PURE__ */ jsx18(
+    /* @__PURE__ */ jsx19("div", { style: overlayStyle }),
+    /* @__PURE__ */ jsx19(
       HeroBase,
       {
         ...config,
-        theme: {
-          ...theme,
-          colors: {
-            ...theme.colors,
-            text: "#ffffff",
-            muted: "rgba(255, 255, 255, 0.8)"
-          }
-        },
         style: { position: "relative", zIndex: 1 },
         containerStyle,
         contentStyle
@@ -1530,9 +1664,10 @@ var HeroSkin4 = (props) => {
 };
 
 // src/renderers/react/skins/hero/HeroSkin5.tsx
-import { jsx as jsx19 } from "react/jsx-runtime";
+import { jsx as jsx20 } from "react/jsx-runtime";
 var HeroSkin5 = (props) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
   const sectionStyle = {
     padding: "6rem 0",
     backgroundColor: "#f8fafc",
@@ -1557,11 +1692,10 @@ var HeroSkin5 = (props) => {
     borderRadius: "0.5rem",
     boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)"
   };
-  return /* @__PURE__ */ jsx19(
+  return /* @__PURE__ */ jsx20(
     HeroBase,
     {
       ...config,
-      theme,
       style: sectionStyle,
       containerStyle,
       contentStyle
@@ -1570,9 +1704,10 @@ var HeroSkin5 = (props) => {
 };
 
 // src/renderers/react/skins/hero/HeroSkin6.tsx
-import { jsx as jsx20 } from "react/jsx-runtime";
+import { jsx as jsx21 } from "react/jsx-runtime";
 var HeroSkin6 = (props) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
   const sectionStyle = {
     padding: "8rem 0",
     backgroundColor: "#000",
@@ -1593,11 +1728,10 @@ var HeroSkin6 = (props) => {
     alignItems: "center",
     ...config.contentStyle
   };
-  return /* @__PURE__ */ jsx20(
+  return /* @__PURE__ */ jsx21(
     HeroBase,
     {
       ...config,
-      theme,
       style: sectionStyle,
       containerStyle,
       contentStyle
@@ -1606,9 +1740,10 @@ var HeroSkin6 = (props) => {
 };
 
 // src/renderers/react/skins/hero/HeroSkin7.tsx
-import { jsx as jsx21 } from "react/jsx-runtime";
+import { jsx as jsx22 } from "react/jsx-runtime";
 var HeroSkin7 = (props) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
   const sectionStyle = {
     padding: "5rem 0",
     backgroundColor: "#fff",
@@ -1637,11 +1772,10 @@ var HeroSkin7 = (props) => {
     fontSize: "1.125rem",
     lineHeight: 1.6
   };
-  return /* @__PURE__ */ jsx21(
+  return /* @__PURE__ */ jsx22(
     HeroBase,
     {
       ...config,
-      theme,
       style: sectionStyle,
       containerStyle,
       contentStyle
@@ -1650,9 +1784,10 @@ var HeroSkin7 = (props) => {
 };
 
 // src/renderers/react/skins/hero/HeroSkin8.tsx
-import { jsx as jsx22 } from "react/jsx-runtime";
+import { jsx as jsx23 } from "react/jsx-runtime";
 var HeroSkin8 = (props) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
   const sectionStyle = {
     padding: "8rem 0",
     backgroundColor: "#3b82f6",
@@ -1684,11 +1819,10 @@ var HeroSkin8 = (props) => {
     transition: "all 0.3s ease",
     boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)"
   };
-  return /* @__PURE__ */ jsx22(
+  return /* @__PURE__ */ jsx23(
     HeroBase,
     {
       ...config,
-      theme,
       style: sectionStyle,
       containerStyle,
       contentStyle
@@ -1697,9 +1831,10 @@ var HeroSkin8 = (props) => {
 };
 
 // src/renderers/react/skins/hero/HeroSkin9.tsx
-import { jsx as jsx23 } from "react/jsx-runtime";
+import { jsx as jsx24 } from "react/jsx-runtime";
 var HeroSkin9 = (props) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
   const sectionStyle = {
     padding: "6rem 0",
     backgroundColor: "#f8fafc",
@@ -1719,11 +1854,10 @@ var HeroSkin9 = (props) => {
     textAlign: "center",
     ...config.contentStyle
   };
-  return /* @__PURE__ */ jsx23(
+  return /* @__PURE__ */ jsx24(
     HeroBase,
     {
       ...config,
-      theme,
       style: sectionStyle,
       containerStyle,
       contentStyle
@@ -1732,9 +1866,10 @@ var HeroSkin9 = (props) => {
 };
 
 // src/renderers/react/skins/hero/HeroSkin10.tsx
-import { jsx as jsx24 } from "react/jsx-runtime";
+import { jsx as jsx25 } from "react/jsx-runtime";
 var HeroSkin10 = (props) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
   const sectionStyle = {
     minHeight: "100vh",
     display: "flex",
@@ -1759,11 +1894,10 @@ var HeroSkin10 = (props) => {
     textAlign: "center",
     ...config.contentStyle
   };
-  return /* @__PURE__ */ jsx24(
+  return /* @__PURE__ */ jsx25(
     HeroBase,
     {
       ...config,
-      theme,
       style: sectionStyle,
       containerStyle,
       contentStyle
@@ -1772,37 +1906,38 @@ var HeroSkin10 = (props) => {
 };
 
 // src/renderers/react/Hero.tsx
-import { jsx as jsx25 } from "react/jsx-runtime";
-var Hero = ({ config, theme }) => {
+import { jsx as jsx26 } from "react/jsx-runtime";
+var Hero = ({ config }) => {
   switch (config.skin) {
     case "skin2":
-      return /* @__PURE__ */ jsx25(HeroSkin2, { ...config, theme });
+      return /* @__PURE__ */ jsx26(HeroSkin2, { ...config });
     case "skin3":
-      return /* @__PURE__ */ jsx25(HeroSkin3, { ...config, theme });
+      return /* @__PURE__ */ jsx26(HeroSkin3, { ...config });
     case "skin4":
-      return /* @__PURE__ */ jsx25(HeroSkin4, { ...config, theme });
+      return /* @__PURE__ */ jsx26(HeroSkin4, { ...config });
     case "skin5":
-      return /* @__PURE__ */ jsx25(HeroSkin5, { ...config, theme });
+      return /* @__PURE__ */ jsx26(HeroSkin5, { ...config });
     case "skin6":
-      return /* @__PURE__ */ jsx25(HeroSkin6, { ...config, theme });
+      return /* @__PURE__ */ jsx26(HeroSkin6, { ...config });
     case "skin7":
-      return /* @__PURE__ */ jsx25(HeroSkin7, { ...config, theme });
+      return /* @__PURE__ */ jsx26(HeroSkin7, { ...config });
     case "skin8":
-      return /* @__PURE__ */ jsx25(HeroSkin8, { ...config, theme });
+      return /* @__PURE__ */ jsx26(HeroSkin8, { ...config });
     case "skin9":
-      return /* @__PURE__ */ jsx25(HeroSkin9, { ...config, theme });
+      return /* @__PURE__ */ jsx26(HeroSkin9, { ...config });
     case "skin10":
-      return /* @__PURE__ */ jsx25(HeroSkin10, { ...config, theme });
+      return /* @__PURE__ */ jsx26(HeroSkin10, { ...config });
     default:
-      return /* @__PURE__ */ jsx25(HeroSkin, { ...config, theme });
+      return /* @__PURE__ */ jsx26(HeroSkin, { ...config });
   }
 };
 var Hero_default = Hero;
 
 // src/renderers/react/base/FeaturesBase.tsx
-import React8 from "react";
-import { jsx as jsx26, jsxs as jsxs4 } from "react/jsx-runtime";
-var FeaturesBase = React8.forwardRef((props, ref) => {
+import React9 from "react";
+import { jsx as jsx27, jsxs as jsxs4 } from "react/jsx-runtime";
+var FeaturesBase = React9.forwardRef((props, ref) => {
+  const theme = useTheme();
   const {
     features,
     className,
@@ -1816,7 +1951,7 @@ var FeaturesBase = React8.forwardRef((props, ref) => {
     onFeatureMouseEnter,
     onFeatureMouseLeave
   } = props;
-  return /* @__PURE__ */ jsx26(Box, { as: "section", ref, className, style, children: /* @__PURE__ */ jsx26(Container, { style: containerStyle, children: /* @__PURE__ */ jsx26(Box, { style: gridStyle, children: features.map((feature) => /* @__PURE__ */ jsxs4(
+  return /* @__PURE__ */ jsx27(Box, { as: "section", ref, className, style, children: /* @__PURE__ */ jsx27(Container, { style: containerStyle, children: /* @__PURE__ */ jsx27(Box, { style: gridStyle, children: features.map((feature) => /* @__PURE__ */ jsxs4(
     Box,
     {
       className: feature.className,
@@ -1824,9 +1959,9 @@ var FeaturesBase = React8.forwardRef((props, ref) => {
       onMouseEnter: onFeatureMouseEnter,
       onMouseLeave: onFeatureMouseLeave,
       children: [
-        feature.icon && /* @__PURE__ */ jsx26(Box, { style: iconStyle, children: feature.icon }),
-        /* @__PURE__ */ jsx26(Box, { as: "h3", style: titleStyle, children: feature.title }),
-        /* @__PURE__ */ jsx26(Box, { as: "p", style: descriptionStyle, children: feature.description })
+        feature.icon && /* @__PURE__ */ jsx27(Box, { style: iconStyle, children: feature.icon }),
+        /* @__PURE__ */ jsx27(Box, { as: "h3", style: titleStyle, children: feature.title }),
+        /* @__PURE__ */ jsx27(Box, { as: "p", style: descriptionStyle, children: feature.description })
       ]
     },
     feature.id
@@ -1835,9 +1970,10 @@ var FeaturesBase = React8.forwardRef((props, ref) => {
 FeaturesBase.displayName = "FeaturesBase";
 
 // src/renderers/react/skins/features/FeaturesSkin.tsx
-import { jsx as jsx27 } from "react/jsx-runtime";
+import { jsx as jsx28 } from "react/jsx-runtime";
 var FeaturesSkin = (props) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
   const sectionStyle = {
     padding: "4rem 0",
     ...config.style
@@ -1889,11 +2025,10 @@ var FeaturesSkin = (props) => {
     e.currentTarget.style.boxShadow = "0 4px 6px -1px rgba(0, 0, 0, 0.1)";
     config.onFeatureMouseLeave?.(e);
   };
-  return /* @__PURE__ */ jsx27(
+  return /* @__PURE__ */ jsx28(
     FeaturesBase,
     {
       ...config,
-      theme,
       style: sectionStyle,
       containerStyle,
       gridStyle,
@@ -1908,16 +2043,17 @@ var FeaturesSkin = (props) => {
 };
 
 // src/renderers/react/Features.tsx
-import { jsx as jsx28 } from "react/jsx-runtime";
-var Features = ({ config, theme }) => {
-  return /* @__PURE__ */ jsx28(FeaturesSkin, { ...config, theme });
+import { jsx as jsx29 } from "react/jsx-runtime";
+var Features = ({ config }) => {
+  return /* @__PURE__ */ jsx29(FeaturesSkin, { ...config });
 };
 var Features_default = Features;
 
 // src/renderers/react/base/TestimonialsBase.tsx
-import React9 from "react";
-import { jsx as jsx29, jsxs as jsxs5 } from "react/jsx-runtime";
-var TestimonialsBase = React9.forwardRef((props, ref) => {
+import React10 from "react";
+import { jsx as jsx30, jsxs as jsxs5 } from "react/jsx-runtime";
+var TestimonialsBase = React10.forwardRef((props, ref) => {
+  const theme = useTheme();
   const {
     testimonials,
     className,
@@ -1933,10 +2069,9 @@ var TestimonialsBase = React9.forwardRef((props, ref) => {
     authorNameStyle,
     authorRoleStyle,
     onTestimonialMouseEnter,
-    onTestimonialMouseLeave,
-    theme
+    onTestimonialMouseLeave
   } = props;
-  return /* @__PURE__ */ jsx29(Box, { as: "section", ref, className, style, children: /* @__PURE__ */ jsx29(Container, { style: containerStyle, children: /* @__PURE__ */ jsx29(Box, { style: gridStyle, children: testimonials.map((testimonial) => /* @__PURE__ */ jsxs5(
+  return /* @__PURE__ */ jsx30(Box, { as: "section", ref, className, style, children: /* @__PURE__ */ jsx30(Container, { style: containerStyle, children: /* @__PURE__ */ jsx30(Box, { style: gridStyle, children: testimonials.map((testimonial) => /* @__PURE__ */ jsxs5(
     Box,
     {
       className: testimonial.className,
@@ -1944,7 +2079,7 @@ var TestimonialsBase = React9.forwardRef((props, ref) => {
       onMouseEnter: onTestimonialMouseEnter,
       onMouseLeave: onTestimonialMouseLeave,
       children: [
-        /* @__PURE__ */ jsx29(Box, { style: quoteIconStyle, children: /* @__PURE__ */ jsx29(
+        /* @__PURE__ */ jsx30(Box, { style: quoteIconStyle, children: /* @__PURE__ */ jsx30(
           "svg",
           {
             width: "24",
@@ -1953,10 +2088,10 @@ var TestimonialsBase = React9.forwardRef((props, ref) => {
             fill: "none",
             stroke: theme.colors.primary,
             strokeWidth: "2",
-            children: /* @__PURE__ */ jsx29("path", { d: "M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" })
+            children: /* @__PURE__ */ jsx30("path", { d: "M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" })
           }
         ) }),
-        /* @__PURE__ */ jsx29(Box, { as: "blockquote", style: quoteStyle, children: testimonial.quote }),
+        /* @__PURE__ */ jsx30(Box, { as: "blockquote", style: quoteStyle, children: testimonial.quote }),
         /* @__PURE__ */ jsxs5(
           Flex,
           {
@@ -1964,7 +2099,7 @@ var TestimonialsBase = React9.forwardRef((props, ref) => {
             gap: theme.spacing.md,
             style: authorContainerStyle,
             children: [
-              testimonial.avatar && /* @__PURE__ */ jsx29(
+              testimonial.avatar && /* @__PURE__ */ jsx30(
                 "img",
                 {
                   src: testimonial.avatar,
@@ -1974,8 +2109,8 @@ var TestimonialsBase = React9.forwardRef((props, ref) => {
                 }
               ),
               /* @__PURE__ */ jsxs5(Box, { style: authorInfoStyle, children: [
-                /* @__PURE__ */ jsx29(Box, { as: "p", style: authorNameStyle, children: testimonial.author }),
-                testimonial.role && /* @__PURE__ */ jsx29(Box, { as: "p", style: authorRoleStyle, children: testimonial.role })
+                /* @__PURE__ */ jsx30(Box, { as: "p", style: authorNameStyle, children: testimonial.author }),
+                testimonial.role && /* @__PURE__ */ jsx30(Box, { as: "p", style: authorRoleStyle, children: testimonial.role })
               ] })
             ]
           }
@@ -1988,9 +2123,10 @@ var TestimonialsBase = React9.forwardRef((props, ref) => {
 TestimonialsBase.displayName = "TestimonialsBase";
 
 // src/renderers/react/skins/testimonials/TestimonialsSkin.tsx
-import { jsx as jsx30 } from "react/jsx-runtime";
+import { jsx as jsx31 } from "react/jsx-runtime";
 var TestimonialsSkin = (props) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
   const sectionStyle = {
     padding: "4rem 0",
     ...config.style
@@ -2061,11 +2197,10 @@ var TestimonialsSkin = (props) => {
     e.currentTarget.style.boxShadow = "0 4px 6px -1px rgba(0, 0, 0, 0.1)";
     config.onTestimonialMouseLeave?.(e);
   };
-  return /* @__PURE__ */ jsx30(
+  return /* @__PURE__ */ jsx31(
     TestimonialsBase,
     {
       ...config,
-      theme,
       style: sectionStyle,
       containerStyle,
       gridStyle,
@@ -2084,16 +2219,17 @@ var TestimonialsSkin = (props) => {
 };
 
 // src/renderers/react/Testimonials.tsx
-import { jsx as jsx31 } from "react/jsx-runtime";
-var Testimonials = ({ config, theme }) => {
-  return /* @__PURE__ */ jsx31(TestimonialsSkin, { ...config, theme });
+import { jsx as jsx32 } from "react/jsx-runtime";
+var Testimonials = ({ config }) => {
+  return /* @__PURE__ */ jsx32(TestimonialsSkin, { ...config });
 };
 var Testimonials_default = Testimonials;
 
 // src/renderers/react/base/PricingBase.tsx
-import React10 from "react";
-import { jsx as jsx32, jsxs as jsxs6 } from "react/jsx-runtime";
-var PricingBase = React10.forwardRef((props, ref) => {
+import React11 from "react";
+import { jsx as jsx33, jsxs as jsxs6 } from "react/jsx-runtime";
+var PricingBase = React11.forwardRef((props, ref) => {
+  const theme = useTheme();
   const {
     plans,
     className,
@@ -2109,26 +2245,25 @@ var PricingBase = React10.forwardRef((props, ref) => {
     periodStyle,
     featuresListStyle,
     featureItemStyle,
-    checkIcon,
-    theme
+    checkIcon
   } = props;
-  return /* @__PURE__ */ jsx32(Box, { as: "section", ref, className, style, children: /* @__PURE__ */ jsx32(Container, { style: containerStyle, children: /* @__PURE__ */ jsx32(Box, { style: gridStyle, children: plans.map((plan) => /* @__PURE__ */ jsxs6(
+  return /* @__PURE__ */ jsx33(Box, { as: "section", ref, className, style, children: /* @__PURE__ */ jsx33(Container, { style: containerStyle, children: /* @__PURE__ */ jsx33(Box, { style: gridStyle, children: plans.map((plan) => /* @__PURE__ */ jsxs6(
     Box,
     {
       className: plan.className,
       style: typeof planStyle === "function" ? planStyle(plan) : planStyle,
       children: [
-        plan.featured && /* @__PURE__ */ jsx32(Box, { style: featuredBadgeStyle, children: "Popular" }),
-        /* @__PURE__ */ jsx32(Box, { as: "h3", style: titleStyle, children: plan.title }),
-        /* @__PURE__ */ jsx32(Box, { as: "p", style: descriptionStyle, children: plan.description }),
+        plan.featured && /* @__PURE__ */ jsx33(Box, { style: featuredBadgeStyle, children: "Popular" }),
+        /* @__PURE__ */ jsx33(Box, { as: "h3", style: titleStyle, children: plan.title }),
+        /* @__PURE__ */ jsx33(Box, { as: "p", style: descriptionStyle, children: plan.description }),
         /* @__PURE__ */ jsxs6(Box, { style: priceContainerStyle, children: [
-          /* @__PURE__ */ jsx32(Box, { as: "span", style: priceStyle, children: plan.price }),
+          /* @__PURE__ */ jsx33(Box, { as: "span", style: priceStyle, children: plan.price }),
           plan.period && /* @__PURE__ */ jsxs6(Box, { as: "span", style: periodStyle, children: [
             "/",
             plan.period
           ] })
         ] }),
-        /* @__PURE__ */ jsx32(Box, { as: "ul", style: featuresListStyle, children: plan.features.map((feature, index) => /* @__PURE__ */ jsxs6(Box, { as: "li", style: featureItemStyle, children: [
+        /* @__PURE__ */ jsx33(Box, { as: "ul", style: featuresListStyle, children: plan.features.map((feature, index) => /* @__PURE__ */ jsxs6(Box, { as: "li", style: featureItemStyle, children: [
           checkIcon || /* @__PURE__ */ jsxs6(
             "svg",
             {
@@ -2139,14 +2274,14 @@ var PricingBase = React10.forwardRef((props, ref) => {
               stroke: theme.colors.accent,
               strokeWidth: "2",
               children: [
-                /* @__PURE__ */ jsx32("path", { d: "M22 11.08V12a10 10 0 1 1-5.93-9.14" }),
-                /* @__PURE__ */ jsx32("polyline", { points: "22 4 12 14.01 9 11.01" })
+                /* @__PURE__ */ jsx33("path", { d: "M22 11.08V12a10 10 0 1 1-5.93-9.14" }),
+                /* @__PURE__ */ jsx33("polyline", { points: "22 4 12 14.01 9 11.01" })
               ]
             }
           ),
           feature
         ] }, index)) }),
-        /* @__PURE__ */ jsx32(Button_default, { config: plan.button, theme })
+        /* @__PURE__ */ jsx33(Button_default, { config: plan.button })
       ]
     },
     plan.id
@@ -2155,9 +2290,10 @@ var PricingBase = React10.forwardRef((props, ref) => {
 PricingBase.displayName = "PricingBase";
 
 // src/renderers/react/skins/pricing/PricingSkin.tsx
-import { jsx as jsx33 } from "react/jsx-runtime";
+import { jsx as jsx34 } from "react/jsx-runtime";
 var PricingSkin = (props) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
   const sectionStyle = {
     padding: "4rem 0",
     ...config.style
@@ -2240,11 +2376,10 @@ var PricingSkin = (props) => {
     gap: theme.spacing.sm,
     ...config.featureItemStyle
   };
-  return /* @__PURE__ */ jsx33(
+  return /* @__PURE__ */ jsx34(
     PricingBase,
     {
       ...config,
-      theme,
       style: sectionStyle,
       containerStyle,
       gridStyle,
@@ -2262,16 +2397,17 @@ var PricingSkin = (props) => {
 };
 
 // src/renderers/react/Pricing.tsx
-import { jsx as jsx34 } from "react/jsx-runtime";
-var Pricing = ({ config, theme }) => {
-  return /* @__PURE__ */ jsx34(PricingSkin, { ...config, theme });
+import { jsx as jsx35 } from "react/jsx-runtime";
+var Pricing = ({ config }) => {
+  return /* @__PURE__ */ jsx35(PricingSkin, { ...config });
 };
 var Pricing_default = Pricing;
 
 // src/renderers/react/base/CtaBase.tsx
-import React11 from "react";
-import { jsx as jsx35, jsxs as jsxs7 } from "react/jsx-runtime";
-var CtaBase = React11.forwardRef((props, ref) => {
+import React12 from "react";
+import { jsx as jsx36, jsxs as jsxs7 } from "react/jsx-runtime";
+var CtaBase = React12.forwardRef((props, ref) => {
+  const theme = useTheme();
   const {
     title,
     description,
@@ -2279,12 +2415,11 @@ var CtaBase = React11.forwardRef((props, ref) => {
     className,
     style,
     containerStyle,
-    contentStyle,
-    theme
+    contentStyle
   } = props;
-  return /* @__PURE__ */ jsx35(Box, { as: "section", ref, className, style, children: /* @__PURE__ */ jsx35(Container, { style: containerStyle, children: /* @__PURE__ */ jsxs7(Box, { style: contentStyle, children: [
-    /* @__PURE__ */ jsx35("h2", { style: { fontSize: "2rem", marginBottom: theme.spacing.md }, children: title }),
-    /* @__PURE__ */ jsx35(
+  return /* @__PURE__ */ jsx36(Box, { as: "section", ref, className, style, children: /* @__PURE__ */ jsx36(Container, { style: containerStyle, children: /* @__PURE__ */ jsxs7(Box, { style: contentStyle, children: [
+    /* @__PURE__ */ jsx36("h2", { style: { fontSize: "2rem", marginBottom: theme.spacing.md }, children: title }),
+    /* @__PURE__ */ jsx36(
       "p",
       {
         style: {
@@ -2297,15 +2432,16 @@ var CtaBase = React11.forwardRef((props, ref) => {
         children: description
       }
     ),
-    /* @__PURE__ */ jsx35(Button_default, { config: button, theme })
+    /* @__PURE__ */ jsx36(Button_default, { config: button })
   ] }) }) });
 });
 CtaBase.displayName = "CtaBase";
 
 // src/renderers/react/skins/cta/CtaSkin.tsx
-import { jsx as jsx36 } from "react/jsx-runtime";
+import { jsx as jsx37 } from "react/jsx-runtime";
 var CtaSkin = (props) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
   const backgroundColor = theme.colors.primary;
   const textColor = getBestContrastColor(backgroundColor);
   const sectionStyle = {
@@ -2340,12 +2476,11 @@ var CtaSkin = (props) => {
       // Warna teks saat hover tombol mengikuti warna background CTA
     }
   };
-  return /* @__PURE__ */ jsx36(
+  return /* @__PURE__ */ jsx37(
     CtaBase,
     {
       ...config,
       button: buttonConfig,
-      theme: buttonTheme,
       style: sectionStyle,
       containerStyle,
       contentStyle
@@ -2354,16 +2489,17 @@ var CtaSkin = (props) => {
 };
 
 // src/renderers/react/Cta.tsx
-import { jsx as jsx37 } from "react/jsx-runtime";
-var Cta = ({ config, theme }) => {
-  return /* @__PURE__ */ jsx37(CtaSkin, { ...config, theme });
+import { jsx as jsx38 } from "react/jsx-runtime";
+var Cta = ({ config }) => {
+  return /* @__PURE__ */ jsx38(CtaSkin, { ...config });
 };
 var Cta_default = Cta;
 
 // src/renderers/react/base/FooterBase.tsx
-import React12 from "react";
-import { jsx as jsx38, jsxs as jsxs8 } from "react/jsx-runtime";
-var FooterBase = React12.forwardRef((props, ref) => {
+import React13 from "react";
+import { jsx as jsx39, jsxs as jsxs8 } from "react/jsx-runtime";
+var FooterBase = React13.forwardRef((props, ref) => {
+  const theme = useTheme();
   const {
     logo,
     title,
@@ -2377,13 +2513,12 @@ var FooterBase = React12.forwardRef((props, ref) => {
     columnStyle,
     linkStyle,
     onLinkMouseEnter,
-    onLinkMouseLeave,
-    theme
+    onLinkMouseLeave
   } = props;
-  return /* @__PURE__ */ jsx38(Box, { as: "footer", ref, className, style, children: /* @__PURE__ */ jsxs8(Container, { style: containerStyle, children: [
+  return /* @__PURE__ */ jsx39(Box, { as: "footer", ref, className, style, children: /* @__PURE__ */ jsxs8(Container, { style: containerStyle, children: [
     /* @__PURE__ */ jsxs8(Box, { style: gridStyle, children: [
       /* @__PURE__ */ jsxs8(Box, { style: columnStyle, children: [
-        logo && /* @__PURE__ */ jsx38(
+        logo && /* @__PURE__ */ jsx39(
           "img",
           {
             src: logo,
@@ -2392,7 +2527,7 @@ var FooterBase = React12.forwardRef((props, ref) => {
             loading: "lazy"
           }
         ),
-        title && /* @__PURE__ */ jsx38(
+        title && /* @__PURE__ */ jsx39(
           Box,
           {
             as: "h3",
@@ -2404,7 +2539,7 @@ var FooterBase = React12.forwardRef((props, ref) => {
             children: title
           }
         ),
-        description && /* @__PURE__ */ jsx38(
+        description && /* @__PURE__ */ jsx39(
           Box,
           {
             as: "p",
@@ -2414,7 +2549,7 @@ var FooterBase = React12.forwardRef((props, ref) => {
         )
       ] }),
       links.map((linkGroup) => /* @__PURE__ */ jsxs8(Box, { style: columnStyle, children: [
-        /* @__PURE__ */ jsx38(
+        /* @__PURE__ */ jsx39(
           Box,
           {
             as: "h4",
@@ -2425,12 +2560,12 @@ var FooterBase = React12.forwardRef((props, ref) => {
             children: linkGroup.title
           }
         ),
-        /* @__PURE__ */ jsx38(Box, { as: "ul", style: { listStyle: "none", padding: 0 }, children: linkGroup.items.map((link, index) => /* @__PURE__ */ jsx38(
+        /* @__PURE__ */ jsx39(Box, { as: "ul", style: { listStyle: "none", padding: 0 }, children: linkGroup.items.map((link, index) => /* @__PURE__ */ jsx39(
           Box,
           {
             as: "li",
             style: { marginBottom: theme.spacing.sm },
-            children: /* @__PURE__ */ jsx38(
+            children: /* @__PURE__ */ jsx39(
               "a",
               {
                 href: link.url,
@@ -2447,7 +2582,7 @@ var FooterBase = React12.forwardRef((props, ref) => {
         )) })
       ] }, linkGroup.title))
     ] }),
-    copyright && /* @__PURE__ */ jsx38(
+    copyright && /* @__PURE__ */ jsx39(
       Box,
       {
         style: {
@@ -2456,7 +2591,7 @@ var FooterBase = React12.forwardRef((props, ref) => {
           borderTop: `1px solid ${theme.colors.muted}20`,
           textAlign: "center"
         },
-        children: /* @__PURE__ */ jsx38(Box, { as: "p", style: { color: theme.colors.muted }, children: copyright })
+        children: /* @__PURE__ */ jsx39(Box, { as: "p", style: { color: theme.colors.muted }, children: copyright })
       }
     )
   ] }) });
@@ -2464,9 +2599,10 @@ var FooterBase = React12.forwardRef((props, ref) => {
 FooterBase.displayName = "FooterBase";
 
 // src/renderers/react/skins/footer/FooterSkin.tsx
-import { jsx as jsx39 } from "react/jsx-runtime";
+import { jsx as jsx40 } from "react/jsx-runtime";
 var FooterSkin = (props) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
   const sectionStyle = {
     padding: "4rem 0",
     backgroundColor: theme.colors.background,
@@ -2503,11 +2639,10 @@ var FooterSkin = (props) => {
     e.currentTarget.style.color = theme.colors.muted;
     config.onLinkMouseLeave?.(e);
   };
-  return /* @__PURE__ */ jsx39(
+  return /* @__PURE__ */ jsx40(
     FooterBase,
     {
       ...config,
-      theme,
       style: sectionStyle,
       containerStyle,
       gridStyle,
@@ -2520,16 +2655,17 @@ var FooterSkin = (props) => {
 };
 
 // src/renderers/react/Footer.tsx
-import { jsx as jsx40 } from "react/jsx-runtime";
-var Footer = ({ config, theme }) => {
-  return /* @__PURE__ */ jsx40(FooterSkin, { ...config, theme });
+import { jsx as jsx41 } from "react/jsx-runtime";
+var Footer = ({ config }) => {
+  return /* @__PURE__ */ jsx41(FooterSkin, { ...config });
 };
 var Footer_default = Footer;
 
 // src/renderers/react/base/StatsBase.tsx
-import React13 from "react";
-import { jsx as jsx41, jsxs as jsxs9 } from "react/jsx-runtime";
-var StatsBase = React13.forwardRef((props, ref) => {
+import React14 from "react";
+import { jsx as jsx42, jsxs as jsxs9 } from "react/jsx-runtime";
+var StatsBase = React14.forwardRef((props, ref) => {
+  const theme = useTheme();
   const {
     stats,
     className,
@@ -2542,22 +2678,23 @@ var StatsBase = React13.forwardRef((props, ref) => {
     numberStyle,
     labelStyle
   } = props;
-  return /* @__PURE__ */ jsx41(Box, { as: "section", ref, className, style, children: /* @__PURE__ */ jsx41(Container, { style: containerStyle, children: /* @__PURE__ */ jsx41(Box, { style: gridStyle, children: stats.map((stat) => /* @__PURE__ */ jsxs9(Box, { className: stat.className, style: statStyle, children: [
-    stat.icon && /* @__PURE__ */ jsx41(Box, { style: iconStyle, children: stat.icon }),
+  return /* @__PURE__ */ jsx42(Box, { as: "section", ref, className, style, children: /* @__PURE__ */ jsx42(Container, { style: containerStyle, children: /* @__PURE__ */ jsx42(Box, { style: gridStyle, children: stats.map((stat) => /* @__PURE__ */ jsxs9(Box, { className: stat.className, style: statStyle, children: [
+    stat.icon && /* @__PURE__ */ jsx42(Box, { style: iconStyle, children: stat.icon }),
     /* @__PURE__ */ jsxs9(Box, { style: numberContainerStyle, children: [
-      stat.prefix && /* @__PURE__ */ jsx41(Box, { as: "span", style: numberStyle, children: stat.prefix }),
-      /* @__PURE__ */ jsx41(Box, { as: "span", style: numberStyle, children: stat.number }),
-      stat.suffix && /* @__PURE__ */ jsx41(Box, { as: "span", style: numberStyle, children: stat.suffix })
+      stat.prefix && /* @__PURE__ */ jsx42(Box, { as: "span", style: numberStyle, children: stat.prefix }),
+      /* @__PURE__ */ jsx42(Box, { as: "span", style: numberStyle, children: stat.number }),
+      stat.suffix && /* @__PURE__ */ jsx42(Box, { as: "span", style: numberStyle, children: stat.suffix })
     ] }),
-    /* @__PURE__ */ jsx41(Box, { as: "p", style: labelStyle, children: stat.label })
+    /* @__PURE__ */ jsx42(Box, { as: "p", style: labelStyle, children: stat.label })
   ] }, stat.id)) }) }) });
 });
 StatsBase.displayName = "StatsBase";
 
 // src/renderers/react/skins/stats/StatsSkin.tsx
-import { jsx as jsx42 } from "react/jsx-runtime";
+import { jsx as jsx43 } from "react/jsx-runtime";
 var StatsSkin = (props) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
   const sectionStyle = {
     padding: "4rem 0",
     ...config.style
@@ -2601,11 +2738,10 @@ var StatsSkin = (props) => {
     color: theme.colors.muted,
     ...config.labelStyle
   };
-  return /* @__PURE__ */ jsx42(
+  return /* @__PURE__ */ jsx43(
     StatsBase,
     {
       ...config,
-      theme,
       style: sectionStyle,
       containerStyle,
       gridStyle,
@@ -2619,19 +2755,19 @@ var StatsSkin = (props) => {
 };
 
 // src/renderers/react/Stats.tsx
-import { jsx as jsx43 } from "react/jsx-runtime";
+import { jsx as jsx44 } from "react/jsx-runtime";
 var Stats = ({
-  config,
-  theme
+  config
 }) => {
-  return /* @__PURE__ */ jsx43(StatsSkin, { ...config, theme });
+  return /* @__PURE__ */ jsx44(StatsSkin, { ...config });
 };
 var Stats_default = Stats;
 
 // src/renderers/react/base/FaqBase.tsx
-import React14 from "react";
-import { jsx as jsx44, jsxs as jsxs10 } from "react/jsx-runtime";
-var FaqBase = React14.forwardRef((props, ref) => {
+import React15 from "react";
+import { jsx as jsx45, jsxs as jsxs10 } from "react/jsx-runtime";
+var FaqBase = React15.forwardRef((props, ref) => {
+  const theme = useTheme();
   const {
     items,
     className,
@@ -2639,20 +2775,20 @@ var FaqBase = React14.forwardRef((props, ref) => {
     containerStyle,
     itemStyle,
     questionStyle,
-    answerStyle,
-    theme
+    answerStyle
   } = props;
-  return /* @__PURE__ */ jsx44(Box, { as: "section", ref, className, style, children: /* @__PURE__ */ jsx44(Container, { style: containerStyle, children: /* @__PURE__ */ jsx44(Box, { style: { maxWidth: "800px", margin: "0 auto" }, children: items.map((item) => /* @__PURE__ */ jsx44(Box, { style: itemStyle, children: /* @__PURE__ */ jsxs10("details", { style: { padding: theme.spacing.md }, children: [
-    /* @__PURE__ */ jsx44("summary", { style: questionStyle, children: item.question }),
-    /* @__PURE__ */ jsx44("p", { style: answerStyle, children: item.answer })
+  return /* @__PURE__ */ jsx45(Box, { as: "section", ref, className, style, children: /* @__PURE__ */ jsx45(Container, { style: containerStyle, children: /* @__PURE__ */ jsx45(Box, { style: { maxWidth: "800px", margin: "0 auto" }, children: items.map((item) => /* @__PURE__ */ jsx45(Box, { style: itemStyle, children: /* @__PURE__ */ jsxs10("details", { style: { padding: theme.spacing.md }, children: [
+    /* @__PURE__ */ jsx45("summary", { style: questionStyle, children: item.question }),
+    /* @__PURE__ */ jsx45("p", { style: answerStyle, children: item.answer })
   ] }) }, item.id)) }) }) });
 });
 FaqBase.displayName = "FaqBase";
 
 // src/renderers/react/skins/faq/FaqSkin.tsx
-import { jsx as jsx45 } from "react/jsx-runtime";
+import { jsx as jsx46 } from "react/jsx-runtime";
 var FaqSkin = (props) => {
-  const { theme, ...config } = props;
+  const theme = useTheme();
+  const { ...config } = props;
   const sectionStyle = {
     padding: "4rem 0",
     ...config.style
@@ -2684,11 +2820,10 @@ var FaqSkin = (props) => {
     lineHeight: "1.6",
     ...config.answerStyle
   };
-  return /* @__PURE__ */ jsx45(
+  return /* @__PURE__ */ jsx46(
     FaqBase,
     {
       ...config,
-      theme,
       style: sectionStyle,
       containerStyle,
       itemStyle,
@@ -2699,98 +2834,88 @@ var FaqSkin = (props) => {
 };
 
 // src/renderers/react/Faq.tsx
-import { jsx as jsx46 } from "react/jsx-runtime";
-var Faq = ({ config, theme }) => {
-  return /* @__PURE__ */ jsx46(FaqSkin, { ...config, theme });
+import { jsx as jsx47 } from "react/jsx-runtime";
+var Faq = ({ config }) => {
+  return /* @__PURE__ */ jsx47(FaqSkin, { ...config });
 };
 var Faq_default = Faq;
 
 // src/renderers/react/index.tsx
-import { jsx as jsx47 } from "react/jsx-runtime";
+import { jsx as jsx48 } from "react/jsx-runtime";
 var createReactRenderer = () => {
   const SectionRenderer = ({
-    section,
-    theme
+    section
   }) => {
     switch (section.type) {
       case "header":
-        return /* @__PURE__ */ jsx47(
+        return /* @__PURE__ */ jsx48(
           Header_default,
           {
-            config: section.config,
-            theme
+            config: section.config
           },
           section.id
         );
       case "hero":
-        return /* @__PURE__ */ jsx47(
+        return /* @__PURE__ */ jsx48(
           Hero_default,
           {
-            config: section.config,
-            theme
+            config: section.config
           },
           section.id
         );
       case "features":
-        return /* @__PURE__ */ jsx47(
+        return /* @__PURE__ */ jsx48(
           Features_default,
           {
-            config: section.config,
-            theme
+            config: section.config
           },
           section.id
         );
       case "testimonials":
-        return /* @__PURE__ */ jsx47(
+        return /* @__PURE__ */ jsx48(
           Testimonials_default,
           {
-            config: section.config,
-            theme
+            config: section.config
           },
           section.id
         );
       case "pricing":
-        return /* @__PURE__ */ jsx47(
+        return /* @__PURE__ */ jsx48(
           Pricing_default,
           {
-            config: section.config,
-            theme
+            config: section.config
           },
           section.id
         );
       case "cta":
-        return /* @__PURE__ */ jsx47(
+        return /* @__PURE__ */ jsx48(
           Cta_default,
           {
-            config: section.config,
-            theme
+            config: section.config
           },
           section.id
         );
       case "footer":
-        return /* @__PURE__ */ jsx47(
+        return /* @__PURE__ */ jsx48(
           Footer_default,
           {
-            config: section.config,
-            theme
+            config: section.config
           },
           section.id
         );
       case "stats":
-        return /* @__PURE__ */ jsx47(
+        return /* @__PURE__ */ jsx48(
           Stats_default,
           {
-            config: section.config,
-            theme
+            config: section.config
           },
           section.id
         );
       case "faq":
-        return /* @__PURE__ */ jsx47(
+        return /* @__PURE__ */ jsx48(
           Faq_default,
           {
-            config: section.config,
-            theme
+            config: section.config
           },
           section.id
         );
@@ -2800,7 +2925,7 @@ var createReactRenderer = () => {
     }
   };
   const LandingPage = ({ config }) => {
-    React15.useEffect(() => {
+    React16.useEffect(() => {
       const style = document.createElement("style");
       style.textContent = `
           * {
@@ -2813,6 +2938,7 @@ var createReactRenderer = () => {
             background-color: ${config.theme?.colors?.background || "#ffffff"};
             color: ${config.theme?.colors?.text || "#000000"};
             line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
           }
         `;
       document.head.appendChild(style);
@@ -2820,14 +2946,13 @@ var createReactRenderer = () => {
         document.head.removeChild(style);
       };
     }, [config]);
-    return /* @__PURE__ */ jsx47(Box, { children: config.sections.map((section) => /* @__PURE__ */ jsx47(
+    return /* @__PURE__ */ jsx48(ThemeProvider, { theme: config.theme, dark: config.theme?.colors?.background === "#000000", children: /* @__PURE__ */ jsx48(Box, { children: config.sections.map((section) => /* @__PURE__ */ jsx48(
       SectionRenderer,
       {
-        section,
-        theme: config.theme
+        section
       },
       section.id
-    )) });
+    )) }) });
   };
   return LandingPage;
 };

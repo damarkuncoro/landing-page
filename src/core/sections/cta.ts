@@ -1,7 +1,7 @@
-import type { SectionConfig } from "../types";
+import type { BaseSectionConfig } from "../types";
 import type { CtaConfig } from "../../components/types";
 
-export interface CtaSection extends SectionConfig {
+export interface CtaSection extends BaseSectionConfig {
   type: "cta";
   config: CtaConfig;
 }

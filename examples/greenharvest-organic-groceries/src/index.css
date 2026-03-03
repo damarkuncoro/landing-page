@@ -1,1 +1,36 @@
-/* GreenHarvest Organic Groceries - Styles will be provided by @damarkuncoro/landing-page library */
+/* Tailwind CSS directives (v4 syntax) */
+@import "tailwindcss";
+@import "tailwindcss/typography";
+
+/* GreenHarvest Organic Groceries - Tailwind Theme */
+@theme {
+  --color-primary: #22c55e; /* Fresh green */
+  --color-secondary: #16a34a; /* Dark green */
+  --color-accent: #a3e635; /* Lime green */
+  --color-background: #f6fef9; /* Very light green */
+  --color-foreground: #052e16; /* Dark green text */
+  --color-muted: #64748b; /* Gray for muted text */
+
+  --font-sans: Inter, system-ui, sans-serif;
+  --font-serif: serif;
+  --font-mono: monospace;
+
+  --spacing-4: 1rem;
+  --spacing-8: 2rem;
+  --spacing-16: 4rem;
+  --spacing-24: 6rem;
+  --spacing-32: 8rem;
+}
+
+/* Custom styles */
+.pill-image {
+  @apply rounded-[2rem] shadow-2xl;
+}
+
+.card-soft {
+  @apply rounded-[2rem] bg-white/5 backdrop-blur-sm border border-white/10 shadow-xl;
+}
+
+.soft-shadow {
+  @apply shadow-xl shadow-emerald-500/20;
+}

@@ -1,7 +1,7 @@
-import type { SectionConfig } from "../types";
+import type { BaseSectionConfig } from "../types";
 import type { HeroConfig } from "../../components/types";
 
-export interface HeroSection extends SectionConfig {
+export interface HeroSection extends BaseSectionConfig {
   type: "hero";
   config: HeroConfig;
 }

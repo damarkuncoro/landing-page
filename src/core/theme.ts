@@ -125,5 +125,33 @@ export function validateTheme(theme: Partial<ThemeConfig>): string[] {
     });
   }
 
+  if (theme.typography) {
+    const requiredTypography = ["h1", "h2", "h3", "body", "small"] as const;
+    requiredTypography.forEach((size) => {
+      const typographyValue = (theme.typography as any)[size];
+      if (typographyValue && !/^\d+(\.\d+)?(px|rem|em)$/.test(typographyValue)) {
+        errors.push(
+          `Invalid typography format for ${size}: ${typographyValue}`,
+        );
+      }
+    });
+  }
+
+  if (theme.fontWeights) {
+    const requiredFontWeights = ["normal", "medium", "bold"] as const;
+    requiredFontWeights.forEach((weight) => {
+      const fontWeightValue = (theme.fontWeights as any)[weight];
+      if (
+        fontWeightValue &&
+        typeof fontWeightValue !== "number" &&
+        !["normal", "medium", "bold"].includes(fontWeightValue)
+      ) {
+        errors.push(
+          `Invalid font weight format for ${weight}: ${fontWeightValue}`,
+        );
+      }
+    });
+  }
+
   return errors;
 }
