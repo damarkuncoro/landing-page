@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.1.3] - 2026-03-03
+
+### Added
+- Added `typography` property to theme configuration with support for h1, h2, h3, body, and small font sizes.
+- Added `fontWeights` property to theme configuration with support for normal, medium, and bold font weights (accepting both string and number types).
+- Added `sizes` property to theme configuration with support for subtitleMaxWidth and containerMaxWidth.
+- Updated theme schema to include all new properties.
+- Improved type definitions to accept both string and number values for font weights.
+- Updated examples to use consistent numeric values for font weights.
+
 ## [0.1.2] - 2026-03-02
 
 ### Fixed
