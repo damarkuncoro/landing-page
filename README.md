@@ -323,11 +323,27 @@ interface ThemeConfig {
     body: string
     mono: string
   }
+  typography: {
+    h1: string
+    h2: string
+    h3: string
+    body: string
+    small: string
+  }
+  fontWeights: {
+    normal: string | number
+    medium: string | number
+    bold: string | number
+  }
   breakpoints: {
     sm: string
     md: string
     lg: string
     xl: string
+  }
+  sizes?: {
+    subtitleMaxWidth?: string
+    containerMaxWidth?: string
   }
 }
 ```
