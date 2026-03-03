@@ -8,7 +8,7 @@ export interface BaseLayoutProps {
 }
 
 // Box: TIDAK ADA as, TIDAK ADA HTMLAttributes
-export interface BoxOwnProps extends BaseLayoutProps {}
+export interface BoxOwnProps extends BaseLayoutProps, React.HTMLAttributes<HTMLElement> {}
 
 // Flex: hanya behavior layout
 export interface FlexOwnProps extends BoxOwnProps {

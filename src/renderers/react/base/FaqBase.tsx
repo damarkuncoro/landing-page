@@ -10,7 +10,7 @@ import { useTheme } from "../ThemeProvider";
  */
 export const FaqBase = React.forwardRef<
   HTMLElement,
-  FaqContractProps
+  FaqContractProps & { as?: React.ElementType }
 >((props, ref) => {
   const theme = useTheme();
   const {
@@ -24,7 +24,7 @@ export const FaqBase = React.forwardRef<
   } = props;
 
   return (
-    <Box as="section" ref={ref} className={className} style={style}>
+    <Box as={props.as || "section"} ref={ref} className={className} style={style}>
       <Container style={containerStyle}>
         <Box style={{ maxWidth: "800px", margin: "0 auto" }}>
           {items.map((item) => (

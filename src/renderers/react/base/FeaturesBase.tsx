@@ -10,7 +10,7 @@ import { useTheme } from "../ThemeProvider";
  */
 export const FeaturesBase = React.forwardRef<
   HTMLElement,
-  FeaturesContractProps
+  FeaturesContractProps & { as?: React.ElementType }
 >((props, ref) => {
   const theme = useTheme();
   const {
@@ -28,7 +28,7 @@ export const FeaturesBase = React.forwardRef<
   } = props;
 
   return (
-    <Box as="section" ref={ref} className={className} style={style}>
+    <Box as={props.as || "section"} ref={ref} className={className} style={style}>
       <Container style={containerStyle}>
         <Box style={gridStyle}>
           {features.map((feature) => (

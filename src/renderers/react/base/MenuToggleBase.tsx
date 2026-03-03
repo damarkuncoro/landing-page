@@ -9,7 +9,7 @@ import { Box } from "./LayoutBase";
  */
 export const MenuToggleBase = React.forwardRef<
   HTMLButtonElement,
-  MenuToggleContractProps
+  MenuToggleContractProps & { as?: React.ElementType }
 >((props, ref) => {
   const {
     isOpen,
@@ -23,7 +23,7 @@ export const MenuToggleBase = React.forwardRef<
 
   return (
     <Box
-      as="button"
+      as={props.as || "button"}
       ref={ref}
       onClick={onClick}
       style={style}

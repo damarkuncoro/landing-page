@@ -10,7 +10,7 @@ import { useTheme } from "../ThemeProvider";
  */
 export const FooterBase = React.forwardRef<
   HTMLElement,
-  FooterContractProps
+  FooterContractProps & { as?: React.ElementType }
 >((props, ref) => {
   const theme = useTheme();
   const {
@@ -30,7 +30,7 @@ export const FooterBase = React.forwardRef<
   } = props;
 
   return (
-    <Box as="footer" ref={ref} className={className} style={style}>
+    <Box as={props.as || "footer"} ref={ref} className={className} style={style}>
       <Container style={containerStyle}>
         <Box style={gridStyle}>
           <Box style={columnStyle}>

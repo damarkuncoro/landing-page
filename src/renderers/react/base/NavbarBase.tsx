@@ -7,7 +7,7 @@ import { Box, Flex } from "./LayoutBase";
  * Memisahkan struktur DOM dari styling.
  * Depend pada UI Contract (aturan 13).
  */
-export const NavbarBase = React.forwardRef<HTMLElement, NavbarContractProps>(
+export const NavbarBase = React.forwardRef<HTMLElement, NavbarContractProps & { as?: React.ElementType }>(
   (props, ref) => {
     const {
       links,
@@ -84,7 +84,7 @@ export const NavbarBase = React.forwardRef<HTMLElement, NavbarContractProps>(
 
     return (
       <Box
-        as="nav"
+        as={props.as || "nav"}
         ref={ref}
         className={className}
         style={style}

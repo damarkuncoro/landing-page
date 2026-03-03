@@ -12,7 +12,7 @@ import { getHeroStyles, getAlignmentStyles } from "./HeroStyles";
  */
 export const HeroBase = React.forwardRef<
   HTMLElement,
-  HeroContractProps
+  HeroContractProps & { as?: React.ElementType }
 >((props, ref) => {
   const theme = useTheme();
   const {
@@ -47,7 +47,7 @@ export const HeroBase = React.forwardRef<
 
   return (
     <Box
-      as="section"
+      as={props.as || "section"}
       ref={ref}
       className={className}
       style={style}

@@ -11,7 +11,7 @@ import { useTheme } from "../ThemeProvider";
  */
 export const CtaBase = React.forwardRef<
   HTMLElement,
-  CtaContractProps
+  CtaContractProps & { as?: React.ElementType }
 >((props, ref) => {
   const theme = useTheme();
   const {
@@ -25,7 +25,7 @@ export const CtaBase = React.forwardRef<
   } = props;
 
   return (
-    <Box as="section" ref={ref} className={className} style={style}>
+    <Box as={props.as || "section"} ref={ref} className={className} style={style}>
       <Container style={containerStyle}>
         <Box style={contentStyle}>
           <h2 style={{ fontSize: "2rem", marginBottom: theme.spacing.md }}>

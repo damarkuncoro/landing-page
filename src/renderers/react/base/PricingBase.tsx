@@ -11,7 +11,7 @@ import { useTheme } from "../ThemeProvider";
  */
 export const PricingBase = React.forwardRef<
   HTMLElement,
-  PricingContractProps
+  PricingContractProps & { as?: React.ElementType }
 >((props, ref) => {
   const theme = useTheme();
   const {
@@ -33,7 +33,7 @@ export const PricingBase = React.forwardRef<
   } = props;
 
   return (
-    <Box as="section" ref={ref} className={className} style={style}>
+    <Box as={props.as || "section"} ref={ref} className={className} style={style}>
       <Container style={containerStyle}>
         <Box style={gridStyle}>
           {plans.map((plan) => (

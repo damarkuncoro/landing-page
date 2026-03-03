@@ -13,7 +13,7 @@ import Button from "../Button";
  */
 export const HeaderBase = React.forwardRef<
   HTMLElement,
-  HeaderContractProps
+  HeaderContractProps & { as?: React.ElementType }
 >((props, ref) => {
   const theme = useTheme();
   const {
@@ -47,7 +47,7 @@ export const HeaderBase = React.forwardRef<
 
   return (
     <Box
-      as="header"
+      as={props.as || "header"}
       ref={ref}
       style={style}
       className={className}
