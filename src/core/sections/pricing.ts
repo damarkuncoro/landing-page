@@ -1,7 +1,7 @@
-import type { SectionConfig } from "../types";
+import type { BaseSectionConfig } from "../types";
 import type { PricingConfig } from "../../components/types";
 
-export interface PricingSection extends SectionConfig {
+export interface PricingSection extends BaseSectionConfig {
   type: "pricing";
   config: PricingConfig;
 }

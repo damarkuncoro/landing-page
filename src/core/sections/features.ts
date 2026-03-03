@@ -1,7 +1,7 @@
-import type { SectionConfig } from "../types";
+import type { BaseSectionConfig } from "../types";
 import type { FeatureConfig } from "../../components/types";
 
-export interface FeaturesSection extends SectionConfig {
+export interface FeaturesSection extends BaseSectionConfig {
   type: "features";
   config: {
     features: FeatureConfig[];

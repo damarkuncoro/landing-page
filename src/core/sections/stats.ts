@@ -1,7 +1,7 @@
-import type { SectionConfig } from "../types";
+import type { BaseSectionConfig } from "../types";
 import type { StatConfig } from "../../components/types";
 
-export interface StatsSection extends SectionConfig {
+export interface StatsSection extends BaseSectionConfig {
   type: "stats";
   config: {
     stats: StatConfig[];

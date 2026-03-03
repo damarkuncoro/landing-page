@@ -1,7 +1,7 @@
-import type { SectionConfig } from "../types";
+import type { BaseSectionConfig } from "../types";
 import type { TestimonialConfig } from "../../components/types";
 
-export interface TestimonialsSection extends SectionConfig {
+export interface TestimonialsSection extends BaseSectionConfig {
   type: "testimonials";
   config: {
     testimonials: TestimonialConfig[];

@@ -1,7 +1,7 @@
-import type { SectionConfig } from "../types";
+import type { BaseSectionConfig } from "../types";
 import type { FaqConfig } from "../../components/types";
 
-export interface FaqSection extends SectionConfig {
+export interface FaqSection extends BaseSectionConfig {
   type: "faq";
   config: FaqConfig;
 }

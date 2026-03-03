@@ -3,7 +3,7 @@ import type { HeroContractProps } from "../contracts/HeroContract";
 import Button from "../Button";
 import { Container, Flex, Box } from "./LayoutBase";
 import { useTheme } from "../ThemeProvider";
-import { getHeroStyles, getAlignmentStyles } from "./heroStyles";
+import { getHeroStyles, getAlignmentStyles } from "./HeroStyles";
 
 /**
  * Base UI untuk Hero Section.
