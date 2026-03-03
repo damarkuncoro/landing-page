@@ -9,7 +9,7 @@ export interface HeroContractProps {
   id?: string;
   title: string;
   subtitle?: string;
-  buttons: ButtonConfig[];
+  buttons?: ButtonConfig[];
   image?: string;
   imageAlt?: string;
   video?: string;
@@ -22,4 +22,13 @@ export interface HeroContractProps {
   /** Overrides applied to the inner Flex content wrapper */
   contentStyle?: React.CSSProperties;
   testId?: string;
+  backgroundGradient?: string;
+  parallaxEffect?: boolean;
+  fullHeight?: boolean;
+  imagePosition?: "left" | "right" | "top" | "bottom";
+  imageSize?: "small" | "medium" | "large";
+  videoAutoPlay?: boolean;
+  videoLoop?: boolean;
+  videoMuted?: boolean;
+  contentMaxWidth?: string | number;
 }

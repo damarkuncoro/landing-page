@@ -29,6 +29,15 @@ export const HeroBase = React.forwardRef<
     containerStyle,
     contentStyle,
     testId,
+    backgroundGradient,
+    parallaxEffect,
+    fullHeight,
+    imagePosition = "top",
+    imageSize = "medium",
+    videoAutoPlay = false,
+    videoLoop = false,
+    videoMuted = true,
+    contentMaxWidth,
   } = props;
 
   // Derive unique heading id from props for accessibility
@@ -50,22 +59,68 @@ export const HeroBase = React.forwardRef<
       as={props.as || "section"}
       ref={ref}
       className={className}
-      style={style}
+      style={{
+        ...style,
+        backgroundImage: backgroundGradient,
+        minHeight: fullHeight ? "100vh" : undefined,
+        display: fullHeight ? "flex" : undefined,
+        alignItems: fullHeight ? "center" : undefined,
+      }}
       aria-labelledby={headingId}
       data-testid={testId || "hero-section"}
     >
       <Container style={containerStyle} data-testid="hero-container">
         <Flex
-          direction="column"
+          direction={imagePosition === "left" || imagePosition === "right" ? "row" : "column"}
           gap={theme.spacing.xl}
           align={alignmentStyles.flexAlign}
           style={{
             textAlign: alignmentStyles.textAlign,
             ...contentStyle,
+            maxWidth: contentMaxWidth,
+            margin: "0 auto",
           }}
           data-testid="hero-content"
         >
-          <Box data-testid="hero-text-content">
+          {imagePosition === "left" && (image || video) && (
+            <Box data-testid="hero-media" style={{ flex: 1 }}>
+              {image && !video && (
+                <img
+                  src={image}
+                  alt={imageAlt || title || "Hero"}
+                  style={{
+                    ...styles.media,
+                    width: imageSize === "small" ? "300px" : imageSize === "large" ? "600px" : "450px",
+                    height: "auto",
+                  }}
+                  loading="lazy"
+                  data-testid="hero-image"
+                />
+              )}
+              {video && (
+                <video
+                  src={video}
+                  controls={!videoAutoPlay}
+                  autoPlay={videoAutoPlay}
+                  loop={videoLoop}
+                  muted={videoMuted}
+                  aria-label={title || "Hero video"}
+                  title={title || "Hero video"}
+                  style={{
+                    ...styles.media,
+                    width: imageSize === "small" ? "300px" : imageSize === "large" ? "600px" : "450px",
+                    height: "auto",
+                  }}
+                  data-testid="hero-video"
+                >
+                  {captionsSrc && (
+                    <track kind="captions" src={captionsSrc} default />
+                  )}
+                </video>
+              )}
+            </Box>
+          )}
+          <Box data-testid="hero-text-content" style={{ flex: 1 }}>
             <h1
               id={headingId}
               style={styles.title}
@@ -79,13 +134,17 @@ export const HeroBase = React.forwardRef<
               </p>
             )}
           </Box>
-          {(image || video) && (
-            <Box data-testid="hero-media">
+          {imagePosition === "right" && (image || video) && (
+            <Box data-testid="hero-media" style={{ flex: 1 }}>
               {image && !video && (
                 <img
                   src={image}
                   alt={imageAlt || title || "Hero"}
-                  style={styles.media}
+                  style={{
+                    ...styles.media,
+                    width: imageSize === "small" ? "300px" : imageSize === "large" ? "600px" : "450px",
+                    height: "auto",
+                  }}
                   loading="lazy"
                   data-testid="hero-image"
                 />
@@ -93,10 +152,17 @@ export const HeroBase = React.forwardRef<
               {video && (
                 <video
                   src={video}
-                  controls
+                  controls={!videoAutoPlay}
+                  autoPlay={videoAutoPlay}
+                  loop={videoLoop}
+                  muted={videoMuted}
                   aria-label={title || "Hero video"}
                   title={title || "Hero video"}
-                  style={styles.media}
+                  style={{
+                    ...styles.media,
+                    width: imageSize === "small" ? "300px" : imageSize === "large" ? "600px" : "450px",
+                    height: "auto",
+                  }}
                   data-testid="hero-video"
                 >
                   {captionsSrc && (
@@ -106,6 +172,46 @@ export const HeroBase = React.forwardRef<
               )}
             </Box>
           )}
+          {imagePosition === "top" || imagePosition === "bottom" ? (
+            (image || video) && (
+              <Box data-testid="hero-media">
+                {image && !video && (
+                  <img
+                    src={image}
+                    alt={imageAlt || title || "Hero"}
+                    style={{
+                      ...styles.media,
+                      width: imageSize === "small" ? "300px" : imageSize === "large" ? "600px" : "450px",
+                      height: "auto",
+                    }}
+                    loading="lazy"
+                    data-testid="hero-image"
+                  />
+                )}
+                {video && (
+                  <video
+                    src={video}
+                    controls={!videoAutoPlay}
+                    autoPlay={videoAutoPlay}
+                    loop={videoLoop}
+                    muted={videoMuted}
+                    aria-label={title || "Hero video"}
+                    title={title || "Hero video"}
+                    style={{
+                      ...styles.media,
+                      width: imageSize === "small" ? "300px" : imageSize === "large" ? "600px" : "450px",
+                      height: "auto",
+                    }}
+                    data-testid="hero-video"
+                  >
+                    {captionsSrc && (
+                      <track kind="captions" src={captionsSrc} default />
+                    )}
+                  </video>
+                )}
+              </Box>
+            )
+          ) : null}
           {!!buttons?.length && (
             <Flex
               gap={theme.spacing.md}
