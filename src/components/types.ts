@@ -9,15 +9,36 @@ export interface ButtonConfig extends WithBaseConfig<{
   skin?: "default" | "tailwind";
 }> {}
 
+export interface NavbarLinkConfig {
+  id?: string;
+  text: string;
+  url?: string;
+  target?: "_blank" | "_self";
+  isActive?: boolean;
+  isLoading?: boolean;
+  children?: NavbarLinkConfig[];
+}
+
+export interface LanguageConfig {
+  code: string;
+  name: string;
+}
+
+export interface LanguageSelectorConfig {
+  currentLanguage: string;
+  languages: LanguageConfig[];
+  onLanguageChange?: (code: string) => void;
+}
+
+export interface ThemeSwitcherConfig {
+  currentTheme: "light" | "dark";
+  onThemeChange?: (theme: "light" | "dark") => void;
+}
+
 export interface HeaderConfig extends WithBaseConfig<{
   logo?: string;
   title?: string;
-  links: {
-    id?: string;
-    text: string;
-    url: string;
-    target?: "_blank" | "_self";
-  }[];
+  links: NavbarLinkConfig[];
   buttons?: {
     text: string;
     url: string;
@@ -27,6 +48,11 @@ export interface HeaderConfig extends WithBaseConfig<{
   fixed?: boolean;
   scrollEffect?: boolean;
   skin?: "default" | "tailwind";
+  searchPlaceholder?: string;
+  onSearch?: (query: string) => void;
+  initialSearchValue?: string;
+  languageSelector?: LanguageSelectorConfig;
+  themeSwitcher?: ThemeSwitcherConfig;
 }> {}
 
 export interface HeroConfig extends WithBaseConfig<{

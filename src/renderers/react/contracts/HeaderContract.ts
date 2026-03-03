@@ -1,4 +1,5 @@
 import React from "react";
+import type { LanguageSelectorConfig, ThemeSwitcherConfig } from "@/components/types";
 
 /**
  * Kontrak UI untuk Header.
@@ -7,11 +8,7 @@ import React from "react";
 export interface HeaderContractProps {
   logo?: string;
   title?: string;
-  links: {
-    text: string;
-    url: string;
-    target?: "_blank" | "_self";
-  }[];
+  links: any[];
   buttons?: {
     text: string;
     url: string;
@@ -20,6 +17,11 @@ export interface HeaderContractProps {
   }[];
   fixed?: boolean;
   scrollEffect?: boolean;
+  searchPlaceholder?: string;
+  onSearch?: (query: string) => void;
+  initialSearchValue?: string;
+  languageSelector?: LanguageSelectorConfig;
+  themeSwitcher?: ThemeSwitcherConfig;
   className?: string;
   isMobileMenuOpen?: boolean;
   onMobileMenuToggle?: () => void;

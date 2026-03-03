@@ -13,8 +13,25 @@ export const greenHarvestLandingPage = defineLandingPage({
         logo: 'https://picsum.photos/seed/logo/40/40',
         title: 'GreenHarvest',
         links: [
-          { text: 'Shop', url: '/shop' },
-          { text: 'Our Story', url: '/about' },
+          {
+            text: 'Shop',
+            url: '/shop',
+            children: [
+              { text: 'Fruits & Vegetables', url: '/shop/fruits-vegetables' },
+              { text: 'Dairy Products', url: '/shop/dairy' },
+              { text: 'Meat & Poultry', url: '/shop/meat-poultry' },
+              { text: 'Bakery', url: '/shop/bakery' },
+            ]
+          },
+          {
+            text: 'Our Story',
+            url: '/about',
+            children: [
+              { text: 'About GreenHarvest', url: '/about/story' },
+              { text: 'Our Farmers', url: '/about/farmers' },
+              { text: 'Certifications', url: '/about/certifications' },
+            ]
+          },
           { text: 'Farmers', url: '/farmers' },
           { text: 'Recipes', url: '/recipes' },
         ],
@@ -24,6 +41,18 @@ export const greenHarvestLandingPage = defineLandingPage({
         ],
         fixed: true,
         scrollEffect: true,
+        searchPlaceholder: 'Search products...',
+        languageSelector: {
+          currentLanguage: 'en',
+          languages: [
+            { code: 'en', name: 'English' },
+            { code: 'id', name: 'Bahasa Indonesia' },
+            { code: 'es', name: 'Spanish' },
+          ],
+        },
+        themeSwitcher: {
+          currentTheme: 'light',
+        },
         skin: 'tailwind',
       },
     },

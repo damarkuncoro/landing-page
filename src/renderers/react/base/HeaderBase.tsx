@@ -67,27 +67,16 @@ export const HeaderBase = React.forwardRef<
 
           {/* Desktop Navbar - Hidden on mobile, visible on md screens */}
           <Box className="hidden md:block">
-            <Flex align="center" gap="1.5rem">
-              {links.map((link, index) => (
-                <a
-                  key={index}
-                  href={link.url}
-                  target={link.target || "_self"}
-                  rel={link.target === "_blank" ? "noopener noreferrer" : undefined}
-                  style={{
-                    color: theme.colors.text,
-                    textDecoration: "none",
-                    fontWeight: 500,
-                    fontSize: "0.875rem",
-                    transition: "color 0.2s ease",
-                  }}
-                  onMouseEnter={(e) => e.currentTarget.style.color = theme.colors.primary}
-                  onMouseLeave={(e) => e.currentTarget.style.color = theme.colors.text}
-                >
-                  {link.text}
-                </a>
-              ))}
-            </Flex>
+            <Navbar
+              links={links}
+              isMobile={false}
+              isOpen={true}
+              searchPlaceholder={searchPlaceholder}
+              onSearch={onSearch}
+              searchValue={initialSearchValue}
+              languageSelector={languageSelector}
+              themeSwitcher={themeSwitcher}
+            />
           </Box>
 
           {/* Desktop Buttons - Hidden on mobile, visible on md screens */}

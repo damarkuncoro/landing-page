@@ -10,10 +10,15 @@ import { useTheme } from "../../ThemeProvider";
  */
 export const HeaderSkinTailwind = (props: HeaderContractProps) => {
   const theme = useTheme();
-  const { 
-    fixed = true, 
-    scrollEffect = true, 
-    ...config 
+  const {
+    fixed = true,
+    scrollEffect = true,
+    searchPlaceholder,
+    onSearch,
+    initialSearchValue,
+    languageSelector,
+    themeSwitcher,
+    ...config
   } = props;
   
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -44,6 +49,11 @@ export const HeaderSkinTailwind = (props: HeaderContractProps) => {
   return (
     <HeaderBase
       {...config}
+      searchPlaceholder={searchPlaceholder}
+      onSearch={onSearch}
+      initialSearchValue={initialSearchValue}
+      languageSelector={languageSelector}
+      themeSwitcher={themeSwitcher}
       className={headerClassName}
       containerStyle={containerStyle}
       isMobileMenuOpen={mobileMenuOpen}

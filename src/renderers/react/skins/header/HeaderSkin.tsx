@@ -13,6 +13,11 @@ export const HeaderSkin = (props: HeaderContractProps) => {
   const {
     fixed = false,
     scrollEffect = false,
+    searchPlaceholder,
+    onSearch,
+    initialSearchValue,
+    languageSelector,
+    themeSwitcher,
     ...config
   } = props;
   
@@ -53,6 +58,11 @@ export const HeaderSkin = (props: HeaderContractProps) => {
   return (
     <HeaderBase
       {...config}
+      searchPlaceholder={searchPlaceholder}
+      onSearch={onSearch}
+      initialSearchValue={initialSearchValue}
+      languageSelector={languageSelector}
+      themeSwitcher={themeSwitcher}
       style={headerStyle}
       containerStyle={containerStyle}
       isMobileMenuOpen={mobileMenuOpen}

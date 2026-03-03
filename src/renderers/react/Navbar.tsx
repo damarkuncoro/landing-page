@@ -1,5 +1,6 @@
 import React from "react";
 import { NavbarSkin } from "./skins/navbar/NavbarSkin";
+import type { NavbarContractProps } from "./contracts/NavbarContract";
 
 /**
  * Komponen Navbar yang menggunakan arsitektur Skin.
@@ -11,13 +12,22 @@ const Navbar = ({
   isOpen,
   className,
   style,
-}: {
-  links: any[];
-  isMobile?: boolean;
-  isOpen?: boolean;
-  className?: string;
-  style?: React.CSSProperties;
-}) => {
+  linkStyle,
+  activeLinkStyle,
+  loadingLinkStyle,
+  dropdownStyle,
+  dropdownLinkStyle,
+  onLinkMouseEnter,
+  onLinkMouseLeave,
+  onLinkClick,
+  onDropdownToggle,
+  searchPlaceholder,
+  onSearch,
+  searchValue,
+  onSearchChange,
+  languageSelector,
+  themeSwitcher,
+}: NavbarContractProps) => {
   
   return (
     <NavbarSkin
@@ -26,6 +36,21 @@ const Navbar = ({
       isOpen={isOpen}
       className={className}
       style={style}
+      linkStyle={linkStyle}
+      activeLinkStyle={activeLinkStyle}
+      loadingLinkStyle={loadingLinkStyle}
+      dropdownStyle={dropdownStyle}
+      dropdownLinkStyle={dropdownLinkStyle}
+      onLinkMouseEnter={onLinkMouseEnter}
+      onLinkMouseLeave={onLinkMouseLeave}
+      onLinkClick={onLinkClick}
+      onDropdownToggle={onDropdownToggle}
+      searchPlaceholder={searchPlaceholder}
+      onSearch={onSearch}
+      searchValue={searchValue}
+      onSearchChange={onSearchChange}
+      languageSelector={languageSelector}
+      themeSwitcher={themeSwitcher}
     />
   );
 };
