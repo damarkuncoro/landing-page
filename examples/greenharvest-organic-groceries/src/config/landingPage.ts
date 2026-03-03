@@ -34,7 +34,7 @@ export const greenHarvestLandingPage = defineLandingPage({
           },
           { text: 'Farmers', url: '/farmers' },
           { text: 'Recipes', url: '/recipes' },
-        ],
+        ] as any[],
         buttons: [
           { text: 'Login', url: '/login', variant: 'outline' },
           { text: 'Get Started', url: '/signup', variant: 'primary' },
