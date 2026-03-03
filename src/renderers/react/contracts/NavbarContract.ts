@@ -12,6 +12,7 @@ export interface NavbarLink {
   isActive?: boolean;
   isLoading?: boolean;
   children?: NavbarLink[];
+  icon?: React.ReactNode;
 }
 
 export interface NavbarContractProps {
@@ -51,4 +52,14 @@ export interface NavbarContractProps {
     currentTheme: "light" | "dark";
     onThemeChange?: (theme: "light" | "dark") => void;
   };
+  logo?: string;
+  logoAlt?: string;
+  logoStyle?: React.CSSProperties;
+  brandName?: string;
+  brandNameStyle?: React.CSSProperties;
+  fixed?: boolean;
+  sticky?: boolean;
+  searchDebounceDelay?: number;
+  maxDropdownWidth?: string | number;
+  mobileBreakpoint?: string;
 }

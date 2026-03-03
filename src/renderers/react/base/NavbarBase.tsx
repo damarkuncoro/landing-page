@@ -30,6 +30,16 @@ export const NavbarBase = React.forwardRef<HTMLElement, NavbarContractProps & { 
       onSearchChange,
       languageSelector,
       themeSwitcher,
+      logo,
+      logoAlt,
+      logoStyle,
+      brandName,
+      brandNameStyle,
+      fixed,
+      sticky,
+      searchDebounceDelay = 300,
+      maxDropdownWidth,
+      mobileBreakpoint = "md",
     } = props;
 
     const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -55,7 +65,13 @@ export const NavbarBase = React.forwardRef<HTMLElement, NavbarContractProps & { 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value;
       setSearchQuery(value);
-      onSearchChange?.(value);
+      // Add debounce
+      if (onSearchChange) {
+        const timer = setTimeout(() => {
+          onSearchChange(value);
+        }, searchDebounceDelay);
+        return () => clearTimeout(timer);
+      }
     };
 
     const handleSearchSubmit = (e: React.FormEvent) => {
@@ -87,10 +103,45 @@ export const NavbarBase = React.forwardRef<HTMLElement, NavbarContractProps & { 
         as={props.as || "nav"}
         ref={ref}
         className={className}
-        style={style}
+        style={{
+          ...style,
+          position: fixed ? "fixed" : sticky ? "sticky" : "static",
+          top: fixed || sticky ? 0 : "auto",
+          zIndex: fixed || sticky ? 1000 : "auto",
+        }}
         role="navigation"
         aria-label="Main navigation"
       >
+        {/* Logo and Brand Name */}
+        {(logo || brandName) && (
+          <Box style={{
+            marginBottom: isMobile ? "1rem" : "0",
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5rem"
+          }}>
+            {logo && (
+              <img
+                src={logo}
+                alt={logoAlt || brandName || "Logo"}
+                style={{
+                  height: "40px",
+                  ...logoStyle
+                }}
+              />
+            )}
+            {brandName && (
+              <span style={{
+                fontSize: "1.25rem",
+                fontWeight: "bold",
+                ...brandNameStyle
+              }}>
+                {brandName}
+              </span>
+            )}
+          </Box>
+        )}
+
         {/* Search Input */}
         {searchPlaceholder && (
           <Box style={{ marginBottom: isMobile ? "1rem" : "0", display: "flex", alignItems: "center" }}>
@@ -209,6 +260,7 @@ export const NavbarBase = React.forwardRef<HTMLElement, NavbarContractProps & { 
                         </Flex>
                       ) : (
                         <>
+                          {link.icon && <span style={{ fontSize: "1rem" }}>{link.icon}</span>}
                           {link.text}
                           <span style={{ fontSize: "0.75rem" }}>▼</span>
                         </>
@@ -224,6 +276,7 @@ export const NavbarBase = React.forwardRef<HTMLElement, NavbarContractProps & { 
                           top: "100%",
                           left: 0,
                           minWidth: "160px",
+                          maxWidth: maxDropdownWidth,
                           backgroundColor: "#ffffff",
                           boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
                           borderRadius: "0.5rem",
@@ -325,7 +378,10 @@ export const NavbarBase = React.forwardRef<HTMLElement, NavbarContractProps & { 
                                     <Box>Loading...</Box>
                                   </Flex>
                                 ) : (
-                                  childLink.text
+                                  <>
+                                    {childLink.icon && <span style={{ fontSize: "1rem", marginRight: "0.5rem" }}>{childLink.icon}</span>}
+                                    {childLink.text}
+                                  </>
                                 )}
                               </a>
                             </Box>
@@ -388,7 +444,10 @@ export const NavbarBase = React.forwardRef<HTMLElement, NavbarContractProps & { 
                         <Box>Loading...</Box>
                       </Flex>
                     ) : (
-                      link.text
+                      <>
+                        {link.icon && <span style={{ fontSize: "1rem", marginRight: "0.5rem" }}>{link.icon}</span>}
+                        {link.text}
+                      </>
                     )}
                   </a>
                 )}
