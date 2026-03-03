@@ -1,14 +1,16 @@
 import React from "react";
 import { HeroBase } from "../../base/HeroBase";
 import type { HeroContractProps } from "../../contracts/HeroContract";
+import { useTheme } from "../../ThemeProvider";
 
 /**
  * Skin 8 untuk Hero Section.
  * Desain dengan latar belakang gradien biru muda dan teks berwarna putih.
  * Gambar di sebelah kanan dengan teks di kiri.
  */
-export const HeroSkin8 = (props: HeroContractProps & { theme: any }) => {
-  const { theme, ...config } = props;
+export const HeroSkin8 = (props: HeroContractProps) => {
+  const theme = useTheme();
+  const { ...config } = props;
 
   const sectionStyle: React.CSSProperties = {
     padding: "8rem 0",
@@ -48,7 +50,6 @@ export const HeroSkin8 = (props: HeroContractProps & { theme: any }) => {
   return (
     <HeroBase
       {...config}
-      theme={theme}
       style={sectionStyle}
       containerStyle={containerStyle}
       contentStyle={contentStyle}

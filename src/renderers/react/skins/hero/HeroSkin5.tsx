@@ -1,13 +1,15 @@
 import React from "react";
 import { HeroBase } from "../../base/HeroBase";
 import type { HeroContractProps } from "../../contracts/HeroContract";
+import { useTheme } from "../../ThemeProvider";
 
 /**
  * Skin 5 untuk Hero Section.
  * Gambar di atas dengan teks di bawah, latar belakang berwarna terang.
  */
-export const HeroSkin5 = (props: HeroContractProps & { theme: any }) => {
-  const { theme, ...config } = props;
+export const HeroSkin5 = (props: HeroContractProps) => {
+  const theme = useTheme();
+  const { ...config } = props;
 
   const sectionStyle: React.CSSProperties = {
     padding: "6rem 0",
@@ -40,7 +42,6 @@ export const HeroSkin5 = (props: HeroContractProps & { theme: any }) => {
   return (
     <HeroBase
       {...config}
-      theme={theme}
       style={sectionStyle}
       containerStyle={containerStyle}
       contentStyle={contentStyle}

@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useMemo } from "react";
 import type { HeroContractProps } from "../contracts/HeroContract";
 import Button from "../Button";
 import { Container, Flex, Box } from "./LayoutBase";
-import type { ThemeConfig } from "../../../core/types";
+import { useTheme } from "../ThemeProvider";
+import { getHeroStyles, getAlignmentStyles } from "./heroStyles";
 
 /**
  * Base UI untuk Hero Section.
@@ -11,98 +12,113 @@ import type { ThemeConfig } from "../../../core/types";
  */
 export const HeroBase = React.forwardRef<
   HTMLElement,
-  HeroContractProps & { theme: ThemeConfig }
+  HeroContractProps & { theme?: any }
 >((props, ref) => {
   const {
     title,
     subtitle,
     buttons,
     image,
+    imageAlt,
     video,
+    captionsSrc,
     alignment = "center",
     className,
     style,
     containerStyle,
     contentStyle,
-    theme,
+    testId,
+    theme: customTheme,
   } = props;
 
+  // Get theme from context or use custom theme if provided
+  const contextTheme = useTheme();
+  const theme = customTheme || contextTheme;
+
+  // Derive unique heading id from props for accessibility
+  const headingId = props.id ? `${props.id}-title` : "hero-title";
+
+  // Memoize styles to avoid unnecessary re-renders
+  const styles = useMemo(
+    () => getHeroStyles(theme, alignment),
+    [theme, alignment]
+  );
+
+  const alignmentStyles = useMemo(
+    () => getAlignmentStyles(alignment),
+    [alignment]
+  );
+
   return (
-    <Box as="section" ref={ref} className={className} style={style} aria-labelledby="hero-title">
-      <Container style={containerStyle}>
+    <Box
+      as="section"
+      ref={ref}
+      className={className}
+      style={style}
+      aria-labelledby={headingId}
+      data-testid={testId || "hero-section"}
+    >
+      <Container style={containerStyle} data-testid="hero-container">
         <Flex
           direction="column"
           gap={theme.spacing.xl}
-          align={
-            alignment === "center"
-              ? "center"
-              : alignment === "right"
-                ? "flex-end"
-                : "flex-start"
-          }
-          style={{ textAlign: alignment === "center" ? "center" : alignment === "right" ? "right" : "left", ...contentStyle }}
+          align={alignmentStyles.flexAlign}
+          style={{
+            textAlign: alignmentStyles.textAlign,
+            ...contentStyle,
+          }}
+          data-testid="hero-content"
         >
-          <Box>
+          <Box data-testid="hero-text-content">
             <h1
-              id="hero-title"
-              style={{
-                fontSize: theme.typography.h1,
-                fontWeight: theme.fontWeights.bold,
-                color: theme.colors.text,
-                marginBottom: theme.spacing.md,
-                lineHeight: "1.2",
-              }}
+              id={headingId}
+              style={styles.title}
+              data-testid="hero-title"
             >
               {title}
             </h1>
-            <p
-              style={{
-                fontSize: theme.typography.body,
-                color: theme.colors.muted,
-                marginBottom: theme.spacing.lg,
-                maxWidth: "600px",
-                marginLeft: alignment === "center" ? "auto" : "0",
-                marginRight: alignment === "center" ? "auto" : "0",
-              }}
-            >
-              {subtitle}
-            </p>
+            {subtitle && (
+              <p style={styles.subtitle} data-testid="hero-subtitle">
+                {subtitle}
+              </p>
+            )}
           </Box>
           {(image || video) && (
-            <Box>
-              {image && (
+            <Box data-testid="hero-media">
+              {image && !video && (
                 <img
                   src={image}
-                  alt={title || "Hero"}
-                  style={{
-                    maxWidth: "100%",
-                    borderRadius: "0.5rem",
-                    boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
-                  }}
+                  alt={imageAlt || title || "Hero"}
+                  style={styles.media}
                   loading="lazy"
+                  data-testid="hero-image"
                 />
               )}
               {video && (
                 <video
                   src={video}
                   controls
-                  style={{
-                    maxWidth: "100%",
-                    borderRadius: "0.5rem",
-                    boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
-                  }}
-                />
+                  aria-label={title || "Hero video"}
+                  title={title || "Hero video"}
+                  style={styles.media}
+                  data-testid="hero-video"
+                >
+                  {captionsSrc && (
+                    <track kind="captions" src={captionsSrc} default />
+                  )}
+                </video>
               )}
             </Box>
           )}
-          {buttons?.length > 0 && (
+          {!!buttons?.length && (
             <Flex
               gap={theme.spacing.md}
               wrap="wrap"
-              justify={alignment === "center" ? "center" : "flex-start"}
+              justify={alignmentStyles.justifyContent}
+              data-testid="hero-buttons"
             >
-              {buttons.map((button) => (
-                <Button key={button.id} config={button} theme={theme} />
+              {buttons.map((button, index) => (
+                <Button key={button.id || index} config={button} theme={theme} />
               ))}
             </Flex>
           )}

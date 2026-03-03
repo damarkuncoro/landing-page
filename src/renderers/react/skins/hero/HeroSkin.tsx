@@ -1,14 +1,16 @@
 import React from "react";
 import { HeroBase } from "../../base/HeroBase";
 import type { HeroContractProps } from "../../contracts/HeroContract";
+import { useTheme } from "../../ThemeProvider";
 
 /**
  * Skin untuk Hero Section.
  * Menggabungkan Base UI dengan styling (Tailwind/inline).
  * Depend pada Base UI + Tailwind (optional) + Contract (aturan 15).
  */
-export const HeroSkin = (props: HeroContractProps & { theme: any }) => {
-  const { theme, ...config } = props;
+export const HeroSkin = (props: HeroContractProps) => {
+  const theme = useTheme();
+  const { ...config } = props;
 
   const sectionStyle: React.CSSProperties = {
     padding: "4rem 0",
@@ -34,7 +36,6 @@ export const HeroSkin = (props: HeroContractProps & { theme: any }) => {
   return (
     <HeroBase
       {...config}
-      theme={theme}
       style={sectionStyle}
       containerStyle={containerStyle}
       contentStyle={contentStyle}

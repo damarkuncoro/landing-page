@@ -22,6 +22,7 @@ import Footer from "./Footer";
 import Stats from "./Stats";
 import Faq from "./Faq";
 import { Box } from "./base/LayoutBase";
+import { ThemeProvider } from "./ThemeProvider";
 
 // Main renderer
 export const createReactRenderer = () => {
@@ -32,7 +33,7 @@ export const createReactRenderer = () => {
     section: SectionConfig;
     theme: any;
   }) => {
-    switch (section.type) {
+    switch (section.type as any) {
       case "header":
         return (
           <Header
@@ -60,7 +61,7 @@ export const createReactRenderer = () => {
       case "testimonials":
         return (
           <Testimonials
-            config={section.config as TestimonialConfig}
+            config={section.config as unknown as TestimonialConfig}
             theme={theme}
             key={section.id}
           />
@@ -93,7 +94,7 @@ export const createReactRenderer = () => {
         return (
           <Stats
             config={
-              section.config as { stats: StatConfig[]; className?: string }
+              section.config as unknown as { stats: StatConfig[]; className?: string }
             }
             theme={theme}
             key={section.id}
@@ -137,15 +138,17 @@ export const createReactRenderer = () => {
     }, [config]);
 
     return (
-      <Box>
-        {config.sections.map((section) => (
-          <SectionRenderer
-            key={section.id}
-            section={section}
-            theme={config.theme}
-          />
-        ))}
-      </Box>
+      <ThemeProvider theme={config.theme as any}>
+        <Box>
+          {config.sections.map((section) => (
+            <SectionRenderer
+              key={section.id}
+              section={section}
+              theme={config.theme}
+            />
+          ))}
+        </Box>
+      </ThemeProvider>
     );
   };
 

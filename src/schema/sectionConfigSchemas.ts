@@ -7,7 +7,9 @@ export const sectionConfigSchemas = {
       title: { type: "string" },
       subtitle: { type: "string" },
       image: { type: "string", format: "uri-reference" },
+      imageAlt: { type: "string" },
       video: { type: "string", format: "uri-reference" },
+      captionsSrc: { type: "string", format: "uri-reference" },
       buttons: {
         type: "array",
         items: { $ref: "urn:landing-page:schema#/definitions/ButtonConfig" },

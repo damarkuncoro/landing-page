@@ -9,12 +9,12 @@ export function validateConfig(config: Partial<LandingPageConfig>): string[] {
   if (!config.sections || config.sections.length === 0)
     errors.push("At least one section is required");
 
-  config.sections?.forEach((section, index) => {
+  config.sections?.forEach((section: any, index) => {
     if (!section.id) errors.push(`Section ${index} is missing an id`);
     if (!section.type)
       errors.push(`Section ${section.id || index} is missing a type`);
 
-    const sectionErrors = validateSection(section);
+    const sectionErrors = validateSection(section as any);
     sectionErrors.forEach((error) =>
       errors.push(`Section ${section.id || index}: ${error}`),
     );
@@ -23,7 +23,7 @@ export function validateConfig(config: Partial<LandingPageConfig>): string[] {
   return errors;
 }
 
-export function validateSection(section: Partial<SectionConfig>): string[] {
+export function validateSection(section: any): string[] {
   const errors: string[] = [];
 
   if (!section.type) {

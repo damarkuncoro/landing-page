@@ -26,7 +26,7 @@ export type {
   ThemeConfig,
   SectionConfig,
   Component,
-  BaseConfig,
+  WithBaseConfig,
 } from "./types";
 
 export type {

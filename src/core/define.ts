@@ -12,6 +12,7 @@ export function defineLandingPage(config: LandingPageConfig) {
   // Create the landing page instance
   const landingPage = {
     ...config,
+    sections: [...config.sections], // Convert to mutable array
     theme: createTheme(config.theme),
 
     // Methods
@@ -43,7 +44,7 @@ export function defineLandingPage(config: LandingPageConfig) {
             `Invalid section updates: ${sectionErrors.join(", ")}`,
           );
         }
-        this.sections[index] = updatedSection;
+        this.sections[index] = updatedSection as SectionConfig;
       }
       return this;
     },
