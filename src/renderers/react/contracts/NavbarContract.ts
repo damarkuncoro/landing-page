@@ -62,4 +62,10 @@ export interface NavbarContractProps {
   searchDebounceDelay?: number;
   maxDropdownWidth?: string | number;
   mobileBreakpoint?: string;
+  mobileMenuButtonText?: string;
+  mobileMenuButtonIcon?: React.ReactNode;
+  mobileMenuPosition?: "left" | "right" | "top" | "bottom";
+  mobileMenuOverlay?: boolean;
+  mobileMenuTransitionDuration?: number;
+  mobileSearchBarPosition?: "top" | "bottom";
 }

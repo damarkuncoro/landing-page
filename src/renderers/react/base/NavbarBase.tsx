@@ -40,10 +40,24 @@ export const NavbarBase = React.forwardRef<HTMLElement, NavbarContractProps & { 
       searchDebounceDelay = 300,
       maxDropdownWidth,
       mobileBreakpoint = "md",
+      mobileMenuButtonText,
+      mobileMenuButtonIcon,
+      mobileMenuPosition = "top",
+      mobileMenuOverlay = true,
+      mobileMenuTransitionDuration = 300,
+      mobileSearchBarPosition = "top",
     } = props;
 
     const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
     const [searchQuery, setSearchQuery] = useState(searchValue ?? "");
+    const [isMenuOpen, setIsMenuOpen] = useState(isOpen ?? false);
+
+    // Sync isOpen prop with internal state
+    useEffect(() => {
+      if (isOpen !== undefined) {
+        setIsMenuOpen(isOpen);
+      }
+    }, [isOpen]);
 
     // Handle outside clicks to close dropdown
     useEffect(() => {
@@ -93,10 +107,14 @@ export const NavbarBase = React.forwardRef<HTMLElement, NavbarContractProps & { 
         toggleDropdown(e, link);
       } else {
         onLinkClick?.(e, link);
+        // Close mobile menu when clicking on a link
+        if (isMobile) {
+          setIsMenuOpen(false);
+        }
       }
     };
 
-    if (isMobile && !isOpen) return null;
+    if (isMobile && !isMenuOpen) return null;
 
     return (
       <Box
@@ -112,6 +130,23 @@ export const NavbarBase = React.forwardRef<HTMLElement, NavbarContractProps & { 
         role="navigation"
         aria-label="Main navigation"
       >
+        {/* Mobile Menu Overlay */}
+        {isMobile && isMenuOpen && mobileMenuOverlay && (
+          <Box
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
+              zIndex: 999,
+              backdropFilter: "blur(1px)",
+            }}
+            onClick={() => setIsMenuOpen(false)}
+          />
+        )}
+
         {/* Logo and Brand Name */}
         {(logo || brandName) && (
           <Box style={{
@@ -142,8 +177,8 @@ export const NavbarBase = React.forwardRef<HTMLElement, NavbarContractProps & { 
           </Box>
         )}
 
-        {/* Search Input */}
-        {searchPlaceholder && (
+        {/* Search Input (Mobile Positioning) */}
+        {searchPlaceholder && (mobileSearchBarPosition === "top" || !isMobile) && (
           <Box style={{ marginBottom: isMobile ? "1rem" : "0", display: "flex", alignItems: "center" }}>
             <form onSubmit={handleSearchSubmit} style={{ display: "flex", width: "100%", maxWidth: isMobile ? "100%" : "300px" }}>
               <input
@@ -178,11 +213,57 @@ export const NavbarBase = React.forwardRef<HTMLElement, NavbarContractProps & { 
           </Box>
         )}
 
+        {/* Mobile Menu Toggle */}
+        {isMobile && (
+          <Box style={{
+            marginBottom: "1rem",
+            display: "flex",
+            justifyContent: "flex-end"
+          }}>
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              style={{
+                padding: "0.5rem 1rem",
+                backgroundColor: "transparent",
+                color: "currentColor",
+                border: "1px solid #e5e7eb",
+                borderRadius: "0.25rem",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem"
+              }}
+              aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+            >
+              {mobileMenuButtonIcon || (isMenuOpen ? "✕" : "☰")}
+              {mobileMenuButtonText && <span>{mobileMenuButtonText}</span>}
+            </button>
+          </Box>
+        )}
+
+        {/* Navigation Menu */}
         <Flex
           as="ul"
           direction={isMobile ? "column" : "row"}
           gap="1.5rem"
-          style={{ listStyle: "none", padding: 0 }}
+          style={{
+            listStyle: "none",
+            padding: 0,
+            transform: isMobile ? (isMenuOpen ? "translateX(0)" : "translateX(-100%)") : "none",
+            transition: `transform ${mobileMenuTransitionDuration}ms ease-in-out`,
+            position: isMobile ? (mobileMenuPosition === "top" ? "relative" : "fixed") : "static",
+            top: mobileMenuPosition === "top" ? 0 : "auto",
+            left: mobileMenuPosition === "left" ? 0 : "auto",
+            right: mobileMenuPosition === "right" ? 0 : "auto",
+            bottom: mobileMenuPosition === "bottom" ? 0 : "auto",
+            width: isMobile ? "80%" : "auto",
+            height: isMobile && (mobileMenuPosition === "top" || mobileMenuPosition === "bottom") ? "auto" : "100%",
+            maxHeight: isMobile && (mobileMenuPosition === "top" || mobileMenuPosition === "bottom") ? "80vh" : "auto",
+            backgroundColor: isMobile ? "#ffffff" : "transparent",
+            boxShadow: isMobile ? "0 4px 6px -1px rgba(0, 0, 0, 0.1)" : "none",
+            overflow: isMobile ? "auto" : "visible",
+            zIndex: isMobile ? 1001 : "auto",
+          }}
           role="menubar"
         >
           {links.map((link) => {
@@ -272,8 +353,8 @@ export const NavbarBase = React.forwardRef<HTMLElement, NavbarContractProps & { 
                       <Box
                         as="ul"
                         style={{
-                          position: "absolute",
-                          top: "100%",
+                          position: isMobile ? "relative" : "absolute",
+                          top: isMobile ? "100%" : "100%",
                           left: 0,
                           minWidth: "160px",
                           maxWidth: maxDropdownWidth,
@@ -325,6 +406,10 @@ export const NavbarBase = React.forwardRef<HTMLElement, NavbarContractProps & { 
                                   }
                                   onLinkClick?.(e, childLink);
                                   setActiveDropdown(null);
+                                  // Close mobile menu when clicking on a dropdown link
+                                  if (isMobile) {
+                                    setIsMenuOpen(false);
+                                  }
                                 }}
                                 role="menuitem"
                                 aria-disabled={childLink.isLoading}
@@ -335,6 +420,9 @@ export const NavbarBase = React.forwardRef<HTMLElement, NavbarContractProps & { 
                                     if (!childLink.isLoading) {
                                       onLinkClick?.(e as any, childLink);
                                       setActiveDropdown(null);
+                                      if (isMobile) {
+                                        setIsMenuOpen(false);
+                                      }
                                     }
                                   } else if (e.key === "ArrowUp") {
                                     e.preventDefault();
@@ -412,6 +500,10 @@ export const NavbarBase = React.forwardRef<HTMLElement, NavbarContractProps & { 
                         e.preventDefault();
                       }
                       onLinkClick?.(e, link);
+                      // Close mobile menu when clicking on a link
+                      if (isMobile) {
+                        setIsMenuOpen(false);
+                      }
                     }}
                     role="menuitem"
                     aria-disabled={link.isLoading}
@@ -421,6 +513,9 @@ export const NavbarBase = React.forwardRef<HTMLElement, NavbarContractProps & { 
                         e.preventDefault();
                         if (!link.isLoading) {
                           onLinkClick?.(e as any, link);
+                          if (isMobile) {
+                            setIsMenuOpen(false);
+                          }
                         }
                       }
                     }}
@@ -494,8 +589,8 @@ export const NavbarBase = React.forwardRef<HTMLElement, NavbarContractProps & { 
                 <Box
                   as="ul"
                   style={{
-                    position: "absolute",
-                    top: "100%",
+                    position: isMobile ? "relative" : "absolute",
+                    top: isMobile ? "100%" : "100%",
                     right: 0,
                     minWidth: "120px",
                     backgroundColor: "#ffffff",
@@ -529,6 +624,10 @@ export const NavbarBase = React.forwardRef<HTMLElement, NavbarContractProps & { 
                           e.preventDefault();
                           languageSelector.onLanguageChange?.(lang.code);
                           setActiveDropdown(null);
+                          // Close mobile menu when changing language
+                          if (isMobile) {
+                            setIsMenuOpen(false);
+                          }
                         }}
                         role="menuitem"
                         tabIndex={0}
@@ -537,6 +636,9 @@ export const NavbarBase = React.forwardRef<HTMLElement, NavbarContractProps & { 
                             e.preventDefault();
                             languageSelector.onLanguageChange?.(lang.code);
                             setActiveDropdown(null);
+                            if (isMobile) {
+                              setIsMenuOpen(false);
+                            }
                           }
                         }}
                       >
@@ -575,6 +677,47 @@ export const NavbarBase = React.forwardRef<HTMLElement, NavbarContractProps & { 
                   {themeSwitcher.currentTheme === "light" ? "Dark" : "Light"}
                 </span>
               </button>
+            </Box>
+          )}
+
+          {/* Search Input (Bottom Position for Mobile) */}
+          {searchPlaceholder && mobileSearchBarPosition === "bottom" && isMobile && (
+            <Box style={{
+              marginTop: "1rem",
+              marginBottom: "1rem",
+              display: "flex",
+              alignItems: "center"
+            }}>
+              <form onSubmit={handleSearchSubmit} style={{ display: "flex", width: "100%" }}>
+                <input
+                  type="text"
+                  placeholder={searchPlaceholder}
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                  style={{
+                    flex: 1,
+                    padding: "0.5rem 1rem",
+                    border: "1px solid #e5e7eb",
+                    borderRadius: "0.25rem 0 0 0.25rem",
+                    fontSize: "0.875rem",
+                  }}
+                  aria-label="Search"
+                />
+                <button
+                  type="submit"
+                  style={{
+                    padding: "0.5rem 1rem",
+                    backgroundColor: "#4f46e5",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "0 0.25rem 0.25rem 0",
+                    cursor: "pointer",
+                  }}
+                  aria-label="Search"
+                >
+                  🔍
+                </button>
+              </form>
             </Box>
           )}
         </Flex>
