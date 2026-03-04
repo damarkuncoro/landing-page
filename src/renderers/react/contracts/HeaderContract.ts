@@ -27,4 +27,11 @@ export interface HeaderContractProps {
   onMobileMenuToggle?: () => void;
   style?: React.CSSProperties;
   containerStyle?: React.CSSProperties;
+  mobileBreakpoint?: string;
+  scrollEffectThreshold?: number;
+  scrollEffectStyles?: {
+    scrolled?: React.CSSProperties;
+    notScrolled?: React.CSSProperties;
+  };
+  menuToggleStyle?: React.CSSProperties;
 }

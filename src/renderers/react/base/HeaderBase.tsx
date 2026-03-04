@@ -33,23 +33,42 @@ export const HeaderBase = React.forwardRef<
     initialSearchValue,
     languageSelector,
     themeSwitcher,
+    mobileBreakpoint = "md",
+    scrollEffectThreshold = 20,
+    scrollEffectStyles,
+    menuToggleStyle,
   } = props;
 
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
     if (scrollEffect) {
-      const handleScroll = () => setIsScrolled(window.scrollY > 20);
+      const handleScroll = () => setIsScrolled(window.scrollY > scrollEffectThreshold);
       window.addEventListener('scroll', handleScroll);
       return () => window.removeEventListener('scroll', handleScroll);
     }
-  }, [scrollEffect]);
+  }, [scrollEffect, scrollEffectThreshold]);
+
+  // Determine header styles based on scroll state
+  const headerStyle = {
+    ...style,
+    ...(fixed && {
+      position: 'fixed' as const,
+      top: 0,
+      left: 0,
+      right: 0,
+      zIndex: 50,
+      transition: 'all 0.3s ease',
+    }),
+    ...(scrollEffect && isScrolled && scrollEffectStyles?.scrolled),
+    ...(scrollEffect && !isScrolled && scrollEffectStyles?.notScrolled),
+  };
 
   return (
     <Box
       as={props.as || "header"}
       ref={ref}
-      style={style}
+      style={headerStyle}
       className={className}
     >
       <Container style={containerStyle}>
@@ -71,7 +90,7 @@ export const HeaderBase = React.forwardRef<
           </Flex>
 
           {/* Desktop Navbar - Hidden on mobile, visible on md screens */}
-          <Box className="hidden md:block">
+          <Box className={`hidden ${mobileBreakpoint}:block`}>
             <Navbar
               links={links}
               isMobile={false}
@@ -85,7 +104,7 @@ export const HeaderBase = React.forwardRef<
           </Box>
 
           {/* Desktop Buttons - Hidden on mobile, visible on md screens */}
-          <Box className="hidden md:block">
+          <Box className={`hidden ${mobileBreakpoint}:block`}>
             <Flex align="center" gap="1rem">
               {buttons.map((button, index) => (
                 <Button key={index} config={button} />
@@ -97,6 +116,7 @@ export const HeaderBase = React.forwardRef<
             <MenuToggle
               isOpen={isMobileMenuOpen}
               onClick={onMobileMenuToggle}
+              style={menuToggleStyle}
             />
           )}
         </Flex>
