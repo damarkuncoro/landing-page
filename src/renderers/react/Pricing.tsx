@@ -1,5 +1,6 @@
 import React from "react";
 import type { PricingConfig } from "../../components/types";
+import { PricingBase } from "./base/PricingBase";
 import { PricingSkin } from "./skins/pricing/PricingSkin";
 
 /**
@@ -7,6 +8,10 @@ import { PricingSkin } from "./skins/pricing/PricingSkin";
  * Depend pada Skins + Modules (aturan 16).
  */
 const Pricing = ({ config }: { config: PricingConfig }) => {
+  if (config.skin === "none") {
+    return <PricingBase {...config} />;
+  }
+
   return <PricingSkin {...config} />;
 };
 

@@ -80,7 +80,9 @@ export const HeaderBase = React.forwardRef<
   } = props;
 
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== 'undefined' && window.innerWidth < (BREAKPOINT_WIDTH[mobileBreakpoint] ?? 768)
+  );
 
   // Resolve breakpoint width sekali saja
   const breakpointWidth = BREAKPOINT_WIDTH[mobileBreakpoint] ?? 768;
@@ -88,10 +90,10 @@ export const HeaderBase = React.forwardRef<
   // Check mobile view
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < breakpointWidth);
+      const mobile = window.innerWidth < breakpointWidth;
+      setIsMobile(mobile);
     };
 
-    checkMobile();
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
   }, [breakpointWidth]);
@@ -204,7 +206,7 @@ export const HeaderBase = React.forwardRef<
           )}
 
           {/* Mobile Menu Toggle */}
-          {onMobileMenuToggle && isMobile && (
+          {onMobileMenuToggle && (
             <Box className={mobileVisibleClass}>
               <MenuToggle
                 isOpen={isMobileMenuOpen}

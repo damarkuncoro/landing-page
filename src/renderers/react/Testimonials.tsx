@@ -1,4 +1,5 @@
 import React from "react";
+import { TestimonialsBase } from "./base/TestimonialsBase";
 import { TestimonialsSkin } from "./skins/testimonials/TestimonialsSkin";
 
 /**
@@ -6,6 +7,10 @@ import { TestimonialsSkin } from "./skins/testimonials/TestimonialsSkin";
  * Depend pada Skins + Modules (aturan 16).
  */
 const Testimonials = ({ config }: { config: any }) => {
+  if (config.skin === "none") {
+    return <TestimonialsBase {...config} />;
+  }
+
   return <TestimonialsSkin {...config} />;
 };
 

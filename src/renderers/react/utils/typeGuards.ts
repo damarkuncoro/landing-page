@@ -45,6 +45,6 @@ export function isFaqConfig(config: any): config is FaqConfig {
   return config && typeof config === 'object' && Array.isArray(config.items);
 }
 
-export function isValidSkinType(skin: any): skin is "default" | "tailwind" {
-  return skin === "default" || skin === "tailwind";
+export function isValidSkinType(skin: any): skin is "default" | "tailwind" | "none" {
+  return skin === "default" || skin === "tailwind" || skin === "none";
 }

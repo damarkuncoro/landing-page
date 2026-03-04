@@ -1,5 +1,6 @@
 import React from "react";
 import type { StatConfig } from "../../components/types";
+import { StatsBase } from "./base/StatsBase";
 import { StatsSkin } from "./skins/stats/StatsSkin";
 
 /**
@@ -9,8 +10,12 @@ import { StatsSkin } from "./skins/stats/StatsSkin";
 const Stats = ({
   config,
 }: {
-  config: { stats: StatConfig[]; className?: string };
+  config: { stats: StatConfig[]; className?: string; skin?: "default" | "tailwind" | "none" };
 }) => {
+  if (config.skin === "none") {
+    return <StatsBase {...config} />;
+  }
+
   return <StatsSkin {...config} />;
 };
 

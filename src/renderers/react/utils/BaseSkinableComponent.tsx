@@ -9,11 +9,40 @@ import ErrorBoundary from "./ErrorBoundary";
  */
 
 interface BaseSkinableComponentProps {
-  skin?: "default" | "tailwind";
+  skin?: "default" | "tailwind" | "none";
   className?: string;
   style?: React.CSSProperties;
   [key: string]: any;
 }
+
+// Map component name to base component
+import { HeaderBase } from "../base/HeaderBase";
+import { NavbarBase } from "../base/NavbarBase";
+import { MenuToggleBase } from "../base/MenuToggleBase";
+import { ButtonBase } from "../base/ButtonBase";
+import { HeroBase } from "../base/HeroBase";
+import { FeaturesBase } from "../base/FeaturesBase";
+import { TestimonialsBase } from "../base/TestimonialsBase";
+import { PricingBase } from "../base/PricingBase";
+import { CtaBase } from "../base/CtaBase";
+import { FooterBase } from "../base/FooterBase";
+import { StatsBase } from "../base/StatsBase";
+import { FaqBase } from "../base/FaqBase";
+
+const BASE_COMPONENTS: Record<string, React.ComponentType<any>> = {
+  Header: HeaderBase,
+  Navbar: NavbarBase,
+  MenuToggle: MenuToggleBase,
+  Button: ButtonBase,
+  Hero: HeroBase,
+  Features: FeaturesBase,
+  Testimonials: TestimonialsBase,
+  Pricing: PricingBase,
+  Cta: CtaBase,
+  Footer: FooterBase,
+  Stats: StatsBase,
+  Faq: FaqBase,
+};
 
 export function createBaseSkinableComponent<TProps extends BaseSkinableComponentProps>(
   componentName: string
@@ -28,7 +57,23 @@ export function createBaseSkinableComponent<TProps extends BaseSkinableComponent
 
     const renderContent = () => {
       try {
-        const SkinComponent = skinManager.getSkin(componentName, validSkin);
+        // If skin is "none", render base component directly
+        if (validSkin === "none") {
+          const BaseComponent = BASE_COMPONENTS[componentName];
+          if (BaseComponent) {
+            return (
+              <BaseComponent
+                {...props}
+                className={className}
+                style={style}
+              />
+            );
+          }
+          console.warn(`Base component not found for "${componentName}", falling back to default skin`);
+        }
+
+        // Otherwise, use skin manager to get skin component
+        const SkinComponent = skinManager.getSkin(componentName, "default");
         
         return (
           <SkinComponent

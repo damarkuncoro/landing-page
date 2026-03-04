@@ -1,5 +1,6 @@
 import React from "react";
 import type { FooterConfig } from "../../components/types";
+import { FooterBase } from "./base/FooterBase";
 import { FooterSkin } from "./skins/footer/FooterSkin";
 
 /**
@@ -7,6 +8,10 @@ import { FooterSkin } from "./skins/footer/FooterSkin";
  * Depend pada Skins + Modules (aturan 16).
  */
 const Footer = ({ config }: { config: FooterConfig }) => {
+  if (config.skin === "none") {
+    return <FooterBase {...config} />;
+  }
+
   return <FooterSkin {...config} />;
 };
 

@@ -6,7 +6,7 @@ export interface ButtonConfig extends WithBaseConfig<{
   variant: "primary" | "secondary" | "outline" | "ghost";
   size?: "sm" | "md" | "lg";
   target?: "_blank" | "_self";
-  skin?: "default" | "tailwind";
+  skin?: "default" | "tailwind" | "none";
   padding?: string;
   fontSize?: string;
 }> {}
@@ -44,7 +44,7 @@ export interface HeaderConfig extends WithBaseConfig<{
   buttons?: ButtonConfig[];
   fixed?: boolean;
   scrollEffect?: boolean;
-  skin?: "default" | "tailwind";
+  skin?: "default" | "tailwind" | "none";
   searchPlaceholder?: string;
   onSearch?: (query: string) => void;
   initialSearchValue?: string;
@@ -62,7 +62,7 @@ export interface HeroConfig extends WithBaseConfig<{
   captionsSrc?: string;
   buttons: ButtonConfig[];
   alignment?: "left" | "center" | "right";
-  skin?: "default" | "skin2" | "skin3" | "skin4" | "skin5" | "skin6" | "skin7" | "skin8" | "skin9" | "skin10" | "tailwind";
+  skin?: "default" | "skin2" | "skin3" | "skin4" | "skin5" | "skin6" | "skin7" | "skin8" | "skin9" | "skin10" | "tailwind" | "none";
 }> {}
 
 export interface FeatureConfig extends WithBaseConfig<{
@@ -70,7 +70,7 @@ export interface FeatureConfig extends WithBaseConfig<{
   description: string;
   icon?: string;
   image?: string;
-  skin?: "default" | "tailwind";
+  skin?: "default" | "tailwind" | "none";
 }> {}
 
 export interface TestimonialConfig extends WithBaseConfig<{
@@ -91,6 +91,7 @@ export interface PricingConfig extends WithBaseConfig<{
     button: ButtonConfig;
     featured?: boolean;
   }[];
+  skin?: "default" | "tailwind" | "none";
 }> {}
 
 export interface FooterConfig extends WithBaseConfig<{
@@ -111,6 +112,7 @@ export interface FooterConfig extends WithBaseConfig<{
     icon?: string;
   }[];
   copyright?: string;
+  skin?: "default" | "tailwind" | "none";
 }> {}
 
 export interface CtaConfig extends WithBaseConfig<{
@@ -118,6 +120,7 @@ export interface CtaConfig extends WithBaseConfig<{
   description: string;
   button: ButtonConfig;
   image?: string;
+  skin?: "default" | "tailwind" | "none";
 }> {}
 
 export interface StatConfig extends WithBaseConfig<{
@@ -134,4 +137,5 @@ export interface FaqConfig extends WithBaseConfig<{
     question: string;
     answer: string;
   }[];
+  skin?: "default" | "tailwind" | "none";
 }> {}

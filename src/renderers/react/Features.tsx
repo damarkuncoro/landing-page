@@ -1,4 +1,5 @@
 import React from "react";
+import { FeaturesBase } from "./base/FeaturesBase";
 import { FeaturesSkin } from "./skins/features/FeaturesSkin";
 import { FeaturesSkinTailwind } from "./skins/features/FeaturesSkinTailwind";
 
@@ -7,6 +8,10 @@ import { FeaturesSkinTailwind } from "./skins/features/FeaturesSkinTailwind";
  * Depend pada Skins + Modules (aturan 16).
  */
 const Features = ({ config }: { config: any }) => {
+  if (config.skin === "none") {
+    return <FeaturesBase {...config} />;
+  }
+
   switch (config.skin) {
     case "tailwind":
       return <FeaturesSkinTailwind {...config} />;

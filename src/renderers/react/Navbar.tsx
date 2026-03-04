@@ -5,7 +5,7 @@ import type { NavbarContractProps } from "./contracts/NavbarContract";
  * Komponen Navbar yang menggunakan arsitektur Skin.
  * Depend pada Skins + Modules (aturan 16).
  */
-const Navbar = createBaseSkinableComponent<NavbarContractProps & { skin?: "default" | "tailwind" }>(
+const Navbar = createBaseSkinableComponent<NavbarContractProps & { skin?: "default" | "tailwind" | "none" }>(
   "Navbar"
 );
 
