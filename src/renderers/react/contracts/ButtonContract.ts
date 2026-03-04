@@ -10,6 +10,8 @@ export interface ButtonContractProps {
   target?: "_blank" | "_self";
   variant?: "primary" | "secondary" | "outline" | "ghost";
   size?: "sm" | "md" | "lg";
+  padding?: string;
+  fontSize?: string;
   className?: string;
   style?: React.CSSProperties;
   disabled?: boolean;

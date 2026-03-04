@@ -9,12 +9,14 @@ export interface HeaderContractProps {
   logo?: string;
   title?: string;
   links: any[];
-  buttons?: {
+  buttons?: Array<{
     text: string;
     url: string;
     variant: "primary" | "secondary" | "outline" | "ghost";
     target?: "_blank" | "_self";
-  }[];
+    padding?: string;
+    fontSize?: string;
+  }>;
   fixed?: boolean;
   scrollEffect?: boolean;
   searchPlaceholder?: string;

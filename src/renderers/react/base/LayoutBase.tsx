@@ -73,15 +73,19 @@ type StyleProps = {
   style?: React.CSSProperties;
 };
 
-// Shared component implementation
+// Type for polymorphic ref
+type PolymorphicRef<C extends React.ElementType> =
+  React.ComponentPropsWithRef<C>["ref"];
+
+// Shared component implementation for polymorphic components
 const createLayoutComponent = <P extends BaseLayoutProps>(
   displayName: string,
-  defaultElement: string,
+  defaultElement: React.ElementType,
   styleResolver?: (props: P) => React.CSSProperties
 ) => {
-  const Component = React.forwardRef<HTMLElement, P & { as?: React.ElementType }>((props, ref) => {
+  return React.forwardRef<HTMLElement, P & { as?: React.ElementType }>((props, ref) => {
     const { as: Element = defaultElement, children, ...restProps } = props;
-    const castProps = props as unknown as BaseLayoutProps;
+    const castProps = restProps as unknown as BaseLayoutProps;
     const baseStyle = {
       // Typography
       color: castProps.color,
@@ -136,21 +140,18 @@ const createLayoutComponent = <P extends BaseLayoutProps>(
       display: castProps.display,
       overflow: castProps.overflow,
     };
-    const resolvedStyle = styleResolver ? styleResolver(props as unknown as P) : undefined;
+    const resolvedStyle = styleResolver ? styleResolver(restProps as unknown as P) : undefined;
 
     return (
       <Element
         ref={ref}
-        style={{ ...baseStyle, ...props.style, ...resolvedStyle }}
+        style={{ ...baseStyle, ...restProps.style, ...resolvedStyle }}
         {...restProps as any}
       >
         {children}
       </Element>
     );
   });
-
-  Component.displayName = displayName;
-  return Component;
 };
 
 // Box component - no style resolver needed

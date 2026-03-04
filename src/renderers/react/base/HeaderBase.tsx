@@ -34,8 +34,18 @@ export const HeaderBase = React.forwardRef<
     languageSelector,
     themeSwitcher,
     mobileBreakpoint = "md",
-    scrollEffectThreshold = 20,
-    scrollEffectStyles,
+    scrollEffectThreshold = 40,
+    scrollEffectStyles = {
+      scrolled: {
+        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        backdropFilter: 'blur(10px)',
+        padding: '0.5rem 1rem',
+        boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)'
+      },
+      notScrolled: {
+        backgroundColor: 'transparent'
+      }
+    },
     menuToggleStyle,
   } = props;
 
@@ -60,13 +70,13 @@ export const HeaderBase = React.forwardRef<
       zIndex: 50,
       transition: 'all 0.3s ease',
     }),
-    ...(scrollEffect && isScrolled && scrollEffectStyles?.scrolled),
-    ...(scrollEffect && !isScrolled && scrollEffectStyles?.notScrolled),
+    ...(scrollEffect && isScrolled && scrollEffectStyles.scrolled),
+    ...(scrollEffect && !isScrolled && scrollEffectStyles.notScrolled),
   };
 
   return (
     <Box
-      as={props.as || "header"}
+      as={props.as || ("header" as unknown as React.ElementType)}
       ref={ref}
       style={headerStyle}
       className={className}
@@ -83,41 +93,45 @@ export const HeaderBase = React.forwardRef<
               />
             )}
             {title && (
-              <h1 style={{ fontSize: "1.5rem", color: theme.colors.text }}>
+              <span style={{ fontSize: "1.5rem", fontWeight: "semibold", color: theme.colors.text }}>
                 {title}
-              </h1>
+              </span>
             )}
           </Flex>
 
           {/* Desktop Navbar - Hidden on mobile, visible on md screens */}
           <Box className={`hidden ${mobileBreakpoint}:block`}>
-            <Navbar
-              links={links}
-              isMobile={false}
-              isOpen={true}
-              searchPlaceholder={searchPlaceholder}
-              onSearch={onSearch}
-              searchValue={initialSearchValue}
-              languageSelector={languageSelector}
-              themeSwitcher={themeSwitcher}
-            />
+            <nav aria-label="Primary Navigation">
+              <Navbar
+                links={links}
+                isMobile={false}
+                isOpen={true}
+                searchPlaceholder={searchPlaceholder}
+                onSearch={onSearch}
+                searchValue={initialSearchValue}
+                languageSelector={languageSelector}
+                themeSwitcher={themeSwitcher}
+              />
+            </nav>
           </Box>
 
           {/* Desktop Buttons - Hidden on mobile, visible on md screens */}
           <Box className={`hidden ${mobileBreakpoint}:block`}>
             <Flex align="center" gap="1rem">
               {buttons.map((button, index) => (
-                <Button key={index} config={button} />
+                <Button key={index} config={{ ...button, padding: button.padding || '0.5rem 1rem', fontSize: button.fontSize || '0.875rem' }} />
               ))}
             </Flex>
           </Box>
 
           {onMobileMenuToggle && (
-            <MenuToggle
-              isOpen={isMobileMenuOpen}
-              onClick={onMobileMenuToggle}
-              style={menuToggleStyle}
-            />
+            <Box className={`${mobileBreakpoint}:hidden`}>
+              <MenuToggle
+                isOpen={isMobileMenuOpen}
+                onClick={onMobileMenuToggle}
+                style={menuToggleStyle}
+              />
+            </Box>
           )}
         </Flex>
 

@@ -14,6 +14,8 @@ export const ButtonBase = React.forwardRef(
       target = "_self",
       variant: _variant, // Destructure to avoid spreading to DOM
       size: _size, // Destructure to avoid spreading to DOM
+      padding,
+      fontSize,
       className,
       style,
       onMouseEnter,
@@ -37,7 +39,12 @@ export const ButtonBase = React.forwardRef(
         href={Component === "a" ? url : undefined}
         target={Component === "a" ? target : undefined}
         rel={Component === "a" && target === "_blank" ? "noopener noreferrer" : undefined}
-        style={{ ...style, width: fullWidth ? "100%" : undefined }}
+        style={{
+          ...style,
+          width: fullWidth ? "100%" : undefined,
+          padding: padding,
+          fontSize: fontSize
+        }}
         className={className}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}

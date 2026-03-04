@@ -7,6 +7,8 @@ export interface ButtonConfig extends WithBaseConfig<{
   size?: "sm" | "md" | "lg";
   target?: "_blank" | "_self";
   skin?: "default" | "tailwind";
+  padding?: string;
+  fontSize?: string;
 }> {}
 
 export interface NavbarLinkConfig {
@@ -39,12 +41,7 @@ export interface HeaderConfig extends WithBaseConfig<{
   logo?: string;
   title?: string;
   links: NavbarLinkConfig[];
-  buttons?: {
-    text: string;
-    url: string;
-    variant: "primary" | "secondary" | "outline" | "ghost";
-    target?: "_blank" | "_self";
-  }[];
+  buttons?: ButtonConfig[];
   fixed?: boolean;
   scrollEffect?: boolean;
   skin?: "default" | "tailwind";

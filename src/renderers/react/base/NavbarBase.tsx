@@ -118,7 +118,7 @@ export const NavbarBase = React.forwardRef<HTMLElement, NavbarContractProps & { 
 
     return (
       <Box
-        as={props.as || "nav"}
+        as={props.as || ("nav" as unknown as React.ElementType)}
         ref={ref}
         className={className}
         style={{
