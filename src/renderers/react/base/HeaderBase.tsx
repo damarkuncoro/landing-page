@@ -131,12 +131,9 @@ export const HeaderBase = React.forwardRef<
     [style, fixed, scrollEffect, isScrolled, scrollEffectStyles]
   );
 
-  // Resolve Tailwind classes dari mapping statis
-  const desktopVisibleClass =
-    BREAKPOINT_HIDDEN_CLASS[mobileBreakpoint] ?? "hidden md:block";
-  const mobileVisibleClass =
-    BREAKPOINT_VISIBLE_CLASS[mobileBreakpoint] ?? "md:hidden";
-
+  // Implement responsive visibility using inline styles instead of Tailwind classes
+  const isMobileView = isMobile;
+  
   return (
     <Box
       as={props.as ?? ("header" as unknown as React.ElementType)}
@@ -170,26 +167,28 @@ export const HeaderBase = React.forwardRef<
           </Flex>
 
           {/* Desktop Navbar */}
-          <Box className={desktopVisibleClass}>
-            <nav aria-label="Primary Navigation">
-              <Navbar
-                links={links}
-                isMobile={false}
-                isOpen={true}
-                searchPlaceholder={searchPlaceholder}
-                onSearch={onSearch}
-                searchValue={initialSearchValue}
-                languageSelector={languageSelector}
-                themeSwitcher={themeSwitcher}
-                showSearchInMobileMenu={showSearchInMobileMenu}
-                skin={skin}
-              />
-            </nav>
-          </Box>
+          {!isMobileView && (
+            <Box>
+              <nav aria-label="Primary Navigation">
+                <Navbar
+                  links={links}
+                  isMobile={false}
+                  isOpen={true}
+                  searchPlaceholder={searchPlaceholder}
+                  onSearch={onSearch}
+                  searchValue={initialSearchValue}
+                  languageSelector={languageSelector}
+                  themeSwitcher={themeSwitcher}
+                  showSearchInMobileMenu={showSearchInMobileMenu}
+                  skin={skin}
+                />
+              </nav>
+            </Box>
+          )}
 
           {/* Desktop Buttons */}
-          {buttons.length > 0 && (
-            <Box className={desktopVisibleClass}>
+          {buttons.length > 0 && !isMobileView && (
+            <Box>
               <Flex align="center" gap="1rem">
                 {buttons.map((button, index) => (
                   <Button
@@ -206,8 +205,8 @@ export const HeaderBase = React.forwardRef<
           )}
 
           {/* Mobile Menu Toggle */}
-          {onMobileMenuToggle && (
-            <Box className={mobileVisibleClass}>
+          {onMobileMenuToggle && isMobileView && (
+            <Box>
               <MenuToggle
                 isOpen={isMobileMenuOpen}
                 onClick={onMobileMenuToggle}

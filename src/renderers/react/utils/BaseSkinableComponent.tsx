@@ -1,7 +1,6 @@
-import React from "react";
+import type React from "react";
 import { skinManager } from "./SkinManager";
 import { isValidSkinType } from "./typeGuards";
-import ErrorBoundary from "./ErrorBoundary";
 
 /**
  * Base Skinable Component - Generic base component for all skinable components.
@@ -55,83 +54,58 @@ export function createBaseSkinableComponent<TProps extends BaseSkinableComponent
       console.warn(`Invalid skin type "${skin}" for component "${componentName}", falling back to default skin`);
     }
 
-    const renderContent = () => {
-      try {
-        // If skin is "none", render base component directly
-        if (validSkin === "none") {
-          const BaseComponent = BASE_COMPONENTS[componentName];
-          if (BaseComponent) {
-            return (
-              <BaseComponent
-                {...props}
-                className={className}
-                style={style}
-              />
-            );
-          }
-          console.warn(`Base component not found for "${componentName}", falling back to default skin`);
+    try {
+      // If skin is "none", render base component directly
+      if (validSkin === "none") {
+        const BaseComponent = BASE_COMPONENTS[componentName];
+        if (BaseComponent) {
+          return (
+            <BaseComponent
+              {...props}
+              className={className}
+              style={style}
+            />
+          );
         }
-
-        // Otherwise, use skin manager to get skin component
-        const SkinComponent = skinManager.getSkin(componentName, "default");
-        
-        return (
-          <SkinComponent
-            {...props}
-            className={className}
-            style={style}
-          />
-        );
-      } catch (error) {
-        console.error(`Error rendering skinable component "${componentName}":`, error);
-        
-        // Fallback UI
-        return (
-          <div
-            className={`error-component ${className}`}
-            style={{
-              padding: "1rem",
-              backgroundColor: "#fef2f2",
-              border: "1px solid #fecaca",
-              borderRadius: "0.5rem",
-              color: "#b91c1c",
-              ...style,
-            }}
-          >
-            <h3>Component Error</h3>
-            <p>Failed to render {componentName} component with skin "{validSkin}"</p>
-            {error instanceof Error && (
-              <pre style={{ marginTop: "0.5rem", fontSize: "0.875rem" }}>
-                {error.message}
-              </pre>
-            )}
-          </div>
-        );
+        console.warn(`Base component not found for "${componentName}", falling back to default skin`);
       }
-    };
 
-    return (
-      <ErrorBoundary
-        fallback={
-          <div
-            className={`error-component ${className}`}
-            style={{
-              padding: "1rem",
-              backgroundColor: "#fef2f2",
-              border: "1px solid #fecaca",
-              borderRadius: "0.5rem",
-              color: "#b91c1c",
-              ...style,
-            }}
-          >
-            <h3>Component Error</h3>
-            <p>Failed to render {componentName} component</p>
-          </div>
-        }
-      >
-        {renderContent()}
-      </ErrorBoundary>
-    );
+      // Otherwise, use skin manager to get skin component
+      const SkinComponent = skinManager.getSkin(componentName, "default");
+      
+      return (
+        <SkinComponent
+          {...props}
+          className={className}
+          style={style}
+        />
+      );
+    } catch (error) {
+      console.error(`Error rendering skinable component "${componentName}":`, error);
+      
+      // Fallback UI
+      return (
+        <div
+          className={`error-component ${className}`}
+          style={{
+            padding: "1rem",
+            backgroundColor: "#fef2f2",
+            border: "1px solid #fecaca",
+            borderRadius: "0.5rem",
+            color: "#b91c1c",
+            ...style,
+          }}
+        >
+          <h3>Component Error</h3>
+          <p>Failed to render {componentName} component with skin "{validSkin}"</p>
+          {error instanceof Error && (
+            <pre style={{ marginTop: "0.5rem", fontSize: "0.875rem" }}>
+              {error.message}
+            </pre>
+          )}
+        </div>
+      );
+    }
   };
 
   BaseSkinableComponent.displayName = componentName;
