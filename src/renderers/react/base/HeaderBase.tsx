@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import type { HeaderContractProps } from "../contracts/HeaderContract";
 import Navbar from "../Navbar";
 import MenuToggle from "../MenuToggle";
@@ -11,6 +11,44 @@ import Button from "../Button";
  * Memisahkan struktur DOM dari styling.
  * Depend pada UI Contract (aturan 13).
  */
+
+// Mapping statis untuk menghindari dynamic Tailwind class yang tidak di-generate
+const BREAKPOINT_HIDDEN_CLASS: Record<string, string> = {
+  sm: "hidden sm:block",
+  md: "hidden md:block",
+  lg: "hidden lg:block",
+  xl: "hidden xl:block",
+  "2xl": "hidden 2xl:block",
+};
+
+const BREAKPOINT_VISIBLE_CLASS: Record<string, string> = {
+  sm: "sm:hidden",
+  md: "md:hidden",
+  lg: "lg:hidden",
+  xl: "xl:hidden",
+  "2xl": "2xl:hidden",
+};
+
+const BREAKPOINT_WIDTH: Record<string, number> = {
+  sm: 640,
+  md: 768,
+  lg: 1024,
+  xl: 1280,
+  "2xl": 1536,
+};
+
+const DEFAULT_SCROLL_EFFECT_STYLES = {
+  scrolled: {
+    backgroundColor: "rgba(255, 255, 255, 0.95)",
+    backdropFilter: "blur(10px)",
+    padding: "0.5rem 1rem",
+    boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.1)",
+  },
+  notScrolled: {
+    backgroundColor: "transparent",
+  },
+};
+
 export const HeaderBase = React.forwardRef<
   HTMLElement,
   HeaderContractProps & { as?: React.ElementType }
@@ -35,72 +73,100 @@ export const HeaderBase = React.forwardRef<
     themeSwitcher,
     mobileBreakpoint = "md",
     scrollEffectThreshold = 40,
-    scrollEffectStyles = {
-      scrolled: {
-        backgroundColor: 'rgba(255, 255, 255, 0.95)',
-        backdropFilter: 'blur(10px)',
-        padding: '0.5rem 1rem',
-        boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)'
-      },
-      notScrolled: {
-        backgroundColor: 'transparent'
-      }
-    },
+    scrollEffectStyles = DEFAULT_SCROLL_EFFECT_STYLES,
     menuToggleStyle,
   } = props;
 
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
+  // Resolve breakpoint width sekali saja
+  const breakpointWidth = BREAKPOINT_WIDTH[mobileBreakpoint] ?? 768;
+
+  // Check mobile view
   useEffect(() => {
-    if (scrollEffect) {
-      const handleScroll = () => setIsScrolled(window.scrollY > scrollEffectThreshold);
-      window.addEventListener('scroll', handleScroll);
-      return () => window.removeEventListener('scroll', handleScroll);
-    }
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < breakpointWidth);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, [breakpointWidth]);
+
+  // Scroll effect listener
+  useEffect(() => {
+    if (!scrollEffect) return;
+
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > scrollEffectThreshold);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, [scrollEffect, scrollEffectThreshold]);
 
-  // Determine header styles based on scroll state
-  const headerStyle = {
-    ...style,
-    ...(fixed && {
-      position: 'fixed' as const,
-      top: 0,
-      left: 0,
-      right: 0,
-      zIndex: 50,
-      transition: 'all 0.3s ease',
+  // Memoize header style agar tidak dikalkulasi ulang setiap render
+  const headerStyle = useMemo(
+    () => ({
+      ...style,
+      ...(fixed && {
+        position: "fixed" as const,
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 50,
+        transition: "all 0.3s ease",
+      }),
+      ...(scrollEffect && isScrolled
+        ? scrollEffectStyles.scrolled
+        : scrollEffect
+        ? scrollEffectStyles.notScrolled
+        : {}),
     }),
-    ...(scrollEffect && isScrolled && scrollEffectStyles.scrolled),
-    ...(scrollEffect && !isScrolled && scrollEffectStyles.notScrolled),
-  };
+    [style, fixed, scrollEffect, isScrolled, scrollEffectStyles]
+  );
+
+  // Resolve Tailwind classes dari mapping statis
+  const desktopVisibleClass =
+    BREAKPOINT_HIDDEN_CLASS[mobileBreakpoint] ?? "hidden md:block";
+  const mobileVisibleClass =
+    BREAKPOINT_VISIBLE_CLASS[mobileBreakpoint] ?? "md:hidden";
 
   return (
     <Box
-      as={props.as || ("header" as unknown as React.ElementType)}
+      as={props.as ?? ("header" as unknown as React.ElementType)}
       ref={ref}
       style={headerStyle}
       className={className}
     >
       <Container style={containerStyle}>
         <Flex justify="space-between" align="center">
+          {/* Logo & Title */}
           <Flex align="center" gap="1rem">
             {logo && (
               <img
                 src={logo}
-                alt={title || "Logo"}
+                alt={title ?? "Logo"}
                 style={{ height: "40px" }}
                 loading="lazy"
               />
             )}
             {title && (
-              <span style={{ fontSize: "1.5rem", fontWeight: "semibold", color: theme.colors.text }}>
+              <span
+                style={{
+                  fontSize: "1.5rem",
+                  fontWeight: 600, // fix: "semibold" bukan nilai CSS yang valid
+                  color: theme.colors.text,
+                }}
+              >
                 {title}
               </span>
             )}
           </Flex>
 
-          {/* Desktop Navbar - Hidden on mobile, visible on md screens */}
-          <Box className={`hidden ${mobileBreakpoint}:block`}>
+          {/* Desktop Navbar */}
+          <Box className={desktopVisibleClass}>
             <nav aria-label="Primary Navigation">
               <Navbar
                 links={links}
@@ -115,17 +181,27 @@ export const HeaderBase = React.forwardRef<
             </nav>
           </Box>
 
-          {/* Desktop Buttons - Hidden on mobile, visible on md screens */}
-          <Box className={`hidden ${mobileBreakpoint}:block`}>
-            <Flex align="center" gap="1rem">
-              {buttons.map((button, index) => (
-                <Button key={index} config={{ ...button, padding: button.padding || '0.5rem 1rem', fontSize: button.fontSize || '0.875rem' }} />
-              ))}
-            </Flex>
-          </Box>
+          {/* Desktop Buttons */}
+          {buttons.length > 0 && (
+            <Box className={desktopVisibleClass}>
+              <Flex align="center" gap="1rem">
+                {buttons.map((button, index) => (
+                  <Button
+                    key={index}
+                    config={{
+                      ...button,
+                      padding: button.padding ?? "0.5rem 1rem",
+                      fontSize: button.fontSize ?? "0.875rem",
+                    }}
+                  />
+                ))}
+              </Flex>
+            </Box>
+          )}
 
-          {onMobileMenuToggle && (
-            <Box className={`${mobileBreakpoint}:hidden`}>
+          {/* Mobile Menu Toggle */}
+          {onMobileMenuToggle && isMobile && (
+            <Box className={mobileVisibleClass}>
               <MenuToggle
                 isOpen={isMobileMenuOpen}
                 onClick={onMobileMenuToggle}
@@ -136,12 +212,8 @@ export const HeaderBase = React.forwardRef<
         </Flex>
 
         {/* Mobile Navbar */}
-        <Navbar
-          links={links}
-          isMobile={true}
-          isOpen={isMobileMenuOpen}
-        />
-        
+        <Navbar links={links} isMobile={true} isOpen={isMobileMenuOpen} />
+
         {/* Mobile Buttons */}
         {isMobileMenuOpen && buttons.length > 0 && (
           <Flex direction="column" gap="1rem" style={{ marginTop: "1rem" }}>

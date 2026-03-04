@@ -1,6 +1,5 @@
 import React from "react";
 import type { MenuToggleContractProps } from "../contracts/MenuToggleContract";
-import { Box } from "./LayoutBase";
 
 /**
  * Base UI untuk Menu Toggle.
@@ -21,17 +20,19 @@ export const MenuToggleBase = React.forwardRef<
     iconClose = "✕",
   } = props;
 
+  const Element = props.as || "button";
+
   return (
-    <Box
-      as={props.as || "button"}
+    <Element
       ref={ref}
       onClick={onClick}
       style={style}
       className={className}
       aria-label={isOpen ? "Close menu" : ariaLabel}
+      type="button"
     >
       {isOpen ? iconClose : iconOpen}
-    </Box>
+    </Element>
   );
 });
 
