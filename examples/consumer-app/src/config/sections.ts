@@ -37,8 +37,8 @@ export const sectionsConfig = [
       },
     ],
     buttons: [
-      { text: "Login", url: "/login", variant: "outline" },
-      { text: "Get Started", url: "/signup", variant: "primary" },
+      { text: "Login", url: "/login", variant: "outline", size: "md" },
+      { text: "Get Started", url: "/signup", variant: "primary", size: "md" },
     ],
     fixed: true,
     scrollEffect: true,
