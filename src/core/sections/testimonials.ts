@@ -5,11 +5,12 @@ export interface TestimonialsSection extends BaseSectionConfig {
   type: "testimonials";
   config: {
     testimonials: TestimonialConfig[];
+    skin?: "default" | "tailwind" | "none";
   };
 }
 
 export function createTestimonialsSection(
-  config: { testimonials: TestimonialConfig[] },
+  config: { testimonials: TestimonialConfig[]; skin?: "default" | "tailwind" | "none" },
   id?: string,
   className?: string,
 ): TestimonialsSection {

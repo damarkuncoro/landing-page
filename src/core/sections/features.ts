@@ -5,11 +5,12 @@ export interface FeaturesSection extends BaseSectionConfig {
   type: "features";
   config: {
     features: FeatureConfig[];
+    skin?: "default" | "tailwind" | "none";
   };
 }
 
 export function createFeaturesSection(
-  config: { features: FeatureConfig[] },
+  config: { features: FeatureConfig[]; skin?: "default" | "tailwind" | "none" },
   id?: string,
   className?: string,
 ): FeaturesSection {

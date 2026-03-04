@@ -5,11 +5,12 @@ export interface StatsSection extends BaseSectionConfig {
   type: "stats";
   config: {
     stats: StatConfig[];
+    skin?: "default" | "tailwind" | "none";
   };
 }
 
 export function createStatsSection(
-  config: { stats: StatConfig[] },
+  config: { stats: StatConfig[]; skin?: "default" | "tailwind" | "none" },
   id?: string,
   className?: string,
 ): StatsSection {

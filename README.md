@@ -22,6 +22,119 @@ Config-driven landing page library for building beautiful, responsive landing pa
 npm install @damarkuncoro/landing-page
 ```
 
+## Using "No Skin" (Base UI)
+
+The library supports a "no skin" option that allows you to use the base UI components without any additional styling. This gives you full control over the styling through CSS or inline styles.
+
+### Usage
+
+```typescript
+import { defineLandingPage } from '@damarkuncoro/landing-page'
+
+const landingPage = defineLandingPage({
+  title: 'My Landing Page with Base UI',
+  description: 'A landing page using the base UI components',
+  sections: [
+    {
+      id: 'hero',
+      type: 'hero',
+      config: {
+        title: 'Welcome to Our Platform',
+        subtitle: 'Discover amazing features that will transform your workflow',
+        buttons: [
+          {
+            id: 'primary-button',
+            text: 'Get Started',
+            url: '/signup',
+            variant: 'primary',
+            size: 'md',
+            skin: 'none', // Use base UI without skin
+          },
+          {
+            id: 'secondary-button',
+            text: 'Learn More',
+            url: '/about',
+            variant: 'secondary',
+            size: 'md',
+            skin: 'none', // Use base UI without skin
+          },
+        ],
+        skin: 'none', // Use base UI without skin
+      },
+    },
+    {
+      id: 'features',
+      type: 'features',
+      config: {
+        features: [
+          {
+            id: 'feature-1',
+            title: 'Fast Performance',
+            description: 'Our platform is optimized for speed and efficiency',
+          },
+          {
+            id: 'feature-2',
+            title: 'Modern Design',
+            description: 'Beautiful, responsive interface that works on all devices',
+          },
+          {
+            id: 'feature-3',
+            title: 'Secure & Reliable',
+            description: 'Enterprise-grade security and reliability',
+          },
+        ],
+        skin: 'none', // Use base UI without skin
+      },
+    },
+  ],
+})
+```
+
+### Customizing Base UI
+
+When using `skin: 'none'`, you can customize the components using the `style` and `className` props:
+
+```typescript
+const landingPage = defineLandingPage({
+  title: 'My Customized Landing Page',
+  description: 'A landing page with customized base UI components',
+  sections: [
+    {
+      id: 'hero',
+      type: 'hero',
+      config: {
+        title: 'Welcome to Our Platform',
+        subtitle: 'Discover amazing features that will transform your workflow',
+        buttons: [
+          {
+            id: 'primary-button',
+            text: 'Get Started',
+            url: '/signup',
+            variant: 'primary',
+            size: 'md',
+            skin: 'none',
+            className: 'my-custom-button', // Custom CSS class
+            style: {
+              backgroundColor: '#ff0000',
+              color: '#ffffff',
+              padding: '12px 24px',
+              borderRadius: '8px',
+              fontSize: '16px',
+            },
+          },
+        ],
+        skin: 'none',
+        className: 'my-custom-hero', // Custom CSS class
+        style: {
+          padding: '80px 0',
+          backgroundColor: '#f5f5f5',
+        },
+      },
+    },
+  ],
+})
+```
+
 ## Quick Start
 
 1. Define your landing page configuration:
@@ -283,7 +396,7 @@ interface HeroConfig {
   video?: string
   buttons: ButtonConfig[]
   alignment?: 'left' | 'center' | 'right'
-  skin?: 'default' | 'skin2' | 'skin3' | 'skin4' | 'skin5' | 'skin6' | 'skin7' | 'skin8'
+  skin?: 'default' | 'skin2' | 'skin3' | 'skin4' | 'skin5' | 'skin6' | 'skin7' | 'skin8' | 'none'
 }
 
 ### Hero Skins
