@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { HeaderBase } from "../../base/HeaderBase";
 import type { HeaderContractProps } from "../../contracts/HeaderContract";
 import { useTheme } from "../../ThemeProvider";
+import { useHeaderSkin } from "./useHeaderSkin";
 
 /**
  * Tailwind-based Skin untuk Header dengan desain seperti GreenHarvest.
@@ -22,16 +23,7 @@ export const HeaderSkinTailwind = (props: HeaderContractProps) => {
     ...config
   } = props;
   
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  useEffect(() => {
-    if (scrollEffect) {
-      const handleScroll = () => setIsScrolled(window.scrollY > 20);
-      window.addEventListener('scroll', handleScroll);
-      return () => window.removeEventListener('scroll', handleScroll);
-    }
-  }, [scrollEffect]);
+  const { mobileMenuOpen, setMobileMenuOpen, isScrolled } = useHeaderSkin(scrollEffect);
 
   const headerClassName = `
     ${fixed ? 'fixed top-0 left-0 right-0 z-50' : ''}

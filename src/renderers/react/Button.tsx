@@ -8,12 +8,8 @@ import { ButtonSkinTailwind } from "./skins/button/ButtonSkinTailwind";
  * Depend pada Skins + Modules (aturan 16).
  */
 const Button = ({ config }: { config: ButtonConfig }) => {
-  switch (config.skin) {
-    case "tailwind":
-      return <ButtonSkinTailwind {...config} />;
-    default:
-      return <ButtonSkin {...config} />;
-  }
+  const SkinComponent = config.skin === "tailwind" ? ButtonSkinTailwind : ButtonSkin;
+  return <SkinComponent {...config} />;
 };
 
 export default Button;

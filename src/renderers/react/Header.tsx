@@ -8,12 +8,8 @@ import { HeaderSkinTailwind } from "./skins/header/HeaderSkinTailwind";
  * Depend pada Skins + Modules (aturan 16).
  */
 const Header = ({ config }: { config: HeaderConfig }) => {
-  switch (config.skin) {
-    case "tailwind":
-      return <HeaderSkinTailwind {...config} />;
-    default:
-      return <HeaderSkin {...config} />;
-  }
+  const SkinComponent = config.skin === "tailwind" ? HeaderSkinTailwind : HeaderSkin;
+  return <SkinComponent {...config} />;
 };
 
 export default Header;
