@@ -145,6 +145,9 @@ export const NavbarBase = React.forwardRef<
     mobileMenuOverlay = true,
     mobileMenuTransitionDuration = 300,
     mobileSearchBarPosition = "top",
+    showSearchInMobileMenu = true,
+    navbarHeight,
+    stickyOffset = 0,
   } = props;
 
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -278,8 +281,9 @@ export const NavbarBase = React.forwardRef<
 
   if (isMobile && !isMenuOpen) return null;
 
-  const showSearchTop = searchPlaceholder && (mobileSearchBarPosition === "top" || !isMobile);
-  const showSearchBottom = searchPlaceholder && mobileSearchBarPosition === "bottom" && isMobile;
+  const showSearchTop = searchPlaceholder && (mobileSearchBarPosition === "top" || (!isMobile && !showSearchInMobileMenu));
+  const showSearchBottom = searchPlaceholder && mobileSearchBarPosition === "bottom" && isMobile && showSearchInMobileMenu;
+  const showSearchInMenu = searchPlaceholder && isMobile && showSearchInMobileMenu && mobileSearchBarPosition !== "top";
 
   return (
     <Box

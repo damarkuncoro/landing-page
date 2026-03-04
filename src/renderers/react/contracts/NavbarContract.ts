@@ -64,8 +64,13 @@ export interface NavbarContractProps {
   mobileBreakpoint?: string;
   mobileMenuButtonText?: string;
   mobileMenuButtonIcon?: React.ReactNode;
+  // Advanced features
+  showSearchInMobileMenu?: boolean;
+  navbarHeight?: string | number;
+  stickyOffset?: string | number;
   mobileMenuPosition?: "left" | "right" | "top" | "bottom";
   mobileMenuOverlay?: boolean;
   mobileMenuTransitionDuration?: number;
   mobileSearchBarPosition?: "top" | "bottom";
+  skin?: "default" | "tailwind";
 }

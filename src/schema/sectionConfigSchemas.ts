@@ -212,6 +212,7 @@ export const sectionConfigSchemas = {
       skin: { type: "string", enum: ["default", "tailwind"] },
       searchPlaceholder: { type: "string" },
       initialSearchValue: { type: "string" },
+      showSearchInMobileMenu: { type: "boolean" },
       languageSelector: {
         type: "object",
         properties: {

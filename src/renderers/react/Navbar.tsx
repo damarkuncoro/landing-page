@@ -1,5 +1,6 @@
 import React from "react";
 import { NavbarSkin } from "./skins/navbar/NavbarSkin";
+import { NavbarSkinTailwind } from "./skins/navbar/NavbarSkinTailwind";
 import type { NavbarContractProps } from "./contracts/NavbarContract";
 
 /**
@@ -27,10 +28,13 @@ const Navbar = ({
   onSearchChange,
   languageSelector,
   themeSwitcher,
-}: NavbarContractProps) => {
+  skin = "default",
+}: NavbarContractProps & { skin?: "default" | "tailwind" }) => {
+  
+  const NavbarComponent = skin === "tailwind" ? NavbarSkinTailwind : NavbarSkin;
   
   return (
-    <NavbarSkin
+    <NavbarComponent
       links={links}
       isMobile={isMobile}
       isOpen={isOpen}

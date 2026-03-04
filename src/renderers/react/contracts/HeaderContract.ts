@@ -22,6 +22,7 @@ export interface HeaderContractProps {
   searchPlaceholder?: string;
   onSearch?: (query: string) => void;
   initialSearchValue?: string;
+  showSearchInMobileMenu?: boolean;
   languageSelector?: LanguageSelectorConfig;
   themeSwitcher?: ThemeSwitcherConfig;
   className?: string;
@@ -36,4 +37,5 @@ export interface HeaderContractProps {
     notScrolled?: React.CSSProperties;
   };
   menuToggleStyle?: React.CSSProperties;
+  skin?: "default" | "tailwind";
 }

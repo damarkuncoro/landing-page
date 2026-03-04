@@ -1,5 +1,6 @@
 import React from "react";
 import { MenuToggleSkin } from "./skins/menu-toggle/MenuToggleSkin";
+import { MenuToggleSkinTailwind } from "./skins/menu-toggle/MenuToggleSkinTailwind";
 
 /**
  * Komponen MenuToggle yang menggunakan arsitektur Skin.
@@ -10,15 +11,19 @@ const MenuToggle = ({
   onClick,
   className,
   style,
+  skin = "default",
 }: {
   isOpen: boolean;
   onClick: () => void;
   className?: string;
   style?: React.CSSProperties;
+  skin?: "default" | "tailwind";
 }) => {
   
+  const MenuToggleComponent = skin === "tailwind" ? MenuToggleSkinTailwind : MenuToggleSkin;
+  
   return (
-    <MenuToggleSkin
+    <MenuToggleComponent
       isOpen={isOpen}
       onClick={onClick}
       className={className}

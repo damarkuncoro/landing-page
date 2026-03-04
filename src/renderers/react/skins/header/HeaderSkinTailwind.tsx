@@ -16,6 +16,7 @@ export const HeaderSkinTailwind = (props: HeaderContractProps) => {
     searchPlaceholder,
     onSearch,
     initialSearchValue,
+    showSearchInMobileMenu = true,
     languageSelector,
     themeSwitcher,
     ...config
@@ -52,12 +53,14 @@ export const HeaderSkinTailwind = (props: HeaderContractProps) => {
       searchPlaceholder={searchPlaceholder}
       onSearch={onSearch}
       initialSearchValue={initialSearchValue}
+      showSearchInMobileMenu={showSearchInMobileMenu}
       languageSelector={languageSelector}
       themeSwitcher={themeSwitcher}
       className={headerClassName}
       containerStyle={containerStyle}
       isMobileMenuOpen={mobileMenuOpen}
       onMobileMenuToggle={() => setMobileMenuOpen(!mobileMenuOpen)}
+      skin={config.skin || "tailwind"}
     />
   );
 };

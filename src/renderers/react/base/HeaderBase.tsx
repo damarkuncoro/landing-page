@@ -69,12 +69,14 @@ export const HeaderBase = React.forwardRef<
     searchPlaceholder,
     onSearch,
     initialSearchValue,
+    showSearchInMobileMenu = true,
     languageSelector,
     themeSwitcher,
     mobileBreakpoint = "md",
     scrollEffectThreshold = 40,
     scrollEffectStyles = DEFAULT_SCROLL_EFFECT_STYLES,
     menuToggleStyle,
+    skin = "default",
   } = props;
 
   const [isScrolled, setIsScrolled] = useState(false);
@@ -177,6 +179,8 @@ export const HeaderBase = React.forwardRef<
                 searchValue={initialSearchValue}
                 languageSelector={languageSelector}
                 themeSwitcher={themeSwitcher}
+                showSearchInMobileMenu={showSearchInMobileMenu}
+                skin={skin}
               />
             </nav>
           </Box>
@@ -206,13 +210,25 @@ export const HeaderBase = React.forwardRef<
                 isOpen={isMobileMenuOpen}
                 onClick={onMobileMenuToggle}
                 style={menuToggleStyle}
+                skin={skin}
               />
             </Box>
           )}
         </Flex>
 
         {/* Mobile Navbar */}
-        <Navbar links={links} isMobile={true} isOpen={isMobileMenuOpen} />
+        <Navbar
+          links={links}
+          isMobile={true}
+          isOpen={isMobileMenuOpen}
+          searchPlaceholder={searchPlaceholder}
+          onSearch={onSearch}
+          searchValue={initialSearchValue}
+          languageSelector={languageSelector}
+          themeSwitcher={themeSwitcher}
+          showSearchInMobileMenu={showSearchInMobileMenu}
+          skin={skin}
+        />
 
         {/* Mobile Buttons */}
         {isMobileMenuOpen && buttons.length > 0 && (

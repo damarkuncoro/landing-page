@@ -48,6 +48,7 @@ export interface HeaderConfig extends WithBaseConfig<{
   searchPlaceholder?: string;
   onSearch?: (query: string) => void;
   initialSearchValue?: string;
+  showSearchInMobileMenu?: boolean;
   languageSelector?: LanguageSelectorConfig;
   themeSwitcher?: ThemeSwitcherConfig;
 }> {}

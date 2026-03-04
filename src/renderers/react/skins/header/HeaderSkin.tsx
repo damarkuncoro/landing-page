@@ -16,6 +16,7 @@ export const HeaderSkin = (props: HeaderContractProps) => {
     searchPlaceholder,
     onSearch,
     initialSearchValue,
+    showSearchInMobileMenu = true,
     languageSelector,
     themeSwitcher,
     ...config
@@ -61,12 +62,14 @@ export const HeaderSkin = (props: HeaderContractProps) => {
       searchPlaceholder={searchPlaceholder}
       onSearch={onSearch}
       initialSearchValue={initialSearchValue}
+      showSearchInMobileMenu={showSearchInMobileMenu}
       languageSelector={languageSelector}
       themeSwitcher={themeSwitcher}
       style={headerStyle}
       containerStyle={containerStyle}
       isMobileMenuOpen={mobileMenuOpen}
       onMobileMenuToggle={() => setMobileMenuOpen(!mobileMenuOpen)}
+      skin={config.skin || "default"}
     />
   );
 };

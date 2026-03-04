@@ -7,6 +7,7 @@ import React from "react";
 export interface MenuToggleContractProps {
   isOpen: boolean;
   onClick: () => void;
+  skin?: "default" | "tailwind";
   ariaLabel?: string;
   className?: string;
   style?: React.CSSProperties;
