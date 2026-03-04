@@ -1,15 +1,15 @@
 import React from "react";
 import type { HeaderConfig } from "../../components/types";
-import { HeaderSkin } from "./skins/header/HeaderSkin";
-import { HeaderSkinTailwind } from "./skins/header/HeaderSkinTailwind";
+import { createBaseSkinableComponent } from "./utils/BaseSkinableComponent";
 
 /**
  * Komponen Header yang menggunakan arsitektur Skin.
  * Depend pada Skins + Modules (aturan 16).
  */
+const BaseHeader = createBaseSkinableComponent<HeaderConfig>("Header");
+
 const Header = ({ config }: { config: HeaderConfig }) => {
-  const SkinComponent = config.skin === "tailwind" ? HeaderSkinTailwind : HeaderSkin;
-  return <SkinComponent {...config} />;
+  return <BaseHeader {...config} skin={config.skin} />;
 };
 
 export default Header;

@@ -1,15 +1,15 @@
 import React from "react";
 import type { ButtonConfig } from "../../components/types";
-import { ButtonSkin } from "./skins/button/ButtonSkin";
-import { ButtonSkinTailwind } from "./skins/button/ButtonSkinTailwind";
+import { createBaseSkinableComponent } from "./utils/BaseSkinableComponent";
 
 /**
  * Komponen Button yang menggunakan arsitektur Skin.
  * Depend pada Skins + Modules (aturan 16).
  */
+const BaseButton = createBaseSkinableComponent<ButtonConfig>("Button");
+
 const Button = ({ config }: { config: ButtonConfig }) => {
-  const SkinComponent = config.skin === "tailwind" ? ButtonSkinTailwind : ButtonSkin;
-  return <SkinComponent {...config} />;
+  return <BaseButton {...config} skin={config.skin} />;
 };
 
 export default Button;

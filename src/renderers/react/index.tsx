@@ -1,4 +1,6 @@
 import React from "react";
+import { registerSkins } from "./utils/registerSkins";
+import ErrorBoundary from "./utils/ErrorBoundary";
 import type { LandingPageConfig, SectionConfig } from "../../core/types";
 import type {
   HeaderConfig,
@@ -23,6 +25,9 @@ import Stats from "./Stats";
 import Faq from "./Faq";
 import { Box } from "./base/LayoutBase";
 import { ThemeProvider } from "./ThemeProvider";
+
+// Register skins when the renderer is created
+registerSkins();
 
 // Main renderer
 export const createReactRenderer = () => {
@@ -104,6 +109,11 @@ export const createReactRenderer = () => {
   };
 
   const LandingPage = ({ config }: { config: LandingPageConfig }) => {
+    // Handle errors
+    const handleError = (error: Error, errorInfo: React.ErrorInfo) => {
+      console.error("Landing Page Error:", error, errorInfo);
+    };
+
     // Global styles
     React.useEffect(() => {
       const style = document.createElement("style");
@@ -128,16 +138,37 @@ export const createReactRenderer = () => {
     }, [config]);
 
     return (
-      <ThemeProvider theme={config.theme as any} dark={config.theme?.colors?.background === '#000000'}>
-        <Box>
-          {config.sections.map((section) => (
-            <SectionRenderer
-              key={section.id}
-              section={section}
-            />
-          ))}
-        </Box>
-      </ThemeProvider>
+      <ErrorBoundary onError={handleError}>
+        <ThemeProvider theme={config.theme as any} dark={config.theme?.colors?.background === '#000000'}>
+          <Box>
+            {config.sections.map((section) => (
+              <ErrorBoundary
+                key={section.id}
+                fallback={
+                  <div style={{
+                    padding: '2rem',
+                    backgroundColor: '#fef2f2',
+                    border: '1px solid #fecaca',
+                    borderRadius: '0.5rem',
+                    color: '#b91c1c',
+                    margin: '1rem 0'
+                  }}>
+                    <h3>Section Error</h3>
+                    <p>Failed to render section "{section.id}"</p>
+                  </div>
+                }
+                onError={(error, info) => {
+                  console.error(`Section Error (${section.id}):`, error, info);
+                }}
+              >
+                <SectionRenderer
+                  section={section}
+                />
+              </ErrorBoundary>
+            ))}
+          </Box>
+        </ThemeProvider>
+      </ErrorBoundary>
     );
   };
 
