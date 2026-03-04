@@ -15,32 +15,41 @@ interface BaseSkinableComponentProps {
 }
 
 // Map component name to base component
-import { HeaderBase } from "../base/HeaderBase";
-import { NavbarBase } from "../base/NavbarBase";
-import { MenuToggleBase } from "../base/MenuToggleBase";
-import { ButtonBase } from "../base/ButtonBase";
-import { HeroBase } from "../base/HeroBase";
-import { FeaturesBase } from "../base/FeaturesBase";
-import { TestimonialsBase } from "../base/TestimonialsBase";
-import { PricingBase } from "../base/PricingBase";
-import { CtaBase } from "../base/CtaBase";
-import { FooterBase } from "../base/FooterBase";
-import { StatsBase } from "../base/StatsBase";
-import { FaqBase } from "../base/FaqBase";
+// Note: Import these lazily to avoid circular dependencies
+// HeroBase imports Button which uses createBaseSkinableComponent
+const BASE_COMPONENTS: Record<string, React.ComponentType<any>> = {};
 
-const BASE_COMPONENTS: Record<string, React.ComponentType<any>> = {
-  Header: HeaderBase,
-  Navbar: NavbarBase,
-  MenuToggle: MenuToggleBase,
-  Button: ButtonBase,
-  Hero: HeroBase,
-  Features: FeaturesBase,
-  Testimonials: TestimonialsBase,
-  Pricing: PricingBase,
-  Cta: CtaBase,
-  Footer: FooterBase,
-  Stats: StatsBase,
-  Faq: FaqBase,
+// Lazy load base components to avoid circular dependencies
+const getBaseComponent = (name: string): React.ComponentType<any> => {
+  // These imports are lazy to avoid circular dependency with Button -> BaseSkinableComponent -> HeroBase -> Button
+  switch (name) {
+    case "Button":
+      return require("../base/ButtonBase").ButtonBase;
+    case "Header":
+      return require("../base/HeaderBase").HeaderBase;
+    case "Navbar":
+      return require("../base/NavbarBase").NavbarBase;
+    case "MenuToggle":
+      return require("../base/MenuToggleBase").MenuToggleBase;
+    case "Hero":
+      return require("../base/HeroBase").HeroBase;
+    case "Features":
+      return require("../base/FeaturesBase").FeaturesBase;
+    case "Testimonials":
+      return require("../base/TestimonialsBase").TestimonialsBase;
+    case "Pricing":
+      return require("../base/PricingBase").PricingBase;
+    case "Cta":
+      return require("../base/CtaBase").CtaBase;
+    case "Footer":
+      return require("../base/FooterBase").FooterBase;
+    case "Stats":
+      return require("../base/StatsBase").StatsBase;
+    case "Faq":
+      return require("../base/FaqBase").FaqBase;
+    default:
+      return null as any;
+  }
 };
 
 export function createBaseSkinableComponent<TProps extends BaseSkinableComponentProps>(
@@ -57,7 +66,7 @@ export function createBaseSkinableComponent<TProps extends BaseSkinableComponent
     try {
       // If skin is "none", render base component directly
       if (validSkin === "none") {
-        const BaseComponent = BASE_COMPONENTS[componentName];
+        const BaseComponent = getBaseComponent(componentName);
         if (BaseComponent) {
           return (
             <BaseComponent
