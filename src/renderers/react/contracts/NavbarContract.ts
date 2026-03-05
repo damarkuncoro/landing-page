@@ -72,5 +72,5 @@ export interface NavbarContractProps {
   mobileMenuOverlay?: boolean;
   mobileMenuTransitionDuration?: number;
   mobileSearchBarPosition?: "top" | "bottom";
-  skin?: "default" | "tailwind";
+  skin?: "default" | "tailwind" | "modern";
 }

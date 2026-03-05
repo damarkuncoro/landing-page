@@ -44,7 +44,7 @@ export interface HeaderConfig extends WithBaseConfig<{
   buttons?: ButtonConfig[];
   fixed?: boolean;
   scrollEffect?: boolean;
-  skin?: "default" | "tailwind" | "none";
+  skin?: "default" | "tailwind" | "modern" | "none";
   searchPlaceholder?: string;
   onSearch?: (query: string) => void;
   initialSearchValue?: string;

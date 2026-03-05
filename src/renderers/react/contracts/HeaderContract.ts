@@ -37,5 +37,5 @@ export interface HeaderContractProps {
     notScrolled?: React.CSSProperties;
   };
   menuToggleStyle?: React.CSSProperties;
-  skin?: "default" | "tailwind";
+  skin?: "default" | "tailwind" | "modern";
 }

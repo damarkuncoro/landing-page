@@ -3,6 +3,7 @@ import { HeaderSkin } from "../skins/header/HeaderSkin";
 import { HeaderSkinTailwind } from "../skins/header/HeaderSkinTailwind";
 import { NavbarSkin } from "../skins/navbar/NavbarSkin";
 import { NavbarSkinTailwind } from "../skins/navbar/NavbarSkinTailwind";
+import { NavbarSkinModern } from "../skins/navbar/NavbarSkinModern";
 import { MenuToggleSkin } from "../skins/menu-toggle/MenuToggleSkin";
 import { MenuToggleSkinTailwind } from "../skins/menu-toggle/MenuToggleSkinTailwind";
 import { ButtonSkin } from "../skins/button/ButtonSkin";
@@ -20,6 +21,7 @@ export function registerSkins() {
   // Register Navbar skins
   skinManager.registerSkin("Navbar", "default", NavbarSkin);
   skinManager.registerSkin("Navbar", "tailwind", NavbarSkinTailwind);
+  skinManager.registerSkin("Navbar", "modern", NavbarSkinModern);
 
   // Register MenuToggle skins
   skinManager.registerSkin("MenuToggle", "default", MenuToggleSkin);

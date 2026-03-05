@@ -225,7 +225,7 @@ export const HeaderBase = React.forwardRef<
               isOpen={isMobileMenuOpen}
               onClick={onMobileMenuToggle}
               style={menuToggleStyle}
-              skin={skin}
+              skin={skin as "default" | "tailwind" | "modern"}
             />
           )}
         </Flex>
@@ -242,7 +242,7 @@ export const HeaderBase = React.forwardRef<
             languageSelector={languageSelector}
             themeSwitcher={themeSwitcher}
             showSearchInMobileMenu={showSearchInMobileMenu}
-            skin={skin}
+            skin={skin as "default" | "tailwind" | "modern"}
           />
         )}
 

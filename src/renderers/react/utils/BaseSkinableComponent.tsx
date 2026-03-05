@@ -8,7 +8,7 @@ import { isValidSkinType } from "./typeGuards";
  */
 
 interface BaseSkinableComponentProps {
-  skin?: "default" | "tailwind" | "none";
+  skin?: "default" | "tailwind" | "modern" | "none";
   className?: string;
   style?: React.CSSProperties;
   [key: string]: any;

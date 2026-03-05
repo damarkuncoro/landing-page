@@ -2,11 +2,12 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import type { NavbarContractProps, NavbarLink } from "../contracts/NavbarContract";
 import { Box, Flex } from "./LayoutBase";
 import { LogoBase } from "./LogoBase";
-import { LinkContent } from "./LinkContent";
 import { SearchForm } from "./SearchForm";
 import { NavLink } from "./NavLink";
 import { NavDropdown } from "./NavDropdown";
 import { LanguageSelector } from "./LanguageSelector";
+import { ThemeSwitcher } from "./ThemeSwitcher";
+import { MobileOverlay } from "./MobileOverlay";
 
 /**
  * Base UI untuk Navbar.
@@ -238,15 +239,9 @@ export const NavbarBase = React.forwardRef<
     >
       {/* Mobile Overlay */}
       {isMobile && isMenuOpen && mobileMenuOverlay && (
-        <Box
-          style={{
-            position: "fixed",
-            inset: 0,
-            backgroundColor: "rgba(0, 0, 0, 0.5)",
-            zIndex: 999,
-            backdropFilter: "blur(1px)",
-          }}
-          onClick={() => setIsMenuOpen(false)}
+        <MobileOverlay
+          isVisible={isMenuOpen}
+          onClose={() => setIsMenuOpen(false)}
         />
       )}
 
@@ -407,31 +402,11 @@ export const NavbarBase = React.forwardRef<
 
         {/* Theme Switcher */}
         {themeSwitcher && (
-          <Box>
-            <button
-              onClick={() => {
-                const next = themeSwitcher.currentTheme === "light" ? "dark" : "light";
-                themeSwitcher.onThemeChange?.(next);
-              }}
-              style={{
-                ...linkStyle,
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                gap: "0.5rem",
-              }}
-              aria-label="Toggle theme"
-            >
-              <span style={{ fontSize: "1.25rem" }}>
-                {themeSwitcher.currentTheme === "light" ? "🌙" : "☀️"}
-              </span>
-              <span style={{ fontSize: "0.875rem" }}>
-                {themeSwitcher.currentTheme === "light" ? "Dark" : "Light"}
-              </span>
-            </button>
-          </Box>
+          <ThemeSwitcher
+            currentTheme={themeSwitcher.currentTheme}
+            onThemeChange={themeSwitcher.onThemeChange}
+            linkStyle={linkStyle}
+          />
         )}
 
         {/* Search — Bottom Position (Mobile Only) */}

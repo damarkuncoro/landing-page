@@ -209,7 +209,7 @@ export const sectionConfigSchemas = {
       },
       fixed: { type: "boolean" },
       scrollEffect: { type: "boolean" },
-      skin: { type: "string", enum: ["default", "tailwind"] },
+      skin: { type: "string", enum: ["default", "tailwind", "modern"] },
       searchPlaceholder: { type: "string" },
       initialSearchValue: { type: "string" },
       showSearchInMobileMenu: { type: "boolean" },

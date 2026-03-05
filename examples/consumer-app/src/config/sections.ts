@@ -1,13 +1,5 @@
 import {
   createHeaderSection,
-  createHeroSection,
-  createFeaturesSection,
-  createTestimonialsSection,
-  createPricingSection,
-  createStatsSection,
-  createFaqSection,
-  createCtaSection,
-  createFooterSection,
 } from '@damarkuncoro/landing-page'
 
 export const sectionsConfig = [
@@ -42,7 +34,7 @@ export const sectionsConfig = [
     ],
     fixed: true,
     scrollEffect: true,
-    skin: "tailwind",
+    skin: "modern",
   }),
   
 ]

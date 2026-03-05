@@ -26,9 +26,7 @@ export const HeaderSkinTailwind = (props: HeaderContractProps) => {
     ...config
   } = props;
   
-  // HeaderBase will handle scroll effect internally
-  // Pass external isScrolled if provided (for controlled component)
-  
+  // Container style - exact match to user's design
   const defaultContainerStyle = {
     maxWidth: "1200px",
     margin: "0 auto",
@@ -36,10 +34,19 @@ export const HeaderSkinTailwind = (props: HeaderContractProps) => {
   };
 
   // Base classes for the header
-  const baseHeaderClass = `
-    ${fixed ? 'fixed top-0 left-0 right-0 z-50' : ''}
-    transition-all duration-300
-  `.trim().replace(/\s+/g, ' ');
+  // Exact match: background-color: rgb(248, 250, 252), padding: 1rem 0px
+  const baseHeaderStyle: React.CSSProperties = {
+    backgroundColor: "rgb(248, 250, 252)",
+    padding: "1rem 0px",
+    ...(fixed && {
+      position: "fixed" as const,
+      top: 0,
+      left: 0,
+      right: 0,
+      zIndex: 50,
+    }),
+    ...config.style,
+  };
 
   return (
     <HeaderBase
@@ -52,14 +59,14 @@ export const HeaderSkinTailwind = (props: HeaderContractProps) => {
       themeSwitcher={themeSwitcher}
       scrollEffect={scrollEffect}
       fixed={fixed}
-      className={`${baseHeaderClass} ${externalClassName || ''}`.trim()}
+      style={baseHeaderStyle}
       containerStyle={{
         ...defaultContainerStyle,
         ...externalContainerStyle,
       }}
       isMobileMenuOpen={mobileMenuOpen}
       onMobileMenuToggle={() => setMobileMenuOpen(!mobileMenuOpen)}
-      skin={config.skin || "tailwind"}
+      skin={config.skin || "modern"}
     />
   );
 };

@@ -20,7 +20,7 @@ describe('SkinManager', () => {
       expect(headerSkins).toEqual(['default', 'tailwind']);
 
       const navbarSkins = skinManager.listSkins('Navbar');
-      expect(navbarSkins).toEqual(['default', 'tailwind']);
+      expect(navbarSkins).toEqual(['default', 'tailwind', 'modern']);
     });
 
     it('should check skin availability', () => {

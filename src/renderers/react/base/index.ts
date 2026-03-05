@@ -15,6 +15,8 @@ export { MenuToggleBase } from "./MenuToggleBase";
 export { NavLink } from "./NavLink";
 export { NavDropdown } from "./NavDropdown";
 export { LanguageSelector } from "./LanguageSelector";
+export { ThemeSwitcher } from "./ThemeSwitcher";
+export { MobileOverlay } from "./MobileOverlay";
 
 // Content Components
 export { LogoBase } from "./LogoBase";
