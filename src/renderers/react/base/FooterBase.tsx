@@ -2,6 +2,8 @@ import React from "react";
 import type { FooterContractProps } from "../contracts/FooterContract";
 import { Container, Box } from "./LayoutBase";
 import { useTheme } from "../ThemeProvider";
+import { FooterLogo } from "./FooterLogo";
+import { LinkGroup } from "./LinkGroup";
 
 /**
  * Base UI untuk Footer Section.
@@ -33,76 +35,29 @@ export const FooterBase = React.forwardRef<
     <Box as={props.as || "footer"} ref={ref} className={className} style={style}>
       <Container style={containerStyle}>
         <Box style={gridStyle}>
-          <Box style={columnStyle}>
-            {logo && (
-              <img
-                src={logo}
-                alt={title || "Logo"}
-                style={{ marginBottom: theme.spacing.md }}
-                loading="lazy"
-              />
-            )}
-            {title && (
-              <Box
-                as="h3"
-                style={{
-                  fontSize: "1.25rem",
-                  marginBottom: theme.spacing.md,
-                  color: theme.colors.text,
-                }}
-              >
-                {title}
-              </Box>
-            )}
-            {description && (
-              <Box
-                as="p"
-                style={{ color: theme.colors.muted, lineHeight: "1.6" }}
-              >
-                {description}
-              </Box>
-            )}
-          </Box>
+          {/* Logo & Description Section */}
+          <FooterLogo
+            logo={logo}
+            title={title}
+            description={description}
+            style={columnStyle}
+          />
 
+          {/* Link Groups */}
           {links.map((linkGroup) => (
-            <Box key={linkGroup.title} style={columnStyle}>
-              <Box
-                as="h4"
-                style={{
-                  marginBottom: theme.spacing.md,
-                  color: theme.colors.text,
-                }}
-              >
-                {linkGroup.title}
-              </Box>
-              <Box as="ul" style={{ listStyle: "none", padding: 0 }}>
-                {linkGroup.items.map((link, index) => (
-                  <Box
-                    as="li"
-                    key={index}
-                    style={{ marginBottom: theme.spacing.sm }}
-                  >
-                    <a
-                      href={link.url}
-                      target={link.target || "_self"}
-                      rel={
-                        link.target === "_blank"
-                          ? "noopener noreferrer"
-                          : undefined
-                      }
-                      style={linkStyle}
-                      onMouseEnter={onLinkMouseEnter}
-                      onMouseLeave={onLinkMouseLeave}
-                    >
-                      {link.text}
-                    </a>
-                  </Box>
-                ))}
-              </Box>
-            </Box>
+            <LinkGroup
+              key={linkGroup.title}
+              title={linkGroup.title}
+              items={linkGroup.items}
+              style={columnStyle}
+              linkStyle={linkStyle}
+              onLinkMouseEnter={onLinkMouseEnter}
+              onLinkMouseLeave={onLinkMouseLeave}
+            />
           ))}
         </Box>
 
+        {/* Copyright */}
         {copyright && (
           <Box
             style={{

@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import type { HeaderContractProps } from "../contracts/HeaderContract";
 import Navbar from "../Navbar";
 import MenuToggle from "../MenuToggle";
 import { Container, Flex, Box } from "./LayoutBase";
-import { useTheme } from "../ThemeProvider";
 import Button from "../Button";
+import { LogoBase } from "./LogoBase";
 
 /**
  * Base UI untuk Header.
@@ -53,7 +53,6 @@ export const HeaderBase = React.forwardRef<
   HTMLElement,
   HeaderContractProps & { as?: React.ElementType }
 >((props, ref) => {
-  const theme = useTheme();
   const {
     logo,
     title,
@@ -83,6 +82,8 @@ export const HeaderBase = React.forwardRef<
   const [isMobile, setIsMobile] = useState(
     typeof window !== 'undefined' && window.innerWidth < (BREAKPOINT_WIDTH[mobileBreakpoint] ?? 768)
   );
+  const headerRef = useRef<HTMLElement>(null);
+  const [headerHeight, setHeaderHeight] = useState(72);
 
   // Resolve breakpoint width sekali saja
   const breakpointWidth = BREAKPOINT_WIDTH[mobileBreakpoint] ?? 768;
@@ -109,6 +110,32 @@ export const HeaderBase = React.forwardRef<
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [scrollEffect, scrollEffectThreshold]);
+
+  // Calculate actual header height using ref
+  useEffect(() => {
+    if (!fixed) return;
+
+    const updateHeight = () => {
+      if (headerRef.current) {
+        const height = headerRef.current.offsetHeight;
+        setHeaderHeight(height);
+        document.body.style.paddingTop = `${height}px`;
+      }
+    };
+
+    // Initial measurement
+    updateHeight();
+
+    // Update on scroll (for scroll effect height changes)
+    if (scrollEffect) {
+      window.addEventListener('scroll', updateHeight);
+      return () => window.removeEventListener('scroll', updateHeight);
+    }
+    
+    return () => {
+      document.body.style.paddingTop = '';
+    };
+  }, [fixed, scrollEffect, isScrolled]);
 
   // Memoize header style agar tidak dikalkulasi ulang setiap render
   const headerStyle = useMemo(
@@ -137,99 +164,87 @@ export const HeaderBase = React.forwardRef<
   return (
     <Box
       as={props.as ?? ("header" as unknown as React.ElementType)}
-      ref={ref}
+      ref={(el: HTMLElement | null) => {
+        // Handle both refs
+        if (typeof ref === 'function') {
+          ref(el);
+        } else if (ref) {
+          ref.current = el;
+        }
+        // Store internal ref
+        (headerRef as any).current = el;
+      }}
       style={headerStyle}
       className={className}
     >
       <Container style={containerStyle}>
         <Flex justify="space-between" align="center">
-          {/* Logo & Title */}
-          <Flex align="center" gap="1rem">
-            {logo && (
-              <img
-                src={logo}
-                alt={title ?? "Logo"}
-                style={{ height: "40px" }}
-                loading="lazy"
-              />
-            )}
-            {title && (
-              <span
-                style={{
-                  fontSize: "1.5rem",
-                  fontWeight: 600, // fix: "semibold" bukan nilai CSS yang valid
-                  color: theme.colors.text,
-                }}
-              >
-                {title}
-              </span>
-            )}
-          </Flex>
+          {/* Logo & Title - Using LogoBase component */}
+          <LogoBase
+            src={logo}
+            alt={title ?? "Logo"}
+            title={title}
+            height="40px"
+          />
 
-          {/* Desktop Navbar */}
+          {/* Desktop Navbar - No outer nav since NavbarBase already has one */}
           {!isMobileView && (
-            <Box>
-              <nav aria-label="Primary Navigation">
-                <Navbar
-                  links={links}
-                  isMobile={false}
-                  isOpen={true}
-                  searchPlaceholder={searchPlaceholder}
-                  onSearch={onSearch}
-                  searchValue={initialSearchValue}
-                  languageSelector={languageSelector}
-                  themeSwitcher={themeSwitcher}
-                  showSearchInMobileMenu={showSearchInMobileMenu}
-                  skin={skin}
-                />
-              </nav>
-            </Box>
+            <Navbar
+              links={links}
+              isMobile={false}
+              isOpen={true}
+              searchPlaceholder={searchPlaceholder}
+              onSearch={onSearch}
+              searchValue={initialSearchValue}
+              languageSelector={languageSelector}
+              themeSwitcher={themeSwitcher}
+              showSearchInMobileMenu={showSearchInMobileMenu}
+              skin={skin}
+            />
           )}
 
           {/* Desktop Buttons */}
           {buttons.length > 0 && !isMobileView && (
-            <Box>
-              <Flex align="center" gap="1rem">
-                {buttons.map((button, index) => (
-                  <Button
-                    key={index}
-                    config={{
-                      ...button,
-                      padding: button.padding ?? "0.5rem 1rem",
-                      fontSize: button.fontSize ?? "0.875rem",
-                    }}
-                  />
-                ))}
-              </Flex>
-            </Box>
+            <Flex align="center" gap="1rem">
+              {buttons.map((button, index) => (
+                <Button
+                  key={index}
+                  config={{
+                    ...button,
+                    padding: button.padding ?? "0.5rem 1rem",
+                    fontSize: button.fontSize ?? "0.875rem",
+                  }}
+                />
+              ))}
+            </Flex>
           )}
 
           {/* Mobile Menu Toggle */}
           {onMobileMenuToggle && isMobileView && (
-            <Box>
-              <MenuToggle
-                isOpen={isMobileMenuOpen}
-                onClick={onMobileMenuToggle}
-                style={menuToggleStyle}
-                skin={skin}
-              />
-            </Box>
+            <MenuToggle
+              isOpen={isMobileMenuOpen}
+              onClick={onMobileMenuToggle}
+              style={menuToggleStyle}
+              skin={skin}
+            />
           )}
         </Flex>
 
         {/* Mobile Navbar */}
-        <Navbar
-          links={links}
-          isMobile={true}
-          isOpen={isMobileMenuOpen}
-          searchPlaceholder={searchPlaceholder}
-          onSearch={onSearch}
-          searchValue={initialSearchValue}
-          languageSelector={languageSelector}
-          themeSwitcher={themeSwitcher}
-          showSearchInMobileMenu={showSearchInMobileMenu}
-          skin={skin}
-        />
+        {isMobileView && (
+          <Navbar
+            links={links}
+            isMobile={true}
+            isOpen={isMobileMenuOpen}
+            searchPlaceholder={searchPlaceholder}
+            onSearch={onSearch}
+            searchValue={initialSearchValue}
+            languageSelector={languageSelector}
+            themeSwitcher={themeSwitcher}
+            showSearchInMobileMenu={showSearchInMobileMenu}
+            skin={skin}
+          />
+        )}
 
         {/* Mobile Buttons */}
         {isMobileMenuOpen && buttons.length > 0 && (

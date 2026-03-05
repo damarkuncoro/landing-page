@@ -1,109 +1,16 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import type { NavbarContractProps, NavbarLink } from "../contracts/NavbarContract";
 import { Box, Flex } from "./LayoutBase";
+import { LogoBase } from "./LogoBase";
+import { LoadingSpinner } from "./LoadingSpinner";
+import { LinkContent } from "./LinkContent";
+import { SearchForm } from "./SearchForm";
 
 /**
  * Base UI untuk Navbar.
  * Memisahkan struktur DOM dari styling.
  * Depend pada UI Contract (aturan 13).
  */
-
-// ─── Loading Spinner ──────────────────────────────────────────────────────────
-
-const LoadingSpinner = () => (
-  <Flex align="center" gap="0.5rem">
-    <Box
-      as="span"
-      style={{
-        display: "inline-block",
-        width: "16px",
-        height: "16px",
-        border: "2px solid transparent",
-        borderTop: "2px solid currentColor",
-        borderRadius: "50%",
-        animation: "spin 0.8s linear infinite",
-      }}
-      role="status"
-      aria-label="Loading"
-    />
-    <Box>Loading...</Box>
-  </Flex>
-);
-
-// ─── Link Content ─────────────────────────────────────────────────────────────
-
-const LinkContent = ({
-  link,
-  showChevron = false,
-  iconMargin = "0",
-}: {
-  link: NavbarLink;
-  showChevron?: boolean;
-  iconMargin?: string;
-}) => {
-  if (link.isLoading) return <LoadingSpinner />;
-  return (
-    <>
-      {link.icon && (
-        <span style={{ fontSize: "1rem", marginRight: iconMargin }}>{link.icon}</span>
-      )}
-      {link.text}
-      {showChevron && <span style={{ fontSize: "0.75rem" }}>▼</span>}
-    </>
-  );
-};
-
-// ─── Search Form ──────────────────────────────────────────────────────────────
-
-const SearchForm = ({
-  placeholder,
-  value,
-  onChange,
-  onSubmit,
-  fullWidth = false,
-}: {
-  placeholder: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onSubmit: (e: React.FormEvent) => void;
-  fullWidth?: boolean;
-}) => (
-  <form
-    onSubmit={onSubmit}
-    style={{ display: "flex", width: "100%", maxWidth: fullWidth ? "100%" : "300px" }}
-  >
-    <input
-      type="text"
-      placeholder={placeholder}
-      value={value}
-      onChange={onChange}
-      style={{
-        flex: 1,
-        padding: "0.5rem 1rem",
-        border: "1px solid #e5e7eb",
-        borderRadius: "0.25rem 0 0 0.25rem",
-        fontSize: "0.875rem",
-      }}
-      aria-label="Search"
-    />
-    <button
-      type="submit"
-      style={{
-        padding: "0.5rem 1rem",
-        backgroundColor: "#4f46e5",
-        color: "white",
-        border: "none",
-        borderRadius: "0 0.25rem 0.25rem 0",
-        cursor: "pointer",
-      }}
-      aria-label="Search"
-    >
-      🔍
-    </button>
-  </form>
-);
-
-// ─── NavbarBase ───────────────────────────────────────────────────────────────
 
 export const NavbarBase = React.forwardRef<
   HTMLElement,
@@ -296,7 +203,6 @@ export const NavbarBase = React.forwardRef<
         top: fixed || sticky ? 0 : "auto",
         zIndex: fixed || sticky ? 1000 : "auto",
       }}
-      role="navigation"
       aria-label="Main navigation"
     >
       {/* Mobile Overlay */}
@@ -313,28 +219,16 @@ export const NavbarBase = React.forwardRef<
         />
       )}
 
-      {/* Logo & Brand */}
+      {/* Logo & Brand - Using LogoBase component */}
       {(logo || brandName) && (
-        <Box
-          style={{
-            marginBottom: isMobile ? "1rem" : "0",
-            display: "flex",
-            alignItems: "center",
-            gap: "0.5rem",
-          }}
-        >
-          {logo && (
-            <img
-              src={logo}
-              alt={logoAlt ?? brandName ?? "Logo"}
-              style={{ height: "40px", ...logoStyle }}
-            />
-          )}
-          {brandName && (
-            <span style={{ fontSize: "1.25rem", fontWeight: "bold", ...brandNameStyle }}>
-              {brandName}
-            </span>
-          )}
+        <Box style={{ marginBottom: isMobile ? "1rem" : "0" }}>
+          <LogoBase
+            src={logo}
+            alt={logoAlt ?? brandName ?? "Logo"}
+            title={brandName}
+            height="40px"
+            style={logoStyle}
+          />
         </Box>
       )}
 
@@ -381,7 +275,7 @@ export const NavbarBase = React.forwardRef<
         </Box>
       )}
 
-      {/* Navigation Links */}
+      {/* Navigation Links - Using native semantic HTML */}
       <Flex
         as="ul"
         direction={isMobile ? "column" : "row"}
@@ -420,7 +314,6 @@ export const NavbarBase = React.forwardRef<
           overflow: isMobile ? "auto" : "visible",
           zIndex: isMobile ? 1001 : "auto",
         }}
-        role="menubar"
       >
         {/* Regular Links */}
         {links.map((link) => {
@@ -431,7 +324,6 @@ export const NavbarBase = React.forwardRef<
               as="li"
               key={link.id ?? link.text}
               style={{ marginBottom: isMobile ? "0.5rem" : 0, position: "relative" }}
-              role="none"
             >
               {hasChildren ? (
                 <Box style={{ position: "relative" }}>
@@ -447,7 +339,6 @@ export const NavbarBase = React.forwardRef<
                     onMouseLeave={(e) => onLinkMouseLeave?.(e, link)}
                     {...focusHandlers}
                     onClick={(e) => handleLinkClick(e, link)}
-                    role="menuitem"
                     aria-disabled={link.isLoading}
                     aria-haspopup={true}
                     aria-expanded={activeDropdown === link.id}
@@ -481,17 +372,16 @@ export const NavbarBase = React.forwardRef<
                         padding: "0.5rem 0",
                         marginTop: "0.25rem",
                         zIndex: 1000,
+                        listStyle: "none",
                         ...dropdownStyle,
                       }}
-                      role="menu"
-                      aria-labelledby={link.id}
+                      aria-label={link.text}
                     >
                       {link.children!.map((childLink) => (
                         <Box
                           as="li"
                           key={childLink.id ?? childLink.text}
                           style={{ margin: 0 }}
-                          role="none"
                         >
                           <a
                             href={childLink.isLoading ? "#" : childLink.url}
@@ -515,7 +405,6 @@ export const NavbarBase = React.forwardRef<
                               setActiveDropdown(null);
                               closeMobileMenu();
                             }}
-                            role="menuitem"
                             aria-disabled={childLink.isLoading}
                             tabIndex={0}
                             onKeyDown={(e) => handleChildKeyDown(e, link, childLink)}
@@ -545,18 +434,8 @@ export const NavbarBase = React.forwardRef<
                     onLinkClick?.(e, link);
                     closeMobileMenu();
                   }}
-                  role="menuitem"
                   aria-disabled={link.isLoading}
                   tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      if (!link.isLoading) {
-                        onLinkClick?.(e as unknown as React.MouseEvent<HTMLAnchorElement>, link);
-                        closeMobileMenu();
-                      }
-                    }
-                  }}
                 >
                   <LinkContent link={link} iconMargin="0.5rem" />
                 </a>
@@ -567,7 +446,7 @@ export const NavbarBase = React.forwardRef<
 
         {/* Language Selector */}
         {languageSelector && (
-          <Box style={{ position: "relative" }} role="none">
+          <Box style={{ position: "relative" }}>
             <a
               href="#"
               style={{
@@ -581,19 +460,9 @@ export const NavbarBase = React.forwardRef<
                 e.stopPropagation();
                 setActiveDropdown((prev) => (prev === "language" ? null : "language"));
               }}
-              role="menuitem"
               aria-haspopup="true"
               aria-expanded={activeDropdown === "language"}
               tabIndex={0}
-              onKeyDown={(e) => {
-                if (["Enter", " ", "ArrowDown"].includes(e.key)) {
-                  e.preventDefault();
-                  setActiveDropdown((prev) => (prev === "language" ? null : "language"));
-                } else if (e.key === "ArrowUp") {
-                  e.preventDefault();
-                  setActiveDropdown(null);
-                }
-              }}
             >
               <span style={{ fontSize: "0.875rem" }}>🌐</span>
               <span>{languageSelector.currentLanguage.toUpperCase()}</span>
@@ -614,12 +483,12 @@ export const NavbarBase = React.forwardRef<
                   padding: "0.5rem 0",
                   marginTop: "0.25rem",
                   zIndex: 1000,
+                  listStyle: "none",
                   ...dropdownStyle,
                 }}
-                role="menu"
               >
                 {languageSelector.languages.map((lang) => (
-                  <Box as="li" key={lang.code} style={{ margin: 0 }} role="none">
+                  <Box as="li" key={lang.code} style={{ margin: 0 }}>
                     <a
                       href="#"
                       style={{
@@ -637,16 +506,7 @@ export const NavbarBase = React.forwardRef<
                         setActiveDropdown(null);
                         closeMobileMenu();
                       }}
-                      role="menuitem"
                       tabIndex={0}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
-                          e.preventDefault();
-                          languageSelector.onLanguageChange?.(lang.code);
-                          setActiveDropdown(null);
-                          closeMobileMenu();
-                        }
-                      }}
                     >
                       {lang.name} ({lang.code.toUpperCase()})
                     </a>
@@ -659,7 +519,7 @@ export const NavbarBase = React.forwardRef<
 
         {/* Theme Switcher */}
         {themeSwitcher && (
-          <Box role="none">
+          <Box>
             <button
               onClick={() => {
                 const next = themeSwitcher.currentTheme === "light" ? "dark" : "light";

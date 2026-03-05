@@ -1,8 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { HeaderBase } from "../../base/HeaderBase";
 import type { HeaderContractProps } from "../../contracts/HeaderContract";
 import { useTheme } from "../../ThemeProvider";
-import { useHeaderSkin } from "./useHeaderSkin";
 
 /**
  * Tailwind-based Skin untuk Header dengan desain seperti GreenHarvest.
@@ -11,6 +10,8 @@ import { useHeaderSkin } from "./useHeaderSkin";
  */
 export const HeaderSkinTailwind = (props: HeaderContractProps) => {
   const theme = useTheme();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  
   const {
     fixed = true,
     scrollEffect = true,
@@ -20,24 +21,25 @@ export const HeaderSkinTailwind = (props: HeaderContractProps) => {
     showSearchInMobileMenu = true,
     languageSelector,
     themeSwitcher,
+    className: externalClassName,
+    containerStyle: externalContainerStyle,
     ...config
   } = props;
   
-  const { mobileMenuOpen, setMobileMenuOpen, isScrolled } = useHeaderSkin(scrollEffect);
-
-  const headerClassName = `
-    ${fixed ? 'fixed top-0 left-0 right-0 z-50' : ''}
-    transition-all duration-300 px-6 py-4
-    ${isScrolled ? 'bg-white/80 backdrop-blur-md shadow-sm py-3' : 'bg-transparent'}
-    ${config.className || ''}
-  `;
-
-  const containerStyle = {
+  // HeaderBase will handle scroll effect internally
+  // Pass external isScrolled if provided (for controlled component)
+  
+  const defaultContainerStyle = {
     maxWidth: "1200px",
     margin: "0 auto",
     padding: "0 1rem",
-    ...config.containerStyle,
   };
+
+  // Base classes for the header
+  const baseHeaderClass = `
+    ${fixed ? 'fixed top-0 left-0 right-0 z-50' : ''}
+    transition-all duration-300
+  `.trim().replace(/\s+/g, ' ');
 
   return (
     <HeaderBase
@@ -48,8 +50,13 @@ export const HeaderSkinTailwind = (props: HeaderContractProps) => {
       showSearchInMobileMenu={showSearchInMobileMenu}
       languageSelector={languageSelector}
       themeSwitcher={themeSwitcher}
-      className={headerClassName}
-      containerStyle={containerStyle}
+      scrollEffect={scrollEffect}
+      fixed={fixed}
+      className={`${baseHeaderClass} ${externalClassName || ''}`.trim()}
+      containerStyle={{
+        ...defaultContainerStyle,
+        ...externalContainerStyle,
+      }}
       isMobileMenuOpen={mobileMenuOpen}
       onMobileMenuToggle={() => setMobileMenuOpen(!mobileMenuOpen)}
       skin={config.skin || "tailwind"}
