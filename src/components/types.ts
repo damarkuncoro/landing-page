@@ -1,5 +1,20 @@
 import type { WithBaseConfig } from "../core/types";
 
+/**
+ * Base configuration for all list items.
+ * Provides consistent id field for React keys.
+ */
+export interface BaseItemConfig {
+  /** Unique identifier for React keys */
+  id?: string;
+  /** Display text */
+  text: string;
+  /** URL link */
+  url: string;
+  /** Link target */
+  target?: "_blank" | "_self";
+}
+
 export interface ButtonConfig extends WithBaseConfig<{
   text: string;
   url: string;
@@ -94,18 +109,18 @@ export interface PricingConfig extends WithBaseConfig<{
   skin?: "default" | "tailwind" | "none";
 }> {}
 
+export interface FooterLinkItemConfig extends BaseItemConfig {}
+
+export interface FooterLinkGroupConfig {
+  title: string;
+  items: FooterLinkItemConfig[];
+}
+
 export interface FooterConfig extends WithBaseConfig<{
   logo?: string;
   title?: string;
   description?: string;
-  links: {
-    title: string;
-    items: {
-      text: string;
-      url: string;
-      target?: "_blank" | "_self";
-    }[];
-  }[];
+  links: FooterLinkGroupConfig[];
   socialLinks: {
     platform: string;
     url: string;
@@ -113,6 +128,13 @@ export interface FooterConfig extends WithBaseConfig<{
   }[];
   copyright?: string;
   skin?: "default" | "tailwind" | "none";
+  // Custom styles for fine-tuning
+  styles?: {
+    container?: React.CSSProperties;
+    column?: React.CSSProperties;
+    link?: React.CSSProperties;
+    title?: React.CSSProperties;
+  };
 }> {}
 
 export interface CtaConfig extends WithBaseConfig<{
@@ -124,6 +146,7 @@ export interface CtaConfig extends WithBaseConfig<{
 }> {}
 
 export interface StatConfig extends WithBaseConfig<{
+  id?: string;
   number: string;
   label: string;
   icon?: string;
@@ -138,4 +161,11 @@ export interface FaqConfig extends WithBaseConfig<{
     answer: string;
   }[];
   skin?: "default" | "tailwind" | "none";
+  // Custom styles for fine-tuning
+  styles?: {
+    container?: React.CSSProperties;
+    item?: React.CSSProperties;
+    question?: React.CSSProperties;
+    answer?: React.CSSProperties;
+  };
 }> {}

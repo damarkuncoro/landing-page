@@ -19,4 +19,11 @@ export default defineConfig([
     clean: true,
     outDir: 'lib/cjs',
   },
+  {
+    entry: ['src/cli.ts'],
+    format: 'cjs',
+    platform: 'node',
+    outDir: 'lib/cjs',
+    noExternal: ['ajv', 'ajv-formats'],
+  },
 ])

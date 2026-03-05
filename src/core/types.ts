@@ -20,15 +20,23 @@ export type DeepPartial<T> = {
   [K in keyof T]?: T[K] extends object ? DeepPartial<T[K]> : T[K];
 };
 
+export type ColorScheme = "light" | "dark" | "system";
+
+export interface ThemeColors {
+  primary: string;
+  secondary: string;
+  accent: string;
+  background: string;
+  text: string;
+  muted: string;
+}
+
 export interface ThemeConfig {
-  colors: {
-    primary: string;
-    secondary: string;
-    accent: string;
-    background: string;
-    text: string;
-    muted: string;
-  };
+  colors: ThemeColors;
+  /** Dark mode colors - optional for theming */
+  colorsDark?: ThemeColors;
+  /** Color scheme preference */
+  colorScheme?: ColorScheme;
   spacing: {
     xs: string;
     sm: string;

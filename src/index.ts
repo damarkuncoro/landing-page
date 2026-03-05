@@ -16,6 +16,7 @@ export type {
   SectionType,
   ComponentType,
   ThemeConfig,
+  ColorScheme,
 } from "./core/types";
 export type {
   ButtonConfig,
@@ -24,10 +25,13 @@ export type {
   FeatureConfig,
   TestimonialConfig,
   FooterConfig,
+  FooterLinkItemConfig,
+  FooterLinkGroupConfig,
   PricingConfig,
   CtaConfig,
   StatConfig,
   FaqConfig,
+  BaseItemConfig,
 } from "./components/types";
 export { createReactRenderer } from "./renderers/react";
 export { landingPageSchema, sectionConfigSchemas } from "./schema";

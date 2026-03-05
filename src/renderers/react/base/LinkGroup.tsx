@@ -1,4 +1,5 @@
 import React from "react";
+import type { FooterLinkItemConfig } from "../../../components/types";
 
 /**
  * Link Group component for footer links.
@@ -8,11 +9,7 @@ export interface LinkGroupProps {
   /** Group title */
   title: string;
   /** Array of links */
-  items: Array<{
-    text: string;
-    url: string;
-    target?: "_blank" | "_self";
-  }>;
+  items: FooterLinkItemConfig[];
   /** Custom className */
   className?: string;
   /** Custom styles */
@@ -49,8 +46,11 @@ export const LinkGroup: React.FC<LinkGroupProps> = ({
         {title}
       </h4>
       <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
-        {items.map((link, index) => (
-          <li key={index} style={{ marginBottom: itemSpacing }}>
+        {items.map((link) => (
+          <li
+            key={link.id ?? link.text}
+            style={{ marginBottom: itemSpacing }}
+          >
             <a
               href={link.url}
               target={link.target || "_self"}

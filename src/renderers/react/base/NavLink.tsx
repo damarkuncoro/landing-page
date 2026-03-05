@@ -69,30 +69,29 @@ export const NavLink: React.FC<NavLinkProps> = ({
   };
 
   return (
-    <Box as="li" style={{ position: "relative" }}>
-      <a
-        href={hasChildren ? "#" : link.isLoading ? "#" : link.url}
-        target={link.target ?? "_self"}
-        rel={link.target === "_blank" ? "noopener noreferrer" : undefined}
-        style={{
-          ...resolvedStyle,
-          display: "flex",
-          alignItems: "center",
-          gap: "0.5rem",
-        }}
-        onMouseEnter={(e) => onMouseEnter?.(e, link)}
-        onMouseLeave={(e) => onMouseLeave?.(e, link)}
-        {...focusHandlers}
-        onClick={handleClick}
-        aria-disabled={link.isLoading}
-        aria-haspopup={hasChildren}
-        aria-expanded={isDropdownOpen}
-        tabIndex={0}
-        onKeyDown={handleKeyDown}
-      >
-        <LinkContent link={link} showChevron={hasChildren} iconMargin="0" />
-      </a>
-    </Box>
+    <a
+      href={hasChildren ? "#" : link.isLoading ? "#" : link.url}
+      target={link.target ?? "_self"}
+      rel={link.target === "_blank" ? "noopener noreferrer" : undefined}
+      style={{
+        ...resolvedStyle,
+        display: "flex",
+        alignItems: "center",
+        gap: "0.5rem",
+        position: "relative",
+      }}
+      onMouseEnter={(e) => onMouseEnter?.(e, link)}
+      onMouseLeave={(e) => onMouseLeave?.(e, link)}
+      {...focusHandlers}
+      onClick={handleClick}
+      aria-disabled={link.isLoading}
+      aria-haspopup={hasChildren}
+      aria-expanded={isDropdownOpen}
+      tabIndex={0}
+      onKeyDown={handleKeyDown}
+    >
+      <LinkContent link={link} showChevron={hasChildren} iconMargin="0" />
+    </a>
   );
 };
 
