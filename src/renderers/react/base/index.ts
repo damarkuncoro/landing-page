@@ -11,6 +11,11 @@ export { NavbarBase } from "./NavbarBase";
 export { HeaderBase } from "./HeaderBase";
 export { MenuToggleBase } from "./MenuToggleBase";
 
+// Navigation Components
+export { NavLink } from "./NavLink";
+export { NavDropdown } from "./NavDropdown";
+export { LanguageSelector } from "./LanguageSelector";
+
 // Content Components
 export { LogoBase } from "./LogoBase";
 export { LinkContent } from "./LinkContent";

@@ -2,15 +2,46 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import type { NavbarContractProps, NavbarLink } from "../contracts/NavbarContract";
 import { Box, Flex } from "./LayoutBase";
 import { LogoBase } from "./LogoBase";
-import { LoadingSpinner } from "./LoadingSpinner";
 import { LinkContent } from "./LinkContent";
 import { SearchForm } from "./SearchForm";
+import { NavLink } from "./NavLink";
+import { NavDropdown } from "./NavDropdown";
+import { LanguageSelector } from "./LanguageSelector";
 
 /**
  * Base UI untuk Navbar.
  * Memisahkan struktur DOM dari styling.
  * Depend pada UI Contract (aturan 13).
  */
+
+// Mobile Menu Toggle Button component
+const MobileMenuToggle: React.FC<{
+  isOpen: boolean;
+  icon?: React.ReactNode;
+  text?: string;
+  onClick: () => void;
+}> = ({ isOpen, icon, text, onClick }) => (
+  <Box style={{ marginBottom: "1rem", display: "flex", justifyContent: "flex-end" }}>
+    <button
+      onClick={onClick}
+      style={{
+        padding: "0.5rem 1rem",
+        backgroundColor: "transparent",
+        color: "currentColor",
+        border: "1px solid #e5e7eb",
+        borderRadius: "0.25rem",
+        cursor: "pointer",
+        display: "flex",
+        alignItems: "center",
+        gap: "0.5rem",
+      }}
+      aria-label={isOpen ? "Close menu" : "Open menu"}
+    >
+      {icon ?? (isOpen ? "✕" : "☰")}
+      {text && <span>{text}</span>}
+    </button>
+  </Box>
+);
 
 export const NavbarBase = React.forwardRef<
   HTMLElement,
@@ -253,26 +284,12 @@ export const NavbarBase = React.forwardRef<
 
       {/* Mobile Menu Toggle */}
       {isMobile && (
-        <Box style={{ marginBottom: "1rem", display: "flex", justifyContent: "flex-end" }}>
-          <button
-            onClick={() => setIsMenuOpen((prev) => !prev)}
-            style={{
-              padding: "0.5rem 1rem",
-              backgroundColor: "transparent",
-              color: "currentColor",
-              border: "1px solid #e5e7eb",
-              borderRadius: "0.25rem",
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              gap: "0.5rem",
-            }}
-            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-          >
-            {mobileMenuButtonIcon ?? (isMenuOpen ? "✕" : "☰")}
-            {mobileMenuButtonText && <span>{mobileMenuButtonText}</span>}
-          </button>
-        </Box>
+        <MobileMenuToggle
+          isOpen={isMenuOpen}
+          icon={mobileMenuButtonIcon}
+          text={mobileMenuButtonText}
+          onClick={() => setIsMenuOpen((prev) => !prev)}
+        />
       )}
 
       {/* Navigation Links - Using native semantic HTML */}
@@ -318,6 +335,7 @@ export const NavbarBase = React.forwardRef<
         {/* Regular Links */}
         {links.map((link) => {
           const hasChildren = !!link.children?.length;
+          const isDropdownOpen = activeDropdown === link.id;
 
           return (
             <Box
@@ -327,118 +345,44 @@ export const NavbarBase = React.forwardRef<
             >
               {hasChildren ? (
                 <Box style={{ position: "relative" }}>
-                  <a
-                    href="#"
-                    style={{
-                      ...resolveLinkStyle(link),
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.5rem",
-                    }}
+                  <NavLink
+                    link={link}
+                    isDropdownOpen={isDropdownOpen}
+                    resolveLinkStyle={resolveLinkStyle}
+                    onClick={handleLinkClick}
                     onMouseEnter={(e) => onLinkMouseEnter?.(e, link)}
                     onMouseLeave={(e) => onLinkMouseLeave?.(e, link)}
-                    {...focusHandlers}
-                    onClick={(e) => handleLinkClick(e, link)}
-                    aria-disabled={link.isLoading}
-                    aria-haspopup={true}
-                    aria-expanded={activeDropdown === link.id}
-                    tabIndex={0}
-                    onKeyDown={(e) => {
-                      if (["Enter", " ", "ArrowDown"].includes(e.key)) {
-                        e.preventDefault();
-                        toggleDropdown(e, link);
-                      } else if (e.key === "ArrowUp") {
-                        e.preventDefault();
-                        setActiveDropdown(null);
-                      }
-                    }}
-                  >
-                    <LinkContent link={link} showChevron iconMargin="0" />
-                  </a>
-
-                  {/* Dropdown */}
-                  {activeDropdown === link.id && (
-                    <Box
-                      as="ul"
-                      style={{
-                        position: isMobile ? "relative" : "absolute",
-                        top: "100%",
-                        left: 0,
-                        minWidth: "160px",
-                        maxWidth: maxDropdownWidth,
-                        backgroundColor: "#ffffff",
-                        boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
-                        borderRadius: "0.5rem",
-                        padding: "0.5rem 0",
-                        marginTop: "0.25rem",
-                        zIndex: 1000,
-                        listStyle: "none",
-                        ...dropdownStyle,
-                      }}
-                      aria-label={link.text}
-                    >
-                      {link.children!.map((childLink) => (
-                        <Box
-                          as="li"
-                          key={childLink.id ?? childLink.text}
-                          style={{ margin: 0 }}
-                        >
-                          <a
-                            href={childLink.isLoading ? "#" : childLink.url}
-                            target={childLink.target ?? "_self"}
-                            rel={childLink.target === "_blank" ? "noopener noreferrer" : undefined}
-                            style={{
-                              ...resolveLinkStyle(childLink, dropdownLinkStyle),
-                              display: "block",
-                              padding: "0.5rem 1rem",
-                              color: "#374151",
-                              textDecoration: "none",
-                            }}
-                            onMouseEnter={(e) => onLinkMouseEnter?.(e, childLink)}
-                            onMouseLeave={(e) => onLinkMouseLeave?.(e, childLink)}
-                            onClick={(e) => {
-                              if (childLink.isLoading) {
-                                e.preventDefault();
-                                return;
-                              }
-                              onLinkClick?.(e, childLink);
-                              setActiveDropdown(null);
-                              closeMobileMenu();
-                            }}
-                            aria-disabled={childLink.isLoading}
-                            tabIndex={0}
-                            onKeyDown={(e) => handleChildKeyDown(e, link, childLink)}
-                            data-link-id={childLink.id}
-                          >
-                            <LinkContent link={childLink} iconMargin="0.5rem" />
-                          </a>
-                        </Box>
-                      ))}
-                    </Box>
-                  )}
+                    hasChildren={hasChildren}
+                    onToggleDropdown={(e) => toggleDropdown(e, link)}
+                  />
+                  <NavDropdown
+                    link={link}
+                    isOpen={isDropdownOpen}
+                    isMobile={isMobile || false}
+                    maxWidth={maxDropdownWidth || undefined}
+                    resolveLinkStyle={resolveLinkStyle}
+                    dropdownLinkStyle={dropdownLinkStyle}
+                    onLinkClick={onLinkClick}
+                    onLinkMouseEnter={onLinkMouseEnter}
+                    onLinkMouseLeave={onLinkMouseLeave}
+                    onClose={() => setActiveDropdown(null)}
+                  />
                 </Box>
               ) : (
-                <a
-                  href={link.isLoading ? "#" : link.url}
-                  target={link.target ?? "_self"}
-                  rel={link.target === "_blank" ? "noopener noreferrer" : undefined}
-                  style={resolveLinkStyle(link)}
+                <NavLink
+                  link={link}
+                  isDropdownOpen={isDropdownOpen}
+                  resolveLinkStyle={resolveLinkStyle}
+                  onClick={(e, l) => {
+                    if (!l.isLoading) {
+                      onLinkClick?.(e, l);
+                      closeMobileMenu();
+                    }
+                  }}
                   onMouseEnter={(e) => onLinkMouseEnter?.(e, link)}
                   onMouseLeave={(e) => onLinkMouseLeave?.(e, link)}
-                  {...focusHandlers}
-                  onClick={(e) => {
-                    if (link.isLoading) {
-                      e.preventDefault();
-                      return;
-                    }
-                    onLinkClick?.(e, link);
-                    closeMobileMenu();
-                  }}
-                  aria-disabled={link.isLoading}
-                  tabIndex={0}
-                >
-                  <LinkContent link={link} iconMargin="0.5rem" />
-                </a>
+                  hasChildren={hasChildren}
+                />
               )}
             </Box>
           );
@@ -446,75 +390,19 @@ export const NavbarBase = React.forwardRef<
 
         {/* Language Selector */}
         {languageSelector && (
-          <Box style={{ position: "relative" }}>
-            <a
-              href="#"
-              style={{
-                ...linkStyle,
-                display: "flex",
-                alignItems: "center",
-                gap: "0.5rem",
-              }}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                setActiveDropdown((prev) => (prev === "language" ? null : "language"));
-              }}
-              aria-haspopup="true"
-              aria-expanded={activeDropdown === "language"}
-              tabIndex={0}
-            >
-              <span style={{ fontSize: "0.875rem" }}>🌐</span>
-              <span>{languageSelector.currentLanguage.toUpperCase()}</span>
-              <span style={{ fontSize: "0.75rem" }}>▼</span>
-            </a>
-
-            {activeDropdown === "language" && (
-              <Box
-                as="ul"
-                style={{
-                  position: isMobile ? "relative" : "absolute",
-                  top: "100%",
-                  right: 0,
-                  minWidth: "120px",
-                  backgroundColor: "#ffffff",
-                  boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
-                  borderRadius: "0.5rem",
-                  padding: "0.5rem 0",
-                  marginTop: "0.25rem",
-                  zIndex: 1000,
-                  listStyle: "none",
-                  ...dropdownStyle,
-                }}
-              >
-                {languageSelector.languages.map((lang) => (
-                  <Box as="li" key={lang.code} style={{ margin: 0 }}>
-                    <a
-                      href="#"
-                      style={{
-                        ...dropdownLinkStyle,
-                        display: "block",
-                        padding: "0.5rem 1rem",
-                        color: "#374151",
-                        textDecoration: "none",
-                        fontWeight:
-                          lang.code === languageSelector.currentLanguage ? "bold" : "normal",
-                      }}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        languageSelector.onLanguageChange?.(lang.code);
-                        setActiveDropdown(null);
-                        closeMobileMenu();
-                      }}
-                      tabIndex={0}
-                    >
-                      {lang.name} ({lang.code.toUpperCase()})
-                    </a>
-                  </Box>
-                ))}
-              </Box>
-            )}
-          </Box>
+          <LanguageSelector
+            languages={languageSelector.languages}
+            currentLanguage={languageSelector.currentLanguage}
+            onLanguageChange={languageSelector.onLanguageChange}
+            isOpen={activeDropdown === "language"}
+            onToggle={() => setActiveDropdown((prev) => (prev === "language" ? null : "language"))}
+            onClose={() => {
+              setActiveDropdown(null);
+              closeMobileMenu();
+            }}
+            linkStyle={linkStyle}
+            dropdownStyle={dropdownStyle}
+          />
         )}
 
         {/* Theme Switcher */}
