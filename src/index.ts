@@ -28,10 +28,12 @@ export type {
   FooterLinkItemConfig,
   FooterLinkGroupConfig,
   PricingConfig,
+  PricingPlanConfig,
   CtaConfig,
   StatConfig,
   FaqConfig,
   BaseItemConfig,
+  NewsletterConfig,
 } from "./components/types";
 export { createReactRenderer } from "./renderers/react";
 export { landingPageSchema, sectionConfigSchemas } from "./schema";

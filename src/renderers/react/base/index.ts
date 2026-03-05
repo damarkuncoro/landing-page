@@ -39,3 +39,9 @@ export { FooterBase } from "./FooterBase";
 
 // Buttons
 export { ButtonBase } from "./ButtonBase";
+
+// Optimized Image
+export { OptimizedImage } from "./OptimizedImage";
+
+// Newsletter Form
+export { NewsletterForm } from "./NewsletterForm";

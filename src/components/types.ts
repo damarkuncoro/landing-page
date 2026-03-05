@@ -66,6 +66,14 @@ export interface HeaderConfig extends WithBaseConfig<{
   showSearchInMobileMenu?: boolean;
   languageSelector?: LanguageSelectorConfig;
   themeSwitcher?: ThemeSwitcherConfig;
+  // Custom styles for fine-tuning
+  styles?: {
+    container?: React.CSSProperties;
+    logo?: React.CSSProperties;
+    link?: React.CSSProperties;
+    button?: React.CSSProperties;
+    search?: React.CSSProperties;
+  };
 }> {}
 
 export interface HeroConfig extends WithBaseConfig<{
@@ -78,6 +86,15 @@ export interface HeroConfig extends WithBaseConfig<{
   buttons: ButtonConfig[];
   alignment?: "left" | "center" | "right";
   skin?: "default" | "skin2" | "skin3" | "skin4" | "skin5" | "skin6" | "skin7" | "skin8" | "skin9" | "skin10" | "tailwind" | "none";
+  // Custom styles for fine-tuning
+  styles?: {
+    container?: React.CSSProperties;
+    title?: React.CSSProperties;
+    subtitle?: React.CSSProperties;
+    button?: React.CSSProperties;
+    image?: React.CSSProperties;
+    video?: React.CSSProperties;
+  };
 }> {}
 
 export interface FeatureConfig extends WithBaseConfig<{
@@ -86,6 +103,14 @@ export interface FeatureConfig extends WithBaseConfig<{
   icon?: string;
   image?: string;
   skin?: "default" | "tailwind" | "none";
+  // Custom styles for fine-tuning
+  styles?: {
+    container?: React.CSSProperties;
+    title?: React.CSSProperties;
+    description?: React.CSSProperties;
+    icon?: React.CSSProperties;
+    image?: React.CSSProperties;
+  };
 }> {}
 
 export interface TestimonialConfig extends WithBaseConfig<{
@@ -93,20 +118,56 @@ export interface TestimonialConfig extends WithBaseConfig<{
   author: string;
   role?: string;
   avatar?: string;
+  // Custom styles for fine-tuning
+  styles?: {
+    container?: React.CSSProperties;
+    quote?: React.CSSProperties;
+    author?: React.CSSProperties;
+    avatar?: React.CSSProperties;
+  };
 }> {}
 
+/** Pricing plan with optional monthly/yearly pricing */
+export interface PricingPlanConfig {
+  id?: string;
+  title: string;
+  description: string;
+  /** Monthly price (when using toggle) */
+  priceMonthly?: number;
+  /** Yearly price (when using toggle) */
+  priceYearly?: number;
+  /** Single price (when not using toggle) */
+  price?: number;
+  period?: string;
+  features: string[];
+  button: ButtonConfig;
+  featured?: boolean;
+}
+
 export interface PricingConfig extends WithBaseConfig<{
-  plans: {
-    id?: string;
-    title: string;
-    description: string;
-    price: number;
-    period?: string;
-    features: string[];
-    button: ButtonConfig;
-    featured?: boolean;
-  }[];
+  plans: PricingPlanConfig[];
   skin?: "default" | "tailwind" | "none";
+  // Toggle for monthly/yearly pricing
+  toggle?: {
+    enabled?: boolean;
+    defaultPeriod?: "monthly" | "yearly";
+    labels?: {
+      monthly?: string;
+      yearly?: string;
+    };
+    discount?: number; // e.g., 20 for 20% off
+  };
+  // Custom styles for fine-tuning
+  styles?: {
+    container?: React.CSSProperties;
+    toggle?: React.CSSProperties;
+    plan?: React.CSSProperties;
+    title?: React.CSSProperties;
+    price?: React.CSSProperties;
+    features?: React.CSSProperties;
+    button?: React.CSSProperties;
+    featured?: React.CSSProperties;
+  };
 }> {}
 
 export interface FooterLinkItemConfig extends BaseItemConfig {}
@@ -143,6 +204,14 @@ export interface CtaConfig extends WithBaseConfig<{
   button: ButtonConfig;
   image?: string;
   skin?: "default" | "tailwind" | "none";
+  // Custom styles for fine-tuning
+  styles?: {
+    container?: React.CSSProperties;
+    title?: React.CSSProperties;
+    description?: React.CSSProperties;
+    button?: React.CSSProperties;
+    image?: React.CSSProperties;
+  };
 }> {}
 
 export interface StatConfig extends WithBaseConfig<{
@@ -152,6 +221,12 @@ export interface StatConfig extends WithBaseConfig<{
   icon?: string;
   prefix?: string;
   suffix?: string;
+  // Custom styles for fine-tuning
+  styles?: {
+    container?: React.CSSProperties;
+    number?: React.CSSProperties;
+    label?: React.CSSProperties;
+  };
 }> {}
 
 export interface FaqConfig extends WithBaseConfig<{
@@ -169,3 +244,30 @@ export interface FaqConfig extends WithBaseConfig<{
     answer?: React.CSSProperties;
   };
 }> {}
+
+
+export interface NewsletterConfig {
+  title?: string;
+  description?: string;
+  emailPlaceholder?: string;
+  buttonText?: string;
+  buttonVariant?: "primary" | "secondary" | "outline";
+  integration?: "formspree" | "mailchimp" | "custom";
+  formspreeFormId?: string;
+  mailchimpActionUrl?: string;
+  customActionUrl?: string;
+  customMethod?: "POST" | "GET";
+  successMessage?: string;
+  errorMessage?: string;
+  showName?: boolean;
+  namePlaceholder?: string;
+  disableDoubleOptIn?: boolean;
+  hiddenFields?: Record<string, string>;
+  // Custom styles for fine-tuning
+  styles?: {
+    container?: React.CSSProperties;
+    form?: React.CSSProperties;
+    input?: React.CSSProperties;
+    button?: React.CSSProperties;
+  };
+}
