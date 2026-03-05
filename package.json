@@ -1,6 +1,6 @@
 {
   "name": "@damarkuncoro/landing-page",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Config-driven landing page library",
   "main": "lib/cjs/index.js",
   "module": "lib/esm/index.mjs",
