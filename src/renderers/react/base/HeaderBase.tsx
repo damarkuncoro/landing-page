@@ -79,9 +79,7 @@ export const HeaderBase = React.forwardRef<
   } = props;
 
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobile, setIsMobile] = useState(
-    typeof window !== 'undefined' && window.innerWidth < (BREAKPOINT_WIDTH[mobileBreakpoint] ?? 768)
-  );
+  const [isMobile, setIsMobile] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
   const [headerHeight, setHeaderHeight] = useState(72);
 
@@ -94,6 +92,9 @@ export const HeaderBase = React.forwardRef<
       const mobile = window.innerWidth < breakpointWidth;
       setIsMobile(mobile);
     };
+
+    // Initial check
+    checkMobile();
 
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
@@ -242,6 +243,7 @@ export const HeaderBase = React.forwardRef<
             languageSelector={languageSelector}
             themeSwitcher={themeSwitcher}
             showSearchInMobileMenu={showSearchInMobileMenu}
+            {...({ hideMobileToggle: true } as any)}
             skin={skin as "default" | "tailwind" | "modern"}
           />
         )}

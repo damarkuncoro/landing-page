@@ -28,6 +28,8 @@ export interface NavDropdownProps {
   onLinkMouseLeave?: (e: React.MouseEvent<HTMLAnchorElement>, link: NavbarLink) => void;
   /** Menu close handler */
   onClose: () => void;
+  /** Keyboard navigation handler */
+  onKeyDown?: (e: React.KeyboardEvent<HTMLAnchorElement>, link: NavbarLink) => void;
 }
 
 export const NavDropdown: React.FC<NavDropdownProps> = ({
@@ -42,6 +44,7 @@ export const NavDropdown: React.FC<NavDropdownProps> = ({
   onLinkMouseEnter,
   onLinkMouseLeave,
   onClose,
+  onKeyDown,
 }) => {
   if (!isOpen || !link.children) return null;
 
@@ -97,6 +100,7 @@ export const NavDropdown: React.FC<NavDropdownProps> = ({
             aria-disabled={childLink.isLoading}
             tabIndex={0}
             data-link-id={childLink.id}
+            onKeyDown={(e) => onKeyDown?.(e, childLink)}
           >
             <LinkContent link={childLink} iconMargin="0.5rem" />
           </a>

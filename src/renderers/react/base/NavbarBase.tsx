@@ -46,7 +46,7 @@ const MobileMenuToggle: React.FC<{
 
 export const NavbarBase = React.forwardRef<
   HTMLElement,
-  NavbarContractProps & { as?: React.ElementType }
+  NavbarContractProps & { as?: React.ElementType; hideMobileToggle?: boolean }
 >((props, ref) => {
   const {
     links,
@@ -87,6 +87,7 @@ export const NavbarBase = React.forwardRef<
     showSearchInMobileMenu = true,
     navbarHeight,
     stickyOffset = 0,
+    hideMobileToggle = false,
   } = props;
 
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -278,7 +279,7 @@ export const NavbarBase = React.forwardRef<
       )}
 
       {/* Mobile Menu Toggle */}
-      {isMobile && (
+      {isMobile && !hideMobileToggle && (
         <MobileMenuToggle
           isOpen={isMenuOpen}
           icon={mobileMenuButtonIcon}
@@ -361,6 +362,7 @@ export const NavbarBase = React.forwardRef<
                     onLinkMouseEnter={onLinkMouseEnter}
                     onLinkMouseLeave={onLinkMouseLeave}
                     onClose={() => setActiveDropdown(null)}
+                    onKeyDown={(e, childLink) => handleChildKeyDown(e, link, childLink)}
                   />
                 </Box>
               ) : (
