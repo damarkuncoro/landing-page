@@ -17,7 +17,7 @@ describe('SkinManager', () => {
 
     it('should list available skins for each component', () => {
       const headerSkins = skinManager.listSkins('Header');
-      expect(headerSkins).toEqual(['default', 'tailwind']);
+      expect(headerSkins).toEqual(['default', 'tailwind', 'modern']);
 
       const navbarSkins = skinManager.listSkins('Navbar');
       expect(navbarSkins).toEqual(['default', 'tailwind', 'modern']);

@@ -17,6 +17,7 @@ export function registerSkins() {
   // Register Header skins
   skinManager.registerSkin("Header", "default", HeaderSkin);
   skinManager.registerSkin("Header", "tailwind", HeaderSkinTailwind);
+  skinManager.registerSkin("Header", "modern", HeaderSkinTailwind); // Reuse tailwind skin with modern navbar
 
   // Register Navbar skins
   skinManager.registerSkin("Navbar", "default", NavbarSkin);

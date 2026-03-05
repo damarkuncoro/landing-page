@@ -5,10 +5,11 @@ import React from "react";
  * Implements a registry pattern for dynamic skin management.
  */
 
+type SkinType = "default" | "tailwind" | "modern" | "none";
+
 interface SkinRegistry {
   [componentName: string]: {
-    default: React.ComponentType<any>;
-    tailwind: React.ComponentType<any>;
+    [skinType in SkinType]?: React.ComponentType<any>;
   };
 }
 
@@ -18,12 +19,9 @@ class SkinManager {
   /**
    * Register a skin for a component
    */
-  registerSkin(componentName: string, skinType: "default" | "tailwind", component: React.ComponentType<any>) {
+  registerSkin(componentName: string, skinType: SkinType, component: React.ComponentType<any>) {
     if (!this.registry[componentName]) {
-      this.registry[componentName] = {
-        default: null!,
-        tailwind: null!,
-      };
+      this.registry[componentName] = {};
     }
     this.registry[componentName][skinType] = component;
   }
@@ -31,7 +29,7 @@ class SkinManager {
   /**
    * Get a skin component for a specific component and skin type
    */
-  getSkin(componentName: string, skinType: "default" | "tailwind" = "default"): React.ComponentType<any> {
+  getSkin(componentName: string, skinType: SkinType = "default"): React.ComponentType<any> {
     const componentRegistry = this.registry[componentName];
     
     if (!componentRegistry) {
@@ -51,7 +49,7 @@ class SkinManager {
   /**
    * Check if a component has a specific skin type
    */
-  hasSkin(componentName: string, skinType: "default" | "tailwind"): boolean {
+  hasSkin(componentName: string, skinType: SkinType): boolean {
     return !!(this.registry[componentName]?.[skinType]);
   }
 
